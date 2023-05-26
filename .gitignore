@@ -33,3 +33,11 @@ assemble
 *.nav
 *.toc
 
+# ignore exectuable files
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
