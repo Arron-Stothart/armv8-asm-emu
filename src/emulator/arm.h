@@ -16,7 +16,8 @@ typedef struct {
     int registers[NUM_OF_REGISTERS];
     int memory[MAX_MEMORY_SIZE];
     PSTATE pstate;
-    int pc;
+    unsigned int pc;
+    unsigned int cir;
 } ARM;
 
 // Declared in loadbinary.c
