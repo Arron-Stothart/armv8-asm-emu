@@ -41,3 +41,29 @@ assemble
 *.x86_64
 *.hex
 
+## ignore ore latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+## ignore intermediate documents:
+*.dvi
+*.xdv
+*-converted-to.*
+
+## ignore build tool auxiliary files:
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
