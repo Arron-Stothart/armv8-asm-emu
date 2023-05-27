@@ -2,8 +2,8 @@
 #include <stdbool.h>
 #include "defs.h"
 
-// PSTATE tracks flags triggered by last result
-// N - Negative value; Z - Zero value; C - Carry; V - Overflow
+// PSTATE tracks flags triggered by last result.
+// N - Negative value; Z - Zero value; C - Carry; V - Overflow.
 typedef struct {
     bool N;
     bool Z;
@@ -18,3 +18,6 @@ typedef struct {
     PSTATE pstate;
     int pc;
 } ARM;
+
+// Declared in loadbinary.c
+void loadbinary(int* memory, char* path);
