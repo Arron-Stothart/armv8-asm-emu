@@ -22,3 +22,6 @@ typedef struct {
 
 // Declared in loadbinary.c
 void loadbinary(int* memory, char* path);
+
+// Declared in outputstate.c
+void outputstate(ARM* arm);

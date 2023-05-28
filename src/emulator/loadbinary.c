@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+// Given a array of memory and a binary file, data from file will be loaded into array.
 void loadbinary(int* memory, char* path) {
 
     FILE* binary = fopen(path, "r")
@@ -9,7 +10,7 @@ void loadbinary(int* memory, char* path) {
     // If file pointer is null then return with error.
     if (binary == NULL) {
         printf("Error in opening file.\n")
-        return;
+        exit(EXIT_FAILURE);
     }
 
     // Read data from binary until end of file. Only 1 piece of data read each time.

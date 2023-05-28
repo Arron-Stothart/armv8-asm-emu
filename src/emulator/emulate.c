@@ -35,5 +35,6 @@ int main(int argc, char **argv) {
 
   } while (arm.cir == true); //TODO add stopping condition here
 
+  outputstate(&arm);
   return EXIT_SUCCESS;
 }
