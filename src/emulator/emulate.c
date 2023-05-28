@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include "defs.h"
 #include "arm.h"
 
 int main(int argc, char **argv) {
