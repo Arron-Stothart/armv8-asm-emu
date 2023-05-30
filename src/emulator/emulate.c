@@ -32,7 +32,21 @@ int main(int argc, char **argv) {
 
     //TODO decode and execute instruction
 
-  } while (arm.cir == true); //TODO add stopping condition here
+    // convert between endians to make life easier
+    uint instruction = convert(arm.cir);  // TODO: import this (why on earth is convert in outstate.c??)
+    uint op0 = (instruction >> 25) & 0x1111;  // TODO: test this
+
+    if ((op0 & 0x1110) == 0x1000) {
+      // data processing immediate
+    } if ((op0 & 0x0111) == 0x0101) {
+      // data processing register
+    } if ((op0 & 0x0101) == 0x0100) {
+      // loads and stores
+    } if ((op0 & 0x1110) == 0x1010) {
+      // branches
+    }
+
+  } while (arm.cir != 0x8a000000);  // TODO: test this
 
   outputstate(&arm);
   return EXIT_SUCCESS;
