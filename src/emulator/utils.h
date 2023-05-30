@@ -1,3 +1,5 @@
+#include "defs.h"
+
 // Converts hexadecimals in 32bits between endians.
 int convert(int value) {
     int converted = 0;
@@ -10,3 +12,25 @@ int convert(int value) {
 
     return converted;
 }
+
+// Gets instruction type given instruction in little-endian.
+INSTRUCTION_TYPE getInstructionType(int word) {
+    unsigned int instruction = convert(word);
+    unsigned int op0 = (instruction >> 25) & 0x1111; // TODO: test this
+
+    if (instruction == HALT_CODE) {
+        return HALT;
+    } else if (instruction == NOP_CODE) {
+        return NOP;
+    } else if ((op0 & 0x1110) == 0x1000) {
+        return DATA_PROCESSING_IMMEDIATE;
+    } else if ((op0 & 0x0111) == 0x0101) {
+        return DATA_PROCESSING_REGISTER;
+    } else if ((op0 & 0x0101) == 0x0100) {
+        return SINGLE_DATA_TRANSFER;
+    } else if ((op0 & 0x1110) == 0x1010) {
+        return BRANCH;
+    }
+}
+
+    
