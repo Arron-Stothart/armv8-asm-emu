@@ -4,17 +4,17 @@
 
 // Outputs state of ARM processor into .out file.
 void outputstate(ARM* arm) {
-    FILE* output = fopen("state.out", "w");
+    FILE* output = fopen("output.out", "w");
 
     // Output registers.
     fprintf(output, "Registers: \n");
 
 	for (int i = 0; i < NUM_OF_REGISTERS; i++) {
-		fprintf(output, "$X%02d = %16d\n",
+		fprintf(output, "$X%02d = %16x\n",
 			   i, arm->registers[i]);
 	}
 
-    fprintf(output, "PC  = %16d\n", arm->pc);
+    fprintf(output, "PC  = %16x\n", arm->pc);
 
     // Output PSTATE //! find better way to do this
     fprintf(output, "PSTATE: ");
@@ -29,7 +29,7 @@ void outputstate(ARM* arm) {
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
 		if (arm->memory[i] > 0) {
             // Bytes are loaded in little endian so have to convert.
-            fprintf(output, "0x%.8x: 0x%.8x\n", i, convert(arm->memory[i]));
+            fprintf(output, "0x%08x: 0x%08x\n", i, convert(arm->memory[i]));
 		}
 	}
 
