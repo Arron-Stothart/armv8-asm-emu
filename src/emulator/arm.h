@@ -11,7 +11,8 @@ typedef struct {
     bool V;
 } PSTATE;
 
-
+// ARM Proccesor 
+// Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
 typedef struct {
     long long int registers[NUM_OF_REGISTERS];
     char memory[MAX_MEMORY_SIZE];
