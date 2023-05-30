@@ -13,15 +13,15 @@ typedef struct {
 
 
 typedef struct {
-    int registers[NUM_OF_REGISTERS];
-    int memory[MAX_MEMORY_SIZE];
+    long long int registers[NUM_OF_REGISTERS];
+    char memory[MAX_MEMORY_SIZE];
     PSTATE pstate;
-    unsigned int pc;
-    unsigned int cir;
+    unsigned long long int pc;
+    unsigned long long int cir;
 } ARM;
 
 // Declared in loadbinary.c
-extern void loadbinary(int* memory, char* array);
+extern void loadbinary(char* memory, char* array);
 
 // Declared in outputstate.c
 extern void outputstate(ARM* arm);
