@@ -25,3 +25,6 @@ extern void loadbinary(int* memory, char* array);
 
 // Declared in outputstate.c
 extern void outputstate(ARM* arm);
+
+// Declared in utlis.c
+extern int convert(int value);

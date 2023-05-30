@@ -33,8 +33,8 @@ int main(int argc, char **argv) {
     //TODO decode and execute instruction
 
     // convert between endians to make life easier
-    uint instruction = convert(arm.cir);  // TODO: import this (why on earth is convert in outstate.c??)
-    uint op0 = (instruction >> 25) & 0x1111;  // TODO: test this
+    unsigned int instruction = convert(arm.cir);  
+    unsigned int op0 = (instruction >> 25) & 0x1111;  // TODO: test this
 
     if ((op0 & 0x1110) == 0x1000) {
       // data processing immediate
