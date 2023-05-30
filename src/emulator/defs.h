@@ -18,4 +18,4 @@ typedef enum {
     BRANCH,
     NOP,
     HALT,
-} instruction_type;
+} INSTRUCTION_TYPE;

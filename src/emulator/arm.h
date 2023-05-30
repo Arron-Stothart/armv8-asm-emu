@@ -15,14 +15,14 @@ typedef struct {
 // Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
 typedef struct {
     long long int registers[NUM_OF_REGISTERS];
-    char memory[MAX_MEMORY_SIZE];
+    int memory[MAX_MEMORY_SIZE];
     PSTATE pstate;
     unsigned long long int pc;
     unsigned long long int cir;
 } ARM;
 
 // Declared in loadbinary.c
-extern void loadbinary(char* memory, char* array);
+extern void loadbinary(int* memory, char* array);
 
 // Declared in outputstate.c
 extern void outputstate(ARM* arm);
