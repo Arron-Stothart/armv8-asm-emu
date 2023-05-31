@@ -102,3 +102,25 @@ void loadBinary(char* memory, char* path) {
 
     fclose(binary);
 }
+
+// Bits are shifted right;rotated back into the left-hand end if carried right.
+static int rotateRight(long long int value, int shift, int bits) {
+    assert(shift >= 0);
+    long long int shifted = value >> shift;
+    int rot_bits = value << (bits - shift);
+    int combined = shifted | rot_bits;
+    return combined;
+}
+
+// Rotates integers truncating at 32 bits.
+int rotateRight32(long long int value, int shift) {
+    int masked = value && 0x0000000011111111;
+    return rotateRight(masked, shift, 32);
+}
+
+// Rotates 64 bit integers.
+int rotateRight64(long long int value, int shift) {
+    return rotateRight(value, shift, 64);
+}
+
+

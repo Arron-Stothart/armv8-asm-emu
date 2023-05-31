@@ -14,3 +14,7 @@ void loadBinary(char* memory, char* path);
 
 // Returns word from byte addressable memory
 int getWord(long long unsigned int* memory);
+
+// Rotate right operations
+int rotateRight32(long long int value, int shift);
+int rotateRight64(long long int value, int shift);

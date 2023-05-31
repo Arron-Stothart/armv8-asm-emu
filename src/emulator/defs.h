@@ -11,6 +11,9 @@
 #define MAX_MEMORY_SIZE (1 << 21)
 #define BYTES_IN_WORD 4
 #define SIZE_OF_BYTE 8 // in bits
+#define BYTES_IN_64BIT 8
+#define BYTES_IN_32BIT 4
+
 
 // Instruction Constants 
 // Codes are in big endian
