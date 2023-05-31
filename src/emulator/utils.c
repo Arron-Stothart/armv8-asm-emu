@@ -16,7 +16,7 @@ int convert(int value) {
 }
 
 // Returns word from byte addressable memory
-int getword(char* memory) {
+int getWord(char* memory) {
     int value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
         value += *memory >> (8 * i);
@@ -48,7 +48,8 @@ INSTRUCTION_TYPE getInstructionType(int word) {
     }
 }
 
-void outputstate(ARM* arm) {
+// Outputs state of ARM processor into .out file.
+void outputState(ARM* arm) {
     FILE* output = fopen("output.out", "w");
 
     // Output registers.
@@ -81,7 +82,8 @@ void outputstate(ARM* arm) {
     fclose(output);
 }
 
-void loadbinary(char* memory, char* path) {
+// Given a array of memory and a binary file, data from file will be loaded into array.
+void loadBinary(char* memory, char* path) {
 
     FILE* binary = fopen(path, "r");
 

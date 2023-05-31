@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
 #include "utils.h"
 
 int main(int argc, char **argv) {
@@ -22,7 +23,7 @@ int main(int argc, char **argv) {
     };
 
     // Load instructions into memory.
-    loadbinary(arm.memory, argv[1]);
+    loadBinary(arm.memory, argv[1]);
 
     // Fetch-Decode-Execute Cycle
     for (;;) {
@@ -55,6 +56,6 @@ int main(int argc, char **argv) {
     }
 
     halt:
-        outputstate(&arm);
+        outputState(&arm);
         return EXIT_SUCCESS;
 }
