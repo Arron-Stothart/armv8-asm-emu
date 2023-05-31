@@ -25,8 +25,7 @@ typedef enum {
     SINGLE_DATA_TRANSFER,
     BRANCH,
     NOP,
-    HALT,
-    DATA
+    HALT
 } INSTRUCTION_TYPE;
 
 // PSTATE tracks flags triggered by last result.
