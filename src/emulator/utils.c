@@ -16,6 +16,16 @@ int convert(int value) {
     return converted;
 }
 
+// Returns word from byte addressable memory
+int getword(char* memory) {
+    int value = 0;
+    for (int i = 0; i < BYTES_IN_WORD; i++) {
+        value += *memory >> (8 * i);
+        memory++;
+    }
+    return value;
+}
+
 // Gets instruction type given instruction in little-endian.
 INSTRUCTION_TYPE getInstructionType(int word) {
     unsigned int instruction = convert(word);
@@ -64,7 +74,7 @@ void outputstate(ARM* arm) {
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
 		if (arm->memory[i] > 0) {
             // Bytes are loaded in little endian so have to convert.
-            fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(arm->memory[i]));
+            fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(getword(&arm->memory[i])));
 		}
 	}
 
@@ -89,14 +99,4 @@ void loadbinary(char* memory, char* path) {
     }
 
     fclose(binary);
-}
-
-// Returns word from byte addressable memory
-int getword(char* memory) {
-    int value = 0;
-    for (int i = 0; i < BYTES_IN_WORD; i++) {
-        value += *memory >> (8 * i);
-        memory++;
-    }
-    return value;
 }
