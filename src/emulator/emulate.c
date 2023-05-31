@@ -48,7 +48,8 @@ int main(int argc, char **argv) {
                 break;
             case BRANCH:
                 break;
-            case DATA:
+            default:
+                // Non-instruction/data; ignore.
                 break;
         }
     }
