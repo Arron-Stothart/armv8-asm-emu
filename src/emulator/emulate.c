@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
         // Fetch and decode instruction.
         arm.cir = arm.memory[arm.pc];
         arm.pc += INSTRUCTION_SIZE;
-        INSTRUCTION_TYPE type = getInstructionType(arm.cir);
+        INSTRUCTION_TYPE type = getInstructionType(getWord(&arm.cir));
 
         switch(type) {
             case HALT:
@@ -49,8 +49,6 @@ int main(int argc, char **argv) {
             case BRANCH:
                 break;
             case DATA:
-                // Memory is 1 byte so overshot by 3 bytes.
-                arm.pc -= (INSTRUCTION_SIZE - 1);
                 break;
         }
     }
