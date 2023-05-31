@@ -13,4 +13,4 @@ void outputState(ARM* arm);
 void loadBinary(char* memory, char* path);
 
 // Returns word from byte addressable memory
-int getWord(char* memory);
+int getWord(long long unsigned int* memory);
