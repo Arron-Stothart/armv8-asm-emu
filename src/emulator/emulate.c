@@ -38,8 +38,6 @@ int main(int argc, char **argv) {
             case HALT:
                 goto halt; // Required to break out of two loops. 
                 break;
-            case NOP:
-                break;
             case DATA_PROCESSING_IMMEDIATE:
                 break;
             case DATA_PROCESSING_REGISTER:
@@ -49,7 +47,7 @@ int main(int argc, char **argv) {
             case BRANCH:
                 break;
             default:
-                // Non-instruction/data; ignore.
+                // Non-instruction data or NOP case; ignore.
                 break;
         }
     }
