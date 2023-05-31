@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h> // remove
 #include "defs.h"
 
 // Converts hexadecimals in 32bits between endians.
@@ -30,5 +33,60 @@ INSTRUCTION_TYPE getInstructionType(int word) {
         return SINGLE_DATA_TRANSFER;
     } else if ((op0 & 0x1110) == 0x1010) {
         return BRANCH;
+    } else {
+        return -1;
     }
+}
+
+void outputstate(ARM* arm) {
+    FILE* output = fopen("output.out", "w");
+
+    // Output registers.
+    fprintf(output, "Registers: \n");
+
+	for (int i = 0; i < NUM_OF_REGISTERS; i++) {
+		fprintf(output, "$X%02d = %16llx\n",
+			   i, arm->registers[i]);
+	}
+
+    fprintf(output, "PC  = %16llx\n", arm->pc);
+
+    // Output PSTATE //! find better way to do this
+    fprintf(output, "PSTATE: ");
+    fprintf(output, (arm->pstate.N) ? "N" : "-");
+    fprintf(output, (arm->pstate.Z) ? "Z" : "-");
+    fprintf(output, (arm->pstate.C) ? "C" : "-");
+    fprintf(output, (arm->pstate.V) ? "V\n" : "-\n");
+
+    // Output Memory
+    fprintf(output, "Non-zero memory:\n");
+
+    for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
+		if (arm->memory[i] > 0) {
+            // Bytes are loaded in little endian so have to convert.
+            fprintf(output, "0x%08x: 0x%08x\n", i, convert(arm->memory[i]));
+		}
+	}
+
+    fclose(output);
+}
+
+void loadbinary(int* memory, char* path) {
+
+    FILE* binary = fopen(path, "r");
+
+    // If file pointer is null then return with error.
+    if (binary == NULL) {
+        printf("Error in opening file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Read data from binary until end of file. Only 1 piece of data read each time.
+    int i = 0, read = 1;
+    while (read) {
+        read = fread(&memory[i], sizeof(int), 1, binary);
+        i++;
+    }
+
+    fclose(binary);
 }

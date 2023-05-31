@@ -1,4 +1,8 @@
+#include <stdbool.h>
+
 // Register Constants
+#ifndef ZR
+
 #define REGISTER_SIZE 8 // in bytes
 #define NUM_OF_REGISTERS 31
 #define ZR 0 // Zero register
@@ -22,3 +26,24 @@ typedef enum {
     NOP,
     HALT,
 } INSTRUCTION_TYPE;
+
+// PSTATE tracks flags triggered by last result.
+// N - Negative value; Z - Zero value; C - Carry; V - Overflow.
+typedef struct {
+    bool N;
+    bool Z;
+    bool C;
+    bool V;
+} PSTATE;
+
+// ARM Proccesor 
+// Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
+typedef struct {
+    long long int registers[NUM_OF_REGISTERS];
+    int memory[MAX_MEMORY_SIZE];
+    PSTATE pstate;
+    unsigned long long int pc;
+    unsigned long long int cir;
+} ARM;
+
+#endif
