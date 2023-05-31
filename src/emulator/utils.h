@@ -11,3 +11,6 @@ void outputstate(ARM* arm);
 
 // Given a array of memory and a binary file, data from file will be loaded into array.
 void loadbinary(char* memory, char* path);
+
+// Returns word from byte addressable memory
+int getword(char* memory);

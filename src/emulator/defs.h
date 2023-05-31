@@ -9,6 +9,7 @@
 
 // Memory Constants
 #define MAX_MEMORY_SIZE (1 << 21)
+#define BYTES_IN_WORD 4
 
 // Instruction Constants 
 // Codes are in big endian

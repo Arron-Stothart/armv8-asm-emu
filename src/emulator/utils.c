@@ -90,3 +90,13 @@ void loadbinary(char* memory, char* path) {
 
     fclose(binary);
 }
+
+// Returns word from byte addressable memory
+int getword(char* memory) {
+    int value = 0;
+    for (int i = 0; i < BYTES_IN_WORD; i++) {
+        value += *memory >> (8 * i);
+        memory++;
+    }
+    return value;
+}
