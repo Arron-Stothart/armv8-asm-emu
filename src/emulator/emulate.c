@@ -30,12 +30,12 @@ int main(int argc, char **argv) {
         assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
         // Fetch and decode instruction.
         arm.cir = arm.memory[arm.pc];
-        arm.pc += 4;
+        arm.pc += INSTRUCTION_SIZE;
         INSTRUCTION_TYPE type = getInstructionType(arm.cir);
 
         switch(type) {
             case HALT:
-                goto halt;
+                goto halt; // Required to break out of two loops. 
                 break;
             case NOP:
                 break;
@@ -46,6 +46,10 @@ int main(int argc, char **argv) {
             case SINGLE_DATA_TRANSFER:
                 break;
             case BRANCH:
+                break;
+            case DATA:
+                // Memory is 1 byte so overshot by 3 bytes.
+                arm.pc -= (INSTRUCTION_SIZE - 1);
                 break;
         }
     }

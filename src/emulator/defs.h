@@ -25,6 +25,7 @@ typedef enum {
     BRANCH,
     NOP,
     HALT,
+    DATA
 } INSTRUCTION_TYPE;
 
 // PSTATE tracks flags triggered by last result.

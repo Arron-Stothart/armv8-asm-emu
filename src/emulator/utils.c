@@ -43,7 +43,8 @@ INSTRUCTION_TYPE getInstructionType(int word) {
     } else if ((op0 & 0x1110) == 0x1010) {
         return BRANCH;
     } else {
-        return -1;
+        // Default case; not instruction.
+        return DATA;
     }
 }
 
