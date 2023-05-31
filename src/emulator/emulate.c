@@ -28,6 +28,7 @@ int main(int argc, char **argv) {
     for (;;) {
         // Fetch and decode instruction.
         arm.cir = arm.memory[arm.pc];
+        arm.pc += 4;
         INSTRUCTION_TYPE type = getInstructionType(arm.cir);
 
         switch(type) {
@@ -35,7 +36,6 @@ int main(int argc, char **argv) {
                 goto halt;
                 break;
             case NOP:
-                arm.pc++;
                 break;
             case DATA_PROCESSING_IMMEDIATE:
                 break;
