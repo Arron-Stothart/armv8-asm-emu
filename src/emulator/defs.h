@@ -17,7 +17,6 @@
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
 
-
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
@@ -46,5 +45,12 @@ typedef struct {
     unsigned long long int pc;
     unsigned long long int cir;
 } ARM;
+
+// Enum for Branch Instruction Type
+typedef enum {
+    UNCONDITIONAL,
+    REGISTER,
+    CONDITIONAL
+} BRANCH_TYPE;
 
 #endif
