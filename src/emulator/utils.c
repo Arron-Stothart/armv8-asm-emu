@@ -64,14 +64,14 @@ void outputstate(ARM* arm) {
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
 		if (arm->memory[i] > 0) {
             // Bytes are loaded in little endian so have to convert.
-            fprintf(output, "0x%08x: 0x%08x\n", i, convert(arm->memory[i]));
+            fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(arm->memory[i]));
 		}
 	}
 
     fclose(output);
 }
 
-void loadbinary(int* memory, char* path) {
+void loadbinary(char* memory, char* path) {
 
     FILE* binary = fopen(path, "r");
 
@@ -84,7 +84,7 @@ void loadbinary(int* memory, char* path) {
     // Read data from binary until end of file. Only 1 piece of data read each time.
     int i = 0, read = 1;
     while (read) {
-        read = fread(&memory[i], sizeof(int), 1, binary);
+        read = fread(&memory[i], sizeof(char), 1, binary);
         i++;
     }
 
