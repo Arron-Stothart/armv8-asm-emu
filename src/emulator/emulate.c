@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
 
     // Check if binary file provided.
     if (argc != 2) {
-        printf("emulate: no binary file provided.\n");
+        fprintf(stderr, "emulate: no binary file provided.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -26,6 +26,8 @@ int main(int argc, char **argv) {
 
     // Fetch-Decode-Execute Cycle
     for (;;) {
+        // Check if address is in memory range.
+        assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
         // Fetch and decode instruction.
         arm.cir = arm.memory[arm.pc];
         arm.pc += 4;

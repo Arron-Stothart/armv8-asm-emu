@@ -11,14 +11,14 @@ void executeBranch(int offset, ARM* arm, int instruction) { // Perhaps take PC r
     BRANCH_TYPE type = getBranchType(instruction);
     switch (type) {
         case UNCONDITIONAL:
-            unsigned int simm26 = instruction & 0x03ffffff // TODO: Test
+            unsigned int simm26 = instruction & 0x03ffffff; // TODO: Test
             break;
         case REGISTER:
-            unsigned int xn = instruction & 0x000003e0 // TODO: Test
+            unsigned int xn = instruction & 0x000003e0; // TODO: Test
             break;
         case CONDITIONAL:
-            unsigned int simm19 = instruction & 0x00ffffe0 // TODO: Test
-            unsigned int cond = instruction & 0x0000000f // TODO: Test
+            unsigned int simm19 = instruction & 0x00ffffe0; // TODO: Test
+            unsigned int cond = instruction & 0x0000000f; // TODO: Test
             break;
     }
 } 
