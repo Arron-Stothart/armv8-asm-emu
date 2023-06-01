@@ -59,10 +59,8 @@ void executeBranch(ARM* arm, int instruction) {
             int xn = (instruction & 0x000003e0 >> 5);  // TODO: Test
             // Check if xn refers to an exisiting register
             assert(xn >= 0 && xn < NUM_OF_REGISTERS);
-            // Get value held in Xn
-            int branchAddress = (*arm).registers[xn] // TODO: Fix
-            // Branch to address in Xn
-            (*arm).pc = branchAddress;
+            // Branch to address stored in Xn
+            (*arm).pc = (*arm).registers[xn];
             break;
         case CONDITIONAL:
             int simm19 = (instruction & 0x00ffffe0 >> 5); // TODO: Test
