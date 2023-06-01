@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
     ARM arm = {
         .registers = {0},
         .memory = {0},
-        .pstate = (PSTATE) {.N = false, .Z = false, .C = false, .V = false},
+        .pstate = (PSTATE) {.N = false, .Z = true, .C = false, .V = false},
         .pc = 0,
         .cir = 0
     };
