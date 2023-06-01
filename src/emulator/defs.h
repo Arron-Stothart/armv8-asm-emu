@@ -49,7 +49,6 @@ typedef struct {
     char memory[MAX_MEMORY_SIZE];
     PSTATE pstate;
     unsigned long long int pc;
-    char cir;
 } ARM;
 
 // Enum for Branch Instruction Type

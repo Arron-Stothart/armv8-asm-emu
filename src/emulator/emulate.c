@@ -18,8 +18,7 @@ int main(int argc, char **argv) {
         .registers = {0},
         .memory = {0},
         .pstate = (PSTATE) {.N = false, .Z = true, .C = false, .V = false},
-        .pc = 0,
-        .cir = 0
+        .pc = 0
     };
 
     // Load instructions into memory.
@@ -30,9 +29,8 @@ int main(int argc, char **argv) {
         // Check if address is in memory range.
         assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
         // Fetch and decode instruction.
-        arm.cir = arm.memory[arm.pc];
+        INSTRUCTION_TYPE type = getInstructionType(getWord(&arm.memory[arm.pc]));
         arm.pc += INSTRUCTION_SIZE;
-        INSTRUCTION_TYPE type = getInstructionType(getWord(&arm.cir));
 
         switch(type) {
             case HALT:
