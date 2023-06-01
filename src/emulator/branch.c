@@ -52,7 +52,7 @@ void executeBranch(ARM* arm, int instruction) {
             int simm26 = instruction & 0x03ffffff; // TODO: Test
             int offset = simm26 * 4;
             // Branch to address encoded by literal
-            (*arm).pc += offset;
+            (*arm).pc += (offset - 4);
             break;
         case REGISTER:
             // Determining encoding of register Xn
@@ -69,7 +69,7 @@ void executeBranch(ARM* arm, int instruction) {
             if (conditionCheck(cond, arm)) {
                 int offset = simm19 * 4;
                 // Branch to address encoded by literal
-                (*arm).pc += offset;
+                (*arm).pc += (offset - 4);
             }
             break;
     }
