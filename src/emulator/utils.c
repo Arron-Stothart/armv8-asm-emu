@@ -16,7 +16,7 @@ int convert(int value) {
 }
 
 // Returns word from byte addressable memory
-int getWord(long long unsigned int* memory) {
+int getWord(char* memory) {
     int value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
         value += *memory >> (SIZE_OF_BYTE * i);
