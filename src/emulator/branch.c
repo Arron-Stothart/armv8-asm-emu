@@ -1,13 +1,13 @@
 #include "defs.h"
 
 // Gets branch type from instruction 
-BRANCH_TYPE getBranchType(int instruction) {
+static BRANCH_TYPE getBranchType(int instruction) {
     // TODO: Implement
     return -1;
 }
 
 // Determine if ARM PSTATE satisfies cond
-bool conditionCheck(int cond, ARM* arm) {
+static bool conditionCheck(int cond, ARM* arm) {
     int n = (*arm).pstate.N;
     int z = (*arm).pstate.Z; 
     int c = (*arm).pstate.C; 
@@ -50,9 +50,9 @@ void executeBranch(ARM* arm, int instruction) {
     switch (type) {
         case UNCONDITIONAL:
             int simm26 = instruction & 0x03ffffff; // TODO: Test
-            int offset = simm26 * 4;
+            int offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
-            (*arm).pc += (offset - 4);
+            (*arm).pc += (offset - BYTES_IN_WORD);
             break;
         case REGISTER:
             // Determining encoding of register Xn
@@ -67,9 +67,9 @@ void executeBranch(ARM* arm, int instruction) {
             int cond = instruction & 0x0000000f; // TODO: Test
             // TODO: Check if condition is of some expected type
             if (conditionCheck(cond, arm)) {
-                int offset = simm19 * 4;
+                int offset = simm19 * BYTES_IN_WORD;
                 // Branch to address encoded by literal
-                (*arm).pc += (offset - 4);
+                (*arm).pc += (offset - BYTES_IN_WORD);
             }
             break;
     }
