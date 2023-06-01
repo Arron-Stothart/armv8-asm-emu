@@ -3,5 +3,8 @@
 // Gets branch type from instruction 
 BRANCH_TYPE getBranchType(int instruction);
 
+// Determine if ARM PSTATE satisfies cond
+bool conditionCheck(int cond, ARM* arm);
+
 // Execute branch instruction
-void executeBranch(int offset, ARM* arm, int instruction); //Perhaps take PC rather than entire ARM
+void executeBranch(int offset, ARM* arm, int instruction); 

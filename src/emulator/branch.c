@@ -6,19 +6,73 @@ BRANCH_TYPE getBranchType(int instruction) {
     return -1;
 }
 
-// Execute branch instruction
-void executeBranch(int offset, ARM* arm, int instruction) { // Perhaps take PC rather than entire ARM
+// Determine if ARM PSTATE satisfies cond
+bool conditionCheck(int cond, ARM* arm) {
+    int n = (*arm).pstate.N;
+    int z = (*arm).pstate.Z; 
+    int c = (*arm).pstate.C; 
+    int v = (*arm).pstate.V;  
+
+    switch (cond) {
+                // EQ (Equal)
+                case 0b0000: 
+                    return (z == 1);
+                // NE (Not Equal)
+                case 0b0001:
+                    return (z == 0);
+                // GE (Signed greater or equal)
+                case 0b1010:
+                    return (n == 1);
+                // LT (Signed less than)
+                case 0b1011:
+                    return (n != 1);
+                // GT (Signed greater than)
+                case 0b1100:
+                    return (z == 0 && n == v);
+                // LE (Signed less than or equal)
+                case 0b1101:
+                    return (!(z == 0 && n == v));
+                // AL (always)
+                case 1110:
+                    return 1;
+                // Condition not of permitted type
+                default:
+                    return -1;
+            }
+}
+
+// Execute branch instruction TODO: split up into case specific 
+void executeBranch(ARM* arm, int instruction) { 
+
+    // Get type of branch instruction
     BRANCH_TYPE type = getBranchType(instruction);
+
     switch (type) {
         case UNCONDITIONAL:
-            unsigned int simm26 = instruction & 0x03ffffff; // TODO: Test
+            int simm26 = instruction & 0x03ffffff; // TODO: Test
+            int offset = simm26 * 4;
+            // Branch to address encoded by literal
+            (*arm).pc += offset;
             break;
         case REGISTER:
-            unsigned int xn = instruction & 0x000003e0; // TODO: Test
+            // Determining encoding of register Xn
+            int xn = (instruction & 0x000003e0 >> 5);  // TODO: Test
+            // Check if xn refers to an exisiting register
+            assert(xn >= 0 && xn < NUM_OF_REGISTERS);
+            // Get value held in Xn
+            int branchAddress = (*arm).registers[xn] // TODO: Fix
+            // Branch to address in Xn
+            (*arm).pc = branchAddress;
             break;
         case CONDITIONAL:
-            unsigned int simm19 = instruction & 0x00ffffe0; // TODO: Test
-            unsigned int cond = instruction & 0x0000000f; // TODO: Test
+            int simm19 = (instruction & 0x00ffffe0 >> 5); // TODO: Test
+            int cond = instruction & 0x0000000f; // TODO: Test
+            // TODO: Check if condition is of some expected type
+            if (conditionCheck(cond, arm)) {
+                int offset = simm19 * 4;
+                // Branch to address encoded by literal
+                (*arm).pc += offset;
+            }
             break;
     }
 } 
