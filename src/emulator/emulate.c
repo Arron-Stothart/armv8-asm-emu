@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
         assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
         // Fetch and decode instruction.
         INSTRUCTION_TYPE type = getInstructionType(getWord(&arm.memory[arm.pc]));
-        arm.pc += INSTRUCTION_SIZE;
+        arm.pc += 1;
 
         switch(type) {
             case HALT:
