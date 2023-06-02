@@ -37,7 +37,7 @@ void (*logicalImmediate[3])(ARM* arm, int rd, int op) = {
     &movz, &movn, &movk
 };
 
-int (*arithmeticImmediate[4])(ARM* arm, int rd, int op) = {
+int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2) = {
     &add, &adds, &sub, &subs
 };
 
@@ -59,12 +59,20 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // arithmetic
             int sh = getBitAt(instruction, DPI_SHBIT);
             int imm12 = getBitsAt(instruction, DPI_IMM12_START, IMM12_LEN);
-            // Since we don't implement stack pointer, rn must be a general register
             int rn = getBitsAt(instruction, DPI_RN_START, REG_INDEX_SIZE);
+
+            // Shift imm12 by 12 if shift bit is given.
             if (sh) {
                 imm12 <<= 12;
             }
-            //arithmeticImmediate[opc](arm, rd, rn, imm12)
+
+            // Index 32 encodes ZR for arithmetic instructiosn which change PSTATE.
+            // Opc starts with 1 for adds and subs, which change PSTATE flags.
+            if (rd == ZR_INDEX && getBitAt(opc, 1) == 1) {
+                rd = 0;
+            }
+
+            arithmeticImmediate[opc](arm, rd, rn, imm12);
             break;
         }
 
@@ -73,6 +81,12 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             int hw = getBitsAt(instruction, DPI_HW_START, DPI_HW_SIZE);
             int imm16 = getBitsAt(instruction, DPI_IMM16_START, IMM16_LEN);
             imm16 <<= (hw * 16);
+
+            // Index 32 encodes ZR for logical instructions.
+            if (rd == ZR_INDEX) {
+                rd = 0;
+            }
+
             logicalImmediate[opc](arm, rd, imm16);
             break;
         }
