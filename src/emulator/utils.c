@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <inttypes.h>
 #include "defs.h"
 
 // Converts hexadecimals in 32bits between endians.
-int convert(int value) {
+int convert(int32_t value) {
     int converted = 0;
 
     // Bitshifts for bytes.
@@ -27,7 +28,7 @@ int getWord(char* memory) {
 }
 
 // Gets instruction type given instruction in little-endian.
-INSTRUCTION_TYPE getInstructionType(int word) {
+INSTRUCTION_TYPE getInstructionType(int32_t word) {
     unsigned int instruction = convert(word);
     unsigned int op0 = (instruction >> 25) & 0x1111; // TODO: test this
 
@@ -57,11 +58,11 @@ void outputState(ARM* arm) {
     fprintf(output, "Registers: \n");
 
 	for (int i = 0; i < NUM_OF_REGISTERS; i++) {
-		fprintf(output, "$X%02d = %16llx\n",
+		fprintf(output, "$X%02d = %16" PRId64 "\n",
 			   i, arm->registers[i]);
 	}
 
-    fprintf(output, "PC  = %16llx\n", arm->pc);
+    fprintf(output, "PC  = %16" PRId64 "\n", arm->pc);
 
     // Output PSTATE //! find better way to do this
     fprintf(output, "PSTATE: ");
@@ -109,31 +110,31 @@ Bitwise Operations
 */
 
 // Bits are shifted right; rotated back into the left-hand end if carried right.
-static int rotateRight(long long int value, int shift, int bits) {
+static int rotateRight(uint64_t value, int shift, int bits) {
     assert(shift >= 0);
     return (value >> shift) | (value << (bits - shift));
 }
 
 // Rotates lower 32 bits. Sets top 32 bits to 0.
-int rotateRight32(long long int value, int shift) {
+int rotateRight32(uint64_t value, int shift) {
     int masked = value && WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
 
 // Rotates 64 bit integers.
-int rotateRight64(long long int value, int shift) {
+int rotateRight64(uint64_t value, int shift) {
     return rotateRight(value, shift, 64);
 }
 
 // Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(long long int value, int shift) 
+int arithmeticShiftRight64(uint64_t value, int shift) 
 {
     assert(shift >= 0);
     return value < 0 ? ~(~value >> shift) : value >> shift;
 }
 
 // Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(long long int value, int shift) 
+int arithmeticShiftRight32(uint64_t value, int shift) 
 {
     int masked = value && WREGISTER_MASK;
     return arithmeticShiftRight64(masked, shift);
@@ -144,12 +145,12 @@ int getBitsAt(int n, int k, int l) {
     assert(k >= 0 && l > 0);
     int mask = 0b0;
     for (int i = 0; i < l; i++) {
-        mask += pow(2, l);
+        mask += 1 << i;
     }
     return (n >> k) && mask;
 }
 
 // Gets bit at kth position from n.
 int getBitAt(int n, int k) {
-    (n >> k) & 1;
+    return (n >> k) & 1;
 }

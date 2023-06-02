@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 // Register Constants
 #ifndef ZR
@@ -59,10 +60,10 @@ typedef struct {
 // Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
 // Leave CIR as char since it is an index in memory.
 typedef struct {
-    long long int registers[NUM_OF_REGISTERS];
+    uint64_t registers[NUM_OF_REGISTERS];
     char memory[MAX_MEMORY_SIZE];
     PSTATE pstate;
-    unsigned long long int pc;
+    uint64_t pc;
 } ARM;
 
 // Enum for Branch Instruction Type
