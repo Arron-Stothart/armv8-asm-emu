@@ -1,17 +1,18 @@
 #include "defs.h"
+#include "utils.h"
 
 // WIP
 void dataProcessingImmediate(ARM* arm, int instruction) {
-    int sf = (instruction >> 31) & 1;
-    int opc = (instruction >> 29) & 3;
+    int sf = getBitAt(instruction, DPI_SFBIT);
+    int opc = getBitsAt(instruction, DPI_OPC_START, DPI_OPC_LEN);
 
     bool setFlags = opc & 1;
     // true if add-ing, false if sub-ing
     bool addOrSub = (opc & 2) >> 1;
 
-    int opi = (instruction >> 23) & 7;
-    int operand = (instruction >> 5) & ((1 << 17) - 1);
-    int rd = instruction & 15;
+    int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
+    int operand = getBitsAt(instruction, DPI_OPERAND_START, DPI_OPERARND_LEN);
+    int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
 
     if (sf) {
         // accessed as 64 bits

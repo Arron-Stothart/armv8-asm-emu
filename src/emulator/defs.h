@@ -6,6 +6,7 @@
 // Register Constants
 #define REGISTER_SIZE 8 // in bytes
 #define NUM_OF_REGISTERS 31
+#define ZR_INDEX 32 // Register 32 is zero register
 #define ZR 0 // Zero register
 #define WREGISTER_MASK 0x0000000011111111 // sets top 32 bits to 0.
 #define REG_INDEX_SIZE 5 // number of bits used in instructions (32 = 2^5 reg)
@@ -54,6 +55,17 @@
 #define BR_DET_BITS_UNCOND 0b000
 #define BR_DET_BITS_REG 0b110
 #define BR_DET_BITS_COND 0b010
+
+// Data Processing Constants
+// (I for immediate, R for register)
+#define DPI_SFBIT 31
+#define DPI_OPC_START 29
+#define DPI_OPC_LEN 2
+#define DPI_OPI_START 23
+#define DPI_OPI_LEN 3
+#define DPI_RD_START 0
+#define DPI_OPERAND_START 5
+#define DPI_OPERARND_LEN 18
 
 // Enum for Instruction Type
 typedef enum {
