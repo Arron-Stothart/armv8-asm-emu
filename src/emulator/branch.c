@@ -11,35 +11,35 @@ static BRANCH_TYPE getBranchType(int instruction) {
 static bool conditionCheck(int cond, ARM* arm) {
     int n = (*arm).pstate.N;
     int z = (*arm).pstate.Z; 
-    int c = (*arm).pstate.C; 
+    // int c = (*arm).pstate.C; not needed in branch
     int v = (*arm).pstate.V;  
 
     switch (cond) {
-                // EQ (Equal)
-                case 0b0000: 
-                    return (z == 1);
-                // NE (Not Equal)
-                case 0b0001:
-                    return (z == 0);
-                // GE (Signed greater or equal)
-                case 0b1010:
-                    return (n == 1);
-                // LT (Signed less than)
-                case 0b1011:
-                    return (n != 1);
-                // GT (Signed greater than)
-                case 0b1100:
-                    return (z == 0 && n == v);
-                // LE (Signed less than or equal)
-                case 0b1101:
-                    return (!(z == 0 && n == v));
-                // AL (always)
-                case 0b1110:
-                    return 1;
-                // Condition not of permitted type
-                default:
-                    return -1;
-            }
+        // EQ (Equal)
+        case 0b0000: 
+            return (z == 1);
+        // NE (Not Equal)
+        case 0b0001:
+            return (z == 0);
+        // GE (Signed greater or equal)
+        case 0b1010:
+            return (n == 1);
+        // LT (Signed less than)
+        case 0b1011:
+            return (n != 1);
+        // GT (Signed greater than)
+        case 0b1100:
+            return (z == 0 && n == v);
+        // LE (Signed less than or equal)
+        case 0b1101:
+            return (!(z == 0 && n == v));
+        // AL (always)
+        case 0b1110:
+            return 1;
+        // Condition not of permitted type
+        default:
+            return -1;
+    }
 }
 
 // Execute branch instruction TODO: split up into case specific 
