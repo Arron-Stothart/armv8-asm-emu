@@ -22,7 +22,19 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
     }
 
-    int rd = 0;
+    switch (opi) {
+        case 0b010:
+            // arithmetic
+            int sh = (operand >> 16) & 1;
+            int imm12 = (operand >> 5) & ((2 << 11) - 1);
+            int rn = operand & ((2 << 5) - 1);
+            break;
+        case 0b101:
+            // wide move
+            int hw = (operand >> 0);
+    }
+
+    /*int rd = 0;
 
     if (addOrSub) {
         // add
@@ -38,6 +50,6 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     } else {
         // do not set flags
 
-    }
+    }*/
 
 }
