@@ -120,7 +120,17 @@ int rotateRight64(long long int value, int shift) {
     return rotateRight(value, shift, 64);
 }
 
+// Gets l bits starting from kth positon of n
+int getBitsAt(int n, int k, int l) {
+    assert(k >= 0 && l >= 0);
+    int mask = 0b0;
+    for (int i = 0; i < l; i++) {
+        mask += pow(2, l);
+    }
+    return (n >> k) && mask;
+}
+
 // Gets bit at kth position from n.
-int getBitAt(int n, int pos) {
-    (n >> pos) & 1;
+int getBitAt(int n, int k) {
+    (n >> k) & 1;
 }

@@ -21,6 +21,17 @@
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
 
+// Single Data Processing Constants
+#define SDT_LBIT 22
+#define SDT_UBIT 24
+#define SDT_SFBIT 30
+#define SDT_RT_START 0
+#define SDT_RT_LEN 5 
+#define SDT_XN_START 5
+#define SDT_XN_LEN 5
+#define SDT_OFFSET_START 10
+#define SDT_OFFSET_LEN 12
+
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
