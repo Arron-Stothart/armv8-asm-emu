@@ -16,25 +16,25 @@ static bool conditionCheck(int cond, ARM* arm) {
 
     switch (cond) {
         // EQ (Equal)
-        case 0b0000: 
+        case BR_EQ: 
             return (z == 1);
         // NE (Not Equal)
-        case 0b0001:
+        case BR_NE:
             return (z == 0);
         // GE (Signed greater or equal)
-        case 0b1010:
+        case BR_GE:
             return (n == 1);
         // LT (Signed less than)
-        case 0b1011:
+        case BR_LT:
             return (n != 1);
         // GT (Signed greater than)
-        case 0b1100:
+        case BR_GT:
             return (z == 0 && n == v);
         // LE (Signed less than or equal)
-        case 0b1101:
+        case BR_LE:
             return (!(z == 0 && n == v));
         // AL (always)
-        case 0b1110:
+        case BR_AL:
             return 1;
         // Condition not of permitted type
         default:

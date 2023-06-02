@@ -25,6 +25,7 @@
 #define NOP_CODE 0x1f2003d5
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
+#define SIMM26_LEN 26
 
 // Single Data Processing Constants
 #define SDT_LBIT 22
@@ -35,6 +36,15 @@
 #define SDT_IBIT 11
 #define SDT_SIMM9_START 12
 #define SDT_XM_START 16 
+
+// Branch Constants
+#define BR_EQ 0b0000 // Equal
+#define BR_NE 0b0001 // Not equal
+#define BR_GE 0b1010 // Signed greater or equal
+#define BR_LT 0b1011 // Signed less than
+#define BR_GT 0b1100 // Signed greater than
+#define BR_LE 0b1101 // Signed less than or equal
+#define BR_AL 0b1110 // Always
 
 // Enum for Instruction Type
 typedef enum {
