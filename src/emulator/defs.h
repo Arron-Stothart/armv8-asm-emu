@@ -45,12 +45,17 @@
 #define BR_GT 0b1100 // Signed greater than
 #define BR_LE 0b1101 // Signed less than or equal
 #define BR_AL 0b1110 // Always
-#define BRANCH_SIMM26_START 25
-#define BRANCH_SIMM19_START 23
-#define BRANCH_XN_START 9
-#define BRANCH_XN_LEN 5
-#define BRANCH_COND_START 3
-#define BRANCH_COND_LEN 4
+#define BR_SIMM26_START 25
+#define BR_SIMM19_START 23
+#define BR_XN_START 9
+#define BR_XN_LEN 5
+#define BR_COND_START 3
+#define BR_COND_LEN 4
+#define BR_DET_BITS_START 31
+#define BR_DET_BITS_LEN 3
+#define BR_DET_BITS_UNCOND 0b000
+#define BR_DET_BITS_REG 0b110
+#define BR_DET_BITS_COND 0b010
 
 // Enum for Instruction Type
 typedef enum {
