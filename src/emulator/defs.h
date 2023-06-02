@@ -7,7 +7,7 @@
 #define NUM_OF_REGISTERS 31
 #define ZR_INDEX 32 // Register 32 is zero register
 #define ZR 0 // Zero register
-#define WREGISTER_MASK 0x0000000011111111 // sets top 32 bits to 0.
+#define WREGISTER_MASK 0xff // sets top 32 bits to 0.
 #define REG_INDEX_SIZE 5 // number of bits used in instructions
 
 // Memory Constants

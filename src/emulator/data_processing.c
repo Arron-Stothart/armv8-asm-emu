@@ -1,55 +1,55 @@
 #include "defs.h"
 #include "utils.h"
 
-// void movz(ARM* arm, int rd, int op) {
+void movz(ARM* arm, int rd, int op2) {
+    arm->memory[rd] = op2;
+}
 
-// }
+void movn(ARM* arm, int rd, int op2) {
+    arm->memory[rd] = ~op2;
+}
 
-// void movn(ARM* arm, int rd, int op) {
+void movk(ARM* arm, int rd, int op2) {
 
-// }
+}
 
-// void movk(ARM* arm, int rd, int op) {
+int add(ARM* arm, int rd, int rn, int op2) {
+    int r = arm->memory[rn] + op2;
+    arm->registers[rd] = r;
+    return r;
+}
 
-// }
+int sub(ARM* arm, int rd, int rn, int op2) {
+    int r = arm->memory[rn] - op2;
+    arm->registers[rd] = r;
+    return r;
+}
 
-// int add(ARM* arm, int rd, int rn, int op) {
+int adds(ARM* arm, int rd, int rn, int op2) {
 
-// }
+}
 
-// int sub(ARM* arm, int rd, int rn, int op) {
+int subs(ARM* arm, int rd, int rn, int op2) {
 
-// }
+}
 
-// void adds(ARM* arm, int rd, int rn, int op) {
+void (*logicalImmediate[3])(ARM* arm, int rd, int op) = {
+    &movz, &movn, &movk
+};
 
-// }
+int (*arithmeticImmediate[4])(ARM* arm, int rd, int op) = {
+    &add, &adds, &sub, &subs
+};
 
-// void subs(ARM* arm, int rd, int rn, int op) {
-
-// }
-
-// int (*logicalImmediate[3])(ARM* arm, int rd, int op) = {
-//     &movz, &movn, &movk
-// };
-
-// int (*arithmeticImmediate[4])(ARM* arm, int rd, int op) = {
-//     &add, &adds, &sub, &subs
-// };
-
-// WIP
 void dataProcessingImmediate(ARM* arm, int instruction) {
     int sf = getBitAt(instruction, DPI_SFBIT);
     int opc = getBitsAt(instruction, DPI_OPC_START, DPI_OPC_LEN);
     int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
     int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
 
-    if (sf) {
-        // accessed as 64 bits
-
-    } else {
-        // accessed as 32 bits
-
+    // Access rd as 32 bit register
+    if (!sf) {
+        rd &= WREGISTER_MASK;
     }
 
     switch (opi) {
@@ -59,11 +59,12 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // arithmetic
             int sh = getBitAt(instruction, DPI_SHBIT);
             int imm12 = getBitsAt(instruction, DPI_IMM12_START, IMM12_LEN);
+            // Since we don't implement stack pointer, rn must be a general register
             int rn = getBitsAt(instruction, DPI_RN_START, REG_INDEX_SIZE);
             if (sh) {
                 imm12 <<= 12;
             }
-            //arithmeticImmediate[opc](arm, rd, rn, op)
+            //arithmeticImmediate[opc](arm, rd, rn, imm12)
             break;
         }
 
@@ -72,7 +73,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             int hw = getBitsAt(instruction, DPI_HW_START, DPI_HW_SIZE);
             int imm16 = getBitsAt(instruction, DPI_IMM16_START, IMM16_LEN);
             imm16 <<= (hw * 16);
-            // logicalImmediate[opc](arm, rd, op);
+            logicalImmediate[opc](arm, rd, imm16);
             break;
         }
     }
