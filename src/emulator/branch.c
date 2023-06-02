@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "defs.h"
 
 // Gets branch type from instruction 
