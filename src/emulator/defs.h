@@ -6,6 +6,8 @@
 #define REGISTER_SIZE 8 // in bytes
 #define NUM_OF_REGISTERS 31
 #define ZR 0 // Zero register
+#define WREGISTER_MASK 0x0000000011111111 // sets top 32 bits to 0.
+#define REG_INDEX_SIZE 5 // number of bits used in instructions
 
 // Memory Constants
 #define MAX_MEMORY_SIZE (1 << 21)
@@ -20,6 +22,18 @@
 #define INSTRUCTION_SIZE 4
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
+#define SIMM9_LEN 9
+#define SIMM12_LEN 12
+
+// Single Data Processing Constants
+#define SDT_LBIT 22
+#define SDT_UBIT 24
+#define SDT_SFBIT 30
+#define SDT_RT_START 0
+#define SDT_XN_START 5
+#define SDT_IBIT 11
+#define SDT_SIMM9_START 12
+#define SDT_XM_START 16 
 
 // Enum for Instruction Type
 typedef enum {

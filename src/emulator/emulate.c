@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include "utils.h"
+#include "branch.h"
+#include "data_processing.h"
 
 int main(int argc, char **argv) {
 
@@ -44,6 +46,7 @@ int main(int argc, char **argv) {
             case SINGLE_DATA_TRANSFER:
                 break;
             case BRANCH:
+                executeBranch(&arm, instruction);
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.

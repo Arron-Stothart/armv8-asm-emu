@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "defs.h"
 
 // Converts hexadecimals in 32bits between endians.
@@ -75,7 +76,7 @@ void outputState(ARM* arm) {
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
 		if (arm->memory[i] > 0) {
             // Bytes are loaded in little endian so have to convert.
-            fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(getword(&arm->memory[i])));
+            fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(getWord(&arm->memory[i])));
 		}
 	}
 
@@ -103,18 +104,19 @@ void loadBinary(char* memory, char* path) {
     fclose(binary);
 }
 
-// Bits are shifted right;rotated back into the left-hand end if carried right.
+/*
+Bitwise Operations
+*/
+
+// Bits are shifted right; rotated back into the left-hand end if carried right.
 static int rotateRight(long long int value, int shift, int bits) {
     assert(shift >= 0);
-    long long int shifted = value >> shift;
-    int rot_bits = value << (bits - shift);
-    int combined = shifted | rot_bits;
-    return combined;
+    return (value >> shift) | (value << (bits - shift));
 }
 
-// Rotates integers truncating at 32 bits.
+// Rotates lower 32 bits. Sets top 32 bits to 0.
 int rotateRight32(long long int value, int shift) {
-    int masked = value && 0x0000000011111111;
+    int masked = value && WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
 
@@ -123,4 +125,31 @@ int rotateRight64(long long int value, int shift) {
     return rotateRight(value, shift, 64);
 }
 
+// Shift bits right filling vacated bits with sign bit.
+int arithmeticShiftRight64(long long int value, int shift) 
+{
+    assert(shift >= 0);
+    return value < 0 ? ~(~value >> shift) : value >> shift;
+}
 
+// Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
+int arithmeticShiftRight32(long long int value, int shift) 
+{
+    int masked = value && WREGISTER_MASK;
+    return arithmeticShiftRight64(masked, shift);
+}
+
+// Gets l bits starting from kth positon of n
+int getBitsAt(int n, int k, int l) {
+    assert(k >= 0 && l > 0);
+    int mask = 0b0;
+    for (int i = 0; i < l; i++) {
+        mask += pow(2, l);
+    }
+    return (n >> k) && mask;
+}
+
+// Gets bit at kth position from n.
+int getBitAt(int n, int k) {
+    (n >> k) & 1;
+}
