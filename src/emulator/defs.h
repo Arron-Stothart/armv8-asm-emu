@@ -1,14 +1,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// Register Constants
 #ifndef ZR
 
+// Register Constants
 #define REGISTER_SIZE 8 // in bytes
 #define NUM_OF_REGISTERS 31
 #define ZR 0 // Zero register
 #define WREGISTER_MASK 0x0000000011111111 // sets top 32 bits to 0.
-#define REG_INDEX_SIZE 5 // number of bits used in instructions
+#define REG_INDEX_SIZE 5 // number of bits used in instructions (32 = 2^5 reg)
 
 // Memory Constants
 #define MAX_MEMORY_SIZE (1 << 21)
@@ -18,8 +18,7 @@
 #define BYTES_IN_32BIT 4
 
 
-// Instruction Constants 
-// Codes are in big endian
+// Instruction Constants; codes are in big endian
 #define INSTRUCTION_SIZE 4
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
@@ -35,7 +34,7 @@
 #define SDT_XN_START 5
 #define SDT_IBIT 11
 #define SDT_SIMM9_START 12
-#define SDT_XM_START 16 
+#define SDT_XM_START 16
 
 // Branch Constants
 #define BR_EQ 0b0000 // Equal
@@ -48,7 +47,6 @@
 #define BR_SIMM26_START 25
 #define BR_SIMM19_START 23
 #define BR_XN_START 9
-#define BR_XN_LEN 5
 #define BR_COND_START 3
 #define BR_COND_LEN 4
 #define BR_DET_BITS_START 31
@@ -60,7 +58,7 @@
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
-    DATA_PROCESSING_REGISTER, 
+    DATA_PROCESSING_REGISTER,
     SINGLE_DATA_TRANSFER,
     BRANCH,
     HALT,
@@ -77,8 +75,8 @@ typedef struct {
     bool V;
 } PSTATE;
 
-// ARM Proccesor 
-// Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
+// ARM Proccesor
+// Registers are 64 bit; Memory is byte addressable (char = 1 byte).
 typedef struct {
     uint64_t registers[NUM_OF_REGISTERS];
     char memory[MAX_MEMORY_SIZE];

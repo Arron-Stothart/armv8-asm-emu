@@ -2,7 +2,7 @@
 #include "defs.h"
 #include "utils.h"
 
-// Gets branch type from instruction 
+// Gets branch type from instruction
 static BRANCH_TYPE getBranchType(int instruction) {
     // Get bits that determine branch type
     int determiningbits = getBitsAt(instruction, BR_DET_BITS_START, BR_DET_BITS_LEN);
@@ -24,12 +24,12 @@ static BRANCH_TYPE getBranchType(int instruction) {
 // Determine if ARM PSTATE satisfies cond
 static bool conditionCheck(int cond, ARM* arm) {
     int n = (*arm).pstate.N;
-    int z = (*arm).pstate.Z; 
-    int v = (*arm).pstate.V;  
+    int z = (*arm).pstate.Z;
+    int v = (*arm).pstate.V;
 
     switch (cond) {
         // EQ (Equal)
-        case BR_EQ: 
+        case BR_EQ:
             return (z == 1);
         // NE (Not Equal)
         case BR_NE:
@@ -55,8 +55,8 @@ static bool conditionCheck(int cond, ARM* arm) {
     }
 }
 
-// Execute branch instruction TODO: split up into case specific 
-void executeBranch(ARM* arm, int instruction) { 
+// Execute branch instruction TODO: split up into case specific
+void executeBranch(ARM* arm, int instruction) {
 
     // Get type of branch instruction
     BRANCH_TYPE type = getBranchType(instruction);
@@ -70,7 +70,7 @@ void executeBranch(ARM* arm, int instruction) {
             break;
         case REGISTER:
             // Determining encoding of register Xn
-            int xn = getBitsAt(instruction, BR_XN_START, BR_XN_LEN);
+            int xn = getBitsAt(instruction, BR_XN_START, REG_INDEX_SIZE);
             // Check if xn refers to an exisiting register
             assert(xn >= 0 && xn < NUM_OF_REGISTERS);
             // Branch to address stored in Xn
@@ -87,4 +87,4 @@ void executeBranch(ARM* arm, int instruction) {
             }
             break;
     }
-} 
+}
