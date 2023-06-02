@@ -46,6 +46,14 @@
 #define BR_LE 0b1101 // Signed less than or equal
 #define BR_AL 0b1110 // Always
 
+// Branch Component Constants
+#define BRANCH_SIMM26_START 25
+#define BRANCH_SIMM19_START 23
+#define BRANCH_XN_START 9
+#define BRANCH_XN_LEN 5
+#define BRANCH_COND_START 3
+#define BRANCH_COND_LEN 4
+
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
