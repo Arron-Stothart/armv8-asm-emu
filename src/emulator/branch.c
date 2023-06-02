@@ -33,7 +33,7 @@ static bool conditionCheck(int cond, ARM* arm) {
                 case 0b1101:
                     return (!(z == 0 && n == v));
                 // AL (always)
-                case 1110:
+                case 0b1110:
                     return 1;
                 // Condition not of permitted type
                 default:
@@ -65,7 +65,7 @@ void executeBranch(ARM* arm, int instruction) {
         case CONDITIONAL:
             int simm19 = (instruction & 0x00ffffe0 >> 5); // TODO: Test
             int cond = instruction & 0x0000000f; // TODO: Test
-            // TODO: Check if condition is of some expected type
+            // TODO: Check if condition is of some allowed type
             if (conditionCheck(cond, arm)) {
                 int offset = simm19 * BYTES_IN_WORD;
                 // Branch to address encoded by literal
