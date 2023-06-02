@@ -6,7 +6,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     int sf = getBitAt(instruction, DPI_SFBIT);
     int opc = getBitsAt(instruction, DPI_OPC_START, DPI_OPC_LEN);
 
-    bool setFlags = opc & 1;
+    bool setFlags = opc & 1; // true if need to set pstate flags
     // true if add-ing, false if sub-ing
     bool addOrSub = (opc & 2) >> 1;
 
@@ -23,13 +23,13 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     }
 
     switch (opi) {
-        case 0b010:
+        case DPI_ARITHMETIC_OPI:
             // arithmetic
             int sh = (operand >> 16) & 1;
             int imm12 = (operand >> 5) & ((2 << 11) - 1);
             int rn = operand & ((2 << 5) - 1);
             break;
-        case 0b101:
+        case DPI_WIDEMOVE_OPI:
             // wide move
             int hw = (operand >> 0);
     }
