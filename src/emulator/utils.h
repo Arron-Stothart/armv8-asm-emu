@@ -18,3 +18,6 @@ int getWord(char* memory);
 // Rotate right operations
 int rotateRight32(long long int value, int shift);
 int rotateRight64(long long int value, int shift);
+
+// Gets bit at kth position from n.
+int getBitAt(int n, int k);
