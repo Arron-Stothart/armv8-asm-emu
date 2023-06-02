@@ -73,4 +73,13 @@ typedef enum {
     CONDITIONAL
 } BRANCH_TYPE;
 
+// Enum for Data Transfer instruction type
+typedef enum {
+    UNSIGNED_OFFSET,
+    PRE_INDEX,
+    POST_INDEX,
+    REGISTER_OFFSET,
+    LITERAL_ADDRESS
+} TRANSFER_TYPE;
+
 #endif
