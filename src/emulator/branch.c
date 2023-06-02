@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "defs.h"
+#include "utils.h"
 
 // Gets branch type from instruction 
 static BRANCH_TYPE getBranchType(int instruction) {
@@ -50,22 +51,22 @@ void executeBranch(ARM* arm, int instruction) {
 
     switch (type) {
         case UNCONDITIONAL:
-            int simm26 = instruction & 0x03ffffff; // TODO: Test
+            int simm26 = getBitsAt(instruction, BRANCH_SIMM26_START, SIMM26_LEN);
             int offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
             (*arm).pc += (offset - BYTES_IN_WORD);
             break;
         case REGISTER:
             // Determining encoding of register Xn
-            int xn = (instruction & 0x000003e0 >> 5);  // TODO: Test
+            int xn = getBitsAt(instruction, BRANCH_XN_START, BRANCH_XN_LEN);
             // Check if xn refers to an exisiting register
             assert(xn >= 0 && xn < NUM_OF_REGISTERS);
             // Branch to address stored in Xn
             (*arm).pc = (*arm).registers[xn];
             break;
         case CONDITIONAL:
-            int simm19 = (instruction & 0x00ffffe0 >> 5); // TODO: Test
-            int cond = instruction & 0x0000000f; // TODO: Test
+            int simm19 = getBitsAt(instruction, BRANCH_SIMM19_START, SIMM9_LEN);
+            int cond = getBitsAt(instruction, BRANCH_COND_START, BRANCH_COND_LEN);
             // TODO: Check if condition is of some allowed type
             if (conditionCheck(cond, arm)) {
                 int offset = simm19 * BYTES_IN_WORD;
