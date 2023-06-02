@@ -37,6 +37,9 @@
 
 // Data Processing Constants
 // (I for immediate, R for register)
+#define DPI_ARITHMETIC_OPI 0b010
+#define DPI_WIDEMOVE_OPI 0b101
+
 #define DPI_SFBIT 31
 #define DPI_OPC_START 29
 #define DPI_OPC_LEN 2
