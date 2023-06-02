@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include "utils.h"
+#include "branch.h"
+#include "data_processing.h"
 
 int main(int argc, char **argv) {
 
@@ -29,7 +31,8 @@ int main(int argc, char **argv) {
         // Check if address is in memory range.
         assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
         // Fetch and decode instruction.
-        INSTRUCTION_TYPE type = getInstructionType(getWord(&arm.memory[arm.pc]));
+        int instruction = getWord(&arm.memory[arm.pc]);
+        INSTRUCTION_TYPE type = getInstructionType(instruction);
         arm.pc += INSTRUCTION_SIZE;
 
         switch(type) {
@@ -43,6 +46,7 @@ int main(int argc, char **argv) {
             case SINGLE_DATA_TRANSFER:
                 break;
             case BRANCH:
+                executeBranch(&arm, instruction);
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.
