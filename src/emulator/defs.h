@@ -17,13 +17,15 @@
 #define BYTES_IN_64BIT 8
 #define BYTES_IN_32BIT 4
 
-// Instruction Constants 
+// Instruction Constants
 // Codes are in big endian
 #define INSTRUCTION_SIZE 4
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
+#define IMM12_LEN 12
+#define IMM16_LEN 16
 
 // Single Data Processing Constants
 #define SDT_LBIT 22
@@ -33,10 +35,9 @@
 #define SDT_XN_START 5
 #define SDT_IBIT 11
 #define SDT_SIMM9_START 12
-#define SDT_XM_START 16 
+#define SDT_XM_START 16
 
-// Data Processing Constants
-// (I for immediate, R for register)
+// Immediate Data Processing Constants
 #define DPI_ARITHMETIC_OPI 0b010
 #define DPI_WIDEMOVE_OPI 0b101
 
@@ -46,13 +47,17 @@
 #define DPI_OPI_START 23
 #define DPI_OPI_LEN 3
 #define DPI_RD_START 0
-#define DPI_OPERAND_START 5
-#define DPI_OPERARND_LEN 18
+#define DPI_SHBIT 22
+#define DPI_IMM12_START 10 // for arithmetic
+#define DPI_RN_START 5 // for arithmetic
+#define DPI_IMM16_START 5 // for logical
+#define DPI_HW_START 21 // for logical
+#define DPI_HW_SIZE 2 // for logical
 
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
-    DATA_PROCESSING_REGISTER, 
+    DATA_PROCESSING_REGISTER,
     SINGLE_DATA_TRANSFER,
     BRANCH,
     HALT,
@@ -69,8 +74,8 @@ typedef struct {
     bool V;
 } PSTATE;
 
-// ARM Proccesor 
-// Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
+// ARM Proccesor
+// Registers are 64 bit; Memory is byte addressable (char = 1 byte).
 // Leave CIR as char since it is an index in memory.
 typedef struct {
     long long int registers[NUM_OF_REGISTERS];
