@@ -1,16 +1,16 @@
 #include "defs.h"
 #include "utils.h"
 
-void movz(ARM* arm, int rd, int op2) {
-    arm->memory[rd] = op2;
+void movz(ARM* arm, int rd, int op, int hw) {
+    arm->memory[rd] = op;
 }
 
-void movn(ARM* arm, int rd, int op2) {
-    arm->memory[rd] = ~op2;
+void movn(ARM* arm, int rd, int op, int hw) {
+    arm->memory[rd] = ~op;
 }
 
-void movk(ARM* arm, int rd, int op2) {
-
+void movk(ARM* arm, int rd, int op, int hw) {
+    setBitsTo(arm->memory[rd], hw * 16, op);
 }
 
 int add(ARM* arm, int rd, int rn, int op2) {
@@ -33,7 +33,7 @@ int subs(ARM* arm, int rd, int rn, int op2) {
 
 }
 
-void (*logicalImmediate[3])(ARM* arm, int rd, int op) = {
+void (*logicalImmediate[3])(ARM* arm, int rd, int op, int hw) = {
     &movz, &movn, &movk
 };
 
@@ -79,14 +79,18 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
         case DPI_WIDEMOVE_OPI: {
             int hw = getBitsAt(instruction, DPI_HW_START, DPI_HW_SIZE);
             int imm16 = getBitsAt(instruction, DPI_IMM16_START, IMM16_LEN);
-            imm16 <<= (hw * 16);
+
+            // For movk don't shift imm16.
+            if (opc != DPI_MOVK_OPC) {
+                imm16 <<= (hw * 16);
+            }
 
             // Index 32 encodes ZR for logical instructions.
             if (rd == ZR_INDEX) {
                 rd = 0;
             }
 
-            logicalImmediate[opc](arm, rd, imm16);
+            logicalImmediate[opc](arm, rd, imm16, hw);
             break;
         }
     }

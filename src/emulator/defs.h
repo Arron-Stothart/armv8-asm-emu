@@ -40,6 +40,7 @@
 // Immediate Data Processing Constants
 #define DPI_ARITHMETIC_OPI 0b010
 #define DPI_WIDEMOVE_OPI 0b101
+#define DPI_MOVK_OPC 0b11
 
 #define DPI_SFBIT 31
 #define DPI_OPC_START 29
