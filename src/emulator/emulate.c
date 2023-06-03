@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
     };
 
     // Load instructions into memory.
-    loadBinary(arm.memory, argv[1]);
+    loadBinary(&arm.memory, argv[1]);
 
     // Fetch-Decode-Execute Cycle
     for (;;) {
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
         switch(type) {
             case HALT:
-                goto halt; // Required to break out of two loops. 
+                goto halt; // Required to break out of two loops.
                 break;
             case DATA_PROCESSING_IMMEDIATE:
                 break;
