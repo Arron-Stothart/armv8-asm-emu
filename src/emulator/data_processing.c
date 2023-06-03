@@ -6,51 +6,53 @@ static void setFlag(bool* flag, bool condition) {
     flag = condition ? 1 : 0;
 }
 
-void movz(ARM* arm, int rd, int op, int hw) {
+static void movz(ARM* arm, int rd, int op, int hw) {
     arm->memory[rd] = op;
 }
 
-void movn(ARM* arm, int rd, int op, int hw) {
+static void movn(ARM* arm, int rd, int op, int hw) {
     arm->memory[rd] = ~op;
 }
 
-void movk(ARM* arm, int rd, int op, int hw) {
+static void movk(ARM* arm, int rd, int op, int hw) {
     setBitsTo(arm->memory[rd], hw * 16, op);
 }
 
-int add(ARM* arm, int rd, int rn, int op2, int sf) {
+static int add(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = arm->memory[rn] + op2;
     arm->registers[rd] = r;
     return r;
 }
 
-int sub(ARM* arm, int rd, int rn, int op2, int sf) {
+static int sub(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = arm->memory[rn] - op2;
     arm->registers[rd] = r;
     return r;
 }
 
-int adds(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = add(arm, rd, rn, op2, sf);
+static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
+    // If rd is the zero register then we compute result without changing memory.
+    int r = (rd == ZR_INDEX) ? arm->memory[rn] + op2 : add(arm, rd, rn, op2, sf);
 
     // // Sets flags for PSTATE
     // setFlag(arm->pstate.Z, r == 0);
     // setFlag(arm->pstate.N, getBitAt())
 }
 
-int subs(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = sub(arm, rd, rn, op2, sf);
+static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
+    // If rd is the zero register then we compute result without changing memory.
+    int r = (rd == ZR_INDEX) ? arm->memory[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
     // // Set flags for PSTATE
     // setFlag(arm->pstate.Z, r == 0);
     // setFlag(arm->pstate.Z, );
 }
 
-void (*logicalImmediate[3])(ARM* arm, int rd, int op, int hw) = {
+static void (*logicalImmediate[3])(ARM* arm, int rd, int op, int hw) = {
     &movz, &movn, &movk
 };
 
-int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
+static int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
     &add, &adds, &sub, &subs
 };
 
