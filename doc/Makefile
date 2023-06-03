@@ -1,6 +1,6 @@
 ########################################
 
-CHECKPONT=Checkpoint
+CHECKPOINT=Checkpoint
 REPORT=Report
 LATEXMK=latexmk
 OUTDIR=out
@@ -24,7 +24,7 @@ LATEXMKCLEANFLAGS=\
 all: report checkpoint
 
 report: $(REPORT).pdf
-checkpoint: $(CHECKPONT).pdf
+checkpoint: $(CHECKPOINT).pdf
 
 # Starts a server that watches for changes in the tex files and recompiles
 pvc:
@@ -32,7 +32,6 @@ pvc:
 
 %.pdf: %.tex
 	$(LATEXMK) $(LATEXMKFLAGS) $<
-	mv $(OUTDIR)/$@ .
 
 # filters out pdf from the clean (in case you want them there ☺ )
 TO_CLEAN = $(filter-out %.pdf, $(wildcard $(OUTDIR)/*))
