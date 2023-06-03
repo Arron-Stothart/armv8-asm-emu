@@ -78,7 +78,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
                 imm12 <<= 12;
             }
 
-            // Index 32 encodes ZR for arithmetic instructiosn which change PSTATE.
+            // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
             // Opc starts with 1 for adds and subs, which change PSTATE flags.
             if (rd == ZR_INDEX && getBitAt(opc, 1) == 1) {
                 rd = 0;
@@ -98,12 +98,13 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
                 imm16 <<= (hw * 16);
             }
 
-            // Index 32 encodes ZR for logical instructions.
-            if (rd == ZR_INDEX) {
-                rd = 0;
+            // Last rd index encodes ZR for wide move processing.
+            // No need to compute logical instruction when rd = ZR since write
+            // is ignored and PSTATE isn't changed.
+            if (rd != ZR_INDEX) {
+                logicalImmediate[opc](arm, rd, imm16, hw);
             }
 
-            logicalImmediate[opc](arm, rd, imm16, hw);
             break;
         }
     }
