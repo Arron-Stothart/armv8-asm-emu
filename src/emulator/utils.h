@@ -28,3 +28,6 @@ int getBitAt(int n, int k);
 
 // Gets l bits starting from kth positon of n
 int getBitsAt(int n, int k, int l);
+
+// Sets bits starting from kth position of n to new.
+int setBitsTo(int n, int k, int new);
