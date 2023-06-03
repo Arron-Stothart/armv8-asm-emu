@@ -156,9 +156,16 @@ int getBitAt(int n, int k) {
     return (n >> k) & 1;
 }
 
-// Sets l bits starting from kth position of n to 0.
+// Clears l bits starting from kth position of n to 0.
 static int bitClear(int n, int k, int l) {
     assert(k >= 0 && l > 0);
-    return n & (~(generateMask(l) << k));
+    return n & (~(generateMask(l) << (k - l + 1)));
+}
+
+// Sets bits starting from kth position of n to new.
+int setBitsTo(int n, int k, int new) {
+    int newlen =  floor(log2(new)) + 1;
+    int cleared = bitClear(n, k, newlen);
+    return cleared | (new << (k - newlen + 1));
 }
 
