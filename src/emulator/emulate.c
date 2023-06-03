@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
                 goto halt; // Required to break out of two loops.
                 break;
             case DATA_PROCESSING_IMMEDIATE:
+                dataProcessingImmediate(&arm, instruction);
                 break;
             case DATA_PROCESSING_REGISTER:
                 break;
