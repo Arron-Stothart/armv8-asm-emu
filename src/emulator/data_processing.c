@@ -1,5 +1,10 @@
+#include <stdbool.h>
 #include "defs.h"
 #include "utils.h"
+
+static void setFlag(bool* flag, bool condition) {
+    flag = condition ? 1 : 0;
+}
 
 void movz(ARM* arm, int rd, int op, int hw) {
     arm->memory[rd] = op;
@@ -13,31 +18,39 @@ void movk(ARM* arm, int rd, int op, int hw) {
     setBitsTo(arm->memory[rd], hw * 16, op);
 }
 
-int add(ARM* arm, int rd, int rn, int op2) {
+int add(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = arm->memory[rn] + op2;
     arm->registers[rd] = r;
     return r;
 }
 
-int sub(ARM* arm, int rd, int rn, int op2) {
+int sub(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = arm->memory[rn] - op2;
     arm->registers[rd] = r;
     return r;
 }
 
-int adds(ARM* arm, int rd, int rn, int op2) {
+int adds(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = add(arm, rd, rn, op2, sf);
 
+    // // Sets flags for PSTATE
+    // setFlag(arm->pstate.Z, r == 0);
+    // setFlag(arm->pstate.N, getBitAt())
 }
 
-int subs(ARM* arm, int rd, int rn, int op2) {
+int subs(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = sub(arm, rd, rn, op2, sf);
 
+    // // Set flags for PSTATE
+    // setFlag(arm->pstate.Z, r == 0);
+    // setFlag(arm->pstate.Z, );
 }
 
 void (*logicalImmediate[3])(ARM* arm, int rd, int op, int hw) = {
     &movz, &movn, &movk
 };
 
-int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2) = {
+int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
     &add, &adds, &sub, &subs
 };
 
@@ -71,7 +84,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
                 rd = 0;
             }
 
-            arithmeticImmediate[opc](arm, rd, rn, imm12);
+            arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
             break;
         }
 
