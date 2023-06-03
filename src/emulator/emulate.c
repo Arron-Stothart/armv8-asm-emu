@@ -38,11 +38,12 @@ int main(int argc, char **argv) {
 
         switch(type) {
             case HALT:
-                goto halt; // Required to break out of two loops. 
+                goto halt; // Required to break out of two loops.
                 break;
             case DATA_PROCESSING_IMMEDIATE:
                 break;
             case DATA_PROCESSING_REGISTER:
+                dataProcessingRegister(&arm, instruction);
                 break;
             case SINGLE_DATA_TRANSFER:
                 break;
