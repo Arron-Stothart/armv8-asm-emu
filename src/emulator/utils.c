@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include <inttypes.h>
 #include "defs.h"
 
@@ -116,7 +117,7 @@ static int rotateRight(uint64_t value, int shift, int bits) {
 }
 
 // Rotates lower 32 bits. Sets top 32 bits to 0.
-int rotateRight32(uint64_t value, int shift) {
+int rotateRight32(long long int value, int shift) {
     int masked = value && WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
@@ -127,17 +128,22 @@ int rotateRight64(uint64_t value, int shift) {
 }
 
 // Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(uint64_t value, int shift) 
+int arithmeticShiftRight64(long long int value, int shift)
 {
     assert(shift >= 0);
     return value < 0 ? ~(~value >> shift) : value >> shift;
 }
 
 // Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(uint64_t value, int shift) 
+int arithmeticShiftRight32(long long int value, int shift)
 {
-    int masked = value && WREGISTER_MASK;
+    int masked = value & WREGISTER_MASK;
     return arithmeticShiftRight64(masked, shift);
+}
+
+// generates binary mask of n ones.
+static int generateMask(int n) {
+    return (int) (pow(2, n) - 1);
 }
 
 // Gets l bits starting from kth positon of n
@@ -145,12 +151,13 @@ int getBitsAt(int n, int k, int l) {
     assert(k >= 0 && l > 0);
     int mask = 0b0;
     for (int i = 0; i < l; i++) {
-        mask += 1 << i;
+        mask += pow(2, l);
     }
     return (n >> k) && mask;
 }
 
 // Gets bit at kth position from n.
 int getBitAt(int n, int k) {
-    return (n >> k) & 1;
+    (n >> k) & 1;
 }
+

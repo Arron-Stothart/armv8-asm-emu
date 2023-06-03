@@ -56,7 +56,6 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
         // Arithmetic
         case DPI_ARITHMETIC_OPI: {
-            // arithmetic
             int sh = getBitAt(instruction, DPI_SHBIT);
             int imm12 = getBitsAt(instruction, DPI_IMM12_START, IMM12_LEN);
             int rn = getBitsAt(instruction, DPI_RN_START, REG_INDEX_SIZE);
