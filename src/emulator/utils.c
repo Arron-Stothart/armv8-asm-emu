@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include "defs.h"
 
 // Converts hexadecimals in 32bits between endians.
@@ -116,7 +117,7 @@ static int rotateRight(long long int value, int shift, int bits) {
 
 // Rotates lower 32 bits. Sets top 32 bits to 0.
 int rotateRight32(long long int value, int shift) {
-    int masked = value && WREGISTER_MASK;
+    int masked = value & WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
 
@@ -126,30 +127,38 @@ int rotateRight64(long long int value, int shift) {
 }
 
 // Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(long long int value, int shift) 
+int arithmeticShiftRight64(long long int value, int shift)
 {
     assert(shift >= 0);
     return value < 0 ? ~(~value >> shift) : value >> shift;
 }
 
 // Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(long long int value, int shift) 
+int arithmeticShiftRight32(long long int value, int shift)
 {
-    int masked = value && WREGISTER_MASK;
+    int masked = value & WREGISTER_MASK;
     return arithmeticShiftRight64(masked, shift);
+}
+
+// generates binary mask of n ones.
+static int generateMask(int n) {
+    return (int) (pow(2, n) - 1);
 }
 
 // Gets l bits starting from kth positon of n
 int getBitsAt(int n, int k, int l) {
     assert(k >= 0 && l > 0);
-    int mask = 0b0;
-    for (int i = 0; i < l; i++) {
-        mask += pow(2, l);
-    }
-    return (n >> k) && mask;
+    return (n >> k) & generateMask(l);
 }
 
 // Gets bit at kth position from n.
 int getBitAt(int n, int k) {
-    (n >> k) & 1;
+    return (n >> k) & 1;
 }
+
+// Sets l bits starting from kth position of n to 0.
+static int bitClear(int n, int k, int l) {
+    assert(k >= 0 && l > 0);
+    return n & (~(generateMask(l) << k));
+}
+
