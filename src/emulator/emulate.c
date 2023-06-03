@@ -45,6 +45,7 @@ int main(int argc, char **argv) {
                 dataProcessingImmediate(&arm, instruction);
                 break;
             case DATA_PROCESSING_REGISTER:
+                dataProcessingRegister(&arm, instruction);
                 break;
             case SINGLE_DATA_TRANSFER:
                 singleDataTransfer(&arm, instruction);
