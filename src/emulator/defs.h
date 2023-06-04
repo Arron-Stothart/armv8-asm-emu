@@ -76,6 +76,32 @@
 #define BR_DET_BITS_REG 0b110
 #define BR_DET_BITS_COND 0b010
 
+// Data Processing Constants
+#define DPR_RD_START 0
+#define DPR_RN_START 5
+#define DPR_RM_START 16
+#define DPR_OPR_START_21
+#define DPR_OPR_SIZE 3
+#define DPR_OPC_START 29
+#define DPR_OPC_SIZE 2
+#define DPR_SFBIT 31
+#define DPR_SHIFT_START 22
+#define DPR_SHIFT_SIZE 2
+#define DPR_NBIT 21
+
+// Data Processing Constants
+#define DPR_RD_START 0
+#define DPR_RN_START 5
+#define DPR_RM_START 16
+#define DPR_OPR_START_21
+#define DPR_OPR_SIZE 3
+#define DPR_OPC_START 29
+#define DPR_OPC_SIZE 2
+#define DPR_SFBIT 31
+#define DPR_SHIFT_START 22
+#define DPR_SHIFT_SIZE 2
+#define DPR_NBIT 21
+
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
