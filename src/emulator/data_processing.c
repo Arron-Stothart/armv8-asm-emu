@@ -34,7 +34,7 @@ static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
 
 }
 
-static int bics(ARM* arm, int rd, int rn, int op2, int sf {
+static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
 
 }
 

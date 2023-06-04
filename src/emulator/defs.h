@@ -17,8 +17,7 @@
 #define BYTES_IN_64BIT 8
 #define BYTES_IN_32BIT 4
 
-
-// Instruction Constants 
+// Instruction Constants
 // Codes are in big endian
 #define INSTRUCTION_SIZE 4
 #define HALT_CODE 0x0000008a
@@ -35,7 +34,7 @@
 #define SDT_XN_START 5
 #define SDT_IBIT 11
 #define SDT_SIMM9_START 12
-#define SDT_XM_START 16 
+#define SDT_XM_START 16
 
 // Branch Constants
 #define BR_EQ 0b0000 // Equal
@@ -46,10 +45,23 @@
 #define BR_LE 0b1101 // Signed less than or equal
 #define BR_AL 0b1110 // Always
 
+// Data Processing Constants
+#define DPR_RD_START 0
+#define DPR_RN_START 5
+#define DPR_RM_START 16
+#define DPR_OPR_START_21
+#define DPR_OPR_SIZE 3
+#define DPR_OPC_START 29
+#define DPR_OPC_SIZE 2
+#define DPR_SFBIT 31
+#define DPR_SHIFT_START 22
+#define DPR_SHIFT_SIZE 2
+#define DPR_NBIT 21
+
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
-    DATA_PROCESSING_REGISTER, 
+    DATA_PROCESSING_REGISTER,
     SINGLE_DATA_TRANSFER,
     BRANCH,
     HALT,
@@ -66,8 +78,8 @@ typedef struct {
     bool V;
 } PSTATE;
 
-// ARM Proccesor 
-// Registers are 64 bit; Memory is byte addressable (char = 1 byte). 
+// ARM Proccesor
+// Registers are 64 bit; Memory is byte addressable (char = 1 byte).
 typedef struct {
     uint64_t registers[NUM_OF_REGISTERS];
     char memory[MAX_MEMORY_SIZE];
