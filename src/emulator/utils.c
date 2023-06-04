@@ -145,27 +145,30 @@ static int generateMask(int n) {
     return (int) (pow(2, n) - 1);
 }
 
-// Gets l bits starting from kth positon of n
+// Gets l bits upwards starting from kth positon of n
 int getBitsAt(int n, int k, int l) {
+    // In kth position we can get up to k + 1 bits
     assert(k >= 0 && l > 0);
+    // Can be converted into getting bits downards by using:
+    // return (n >> (k - l + 1)) & generateMask(l)
     return (n >> k) & generateMask(l);
 }
 
 // Gets bit at kth position from n.
 int getBitAt(int n, int k) {
+    assert(k >= 0);
     return (n >> k) & 1;
 }
 
-// Clears l bits starting from kth position of n to 0.
+// Clears l bits downwards starting from kth position of n to 0.
 static int bitClear(int n, int k, int l) {
     assert(k >= 0 && l > 0);
     return n & (~(generateMask(l) << (k - l + 1)));
 }
 
-// Sets bits starting from kth position of n to new.
-int setBitsTo(int n, int k, int new) {
-    int newlen =  floor(log2(new)) + 1;
-    int cleared = bitClear(n, k, newlen);
-    return cleared | (new << (k - newlen + 1));
+// Sets clearsize bits starting from kth position of n to new to size copysize.
+int setBitsTo(int n, int k, int new, int clearsize, int copysize) {
+    int cleared = bitClear(n, k, clearsize);
+    return cleared | (getBitsAt(new, k, copysize) << k);
 }
 
