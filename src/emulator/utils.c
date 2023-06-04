@@ -146,7 +146,7 @@ static int generateMask(int n) {
     return (int) (pow(2, n) - 1);
 }
 
-// Gets l bits upwards starting from kth positon of n
+// Gets l bits upwards starting from kth positon of n.
 int getBitsAt(int n, int k, int l) {
     // In kth position we can get up to k + 1 bits
     assert(k >= 0 && l > 0);
