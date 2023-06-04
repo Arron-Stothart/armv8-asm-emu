@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <limits.h>
 #include "defs.h"
 #include "utils.h"
 
@@ -29,26 +30,40 @@ static int sub(ARM* arm, int rd, int rn, int op2, int sf) {
 
 static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    int r = (rd == ZR_INDEX) ? arm->memory[rn] + op2 : add(arm, rd, rn, op2, sf);
+    int rncontent = arm->memory[rn];
+    int r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
     arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
-    arm->pstate.C = 0;
-    arm->pstate.V = 0;
+    // Unsigned overflow if carry bit is produced
+    arm->pstate.C = sf ?
+        ((rncontent > 0 && op2 > ULLONG_MAX - rncontent) ||
+        (rncontent < 0 && op2 < (-ULLONG_MAX + 1) - rncontent)) :
+        ((rncontent > 0 && op2 > INT_MAX - rncontent) ||
+        (rncontent < 0 && op2 < INT_MIN - rncontent));;
+    // Signed overflow/underflow if signs of operand are diferent from result
+    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
 }
 
 static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
+    int rncontent = arm->memory[rn];
     int r = (rd == ZR_INDEX) ? arm->memory[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
     arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
-    arm->pstate.C = 0;
-    arm->pstate.V = 0;
+    // Unsigned overflow if subtraction produced a borrow
+    arm->pstate.C = sf ?
+        ((rncontent < 0 && op2 > ULLONG_MAX + rncontent) ||
+        (rncontent > 0 && op2 < (-ULLONG_MAX + 1) + rncontent)) :
+        ((rncontent < 0 && op2 > INT_MAX + rncontent) ||
+        (rncontent > 0 && op2 < INT_MIN + rncontent));
+    // Signed overflow/underflow if signs of operand are diferent from result
+    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
 }
 
 static void (*logicalImmediate[3])(ARM* arm, int rd, int op, int hw) = {
