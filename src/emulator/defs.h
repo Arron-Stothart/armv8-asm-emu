@@ -30,12 +30,12 @@
 #define SIMM26_LEN 26
 
 // Single Data Processing Constants
-#define SDT_LBIT 22
-#define SDT_UBIT 24
-#define SDT_SFBIT 30
+#define SDT_LBIT_POS 22
+#define SDT_UBIT_POS 24
+#define SDT_SFBIT_POS 30
 #define SDT_RT_START 0
 #define SDT_XN_START 5
-#define SDT_IBIT 11
+#define SDT_IBIT_POS 11
 #define SDT_SIMM9_START 12
 #define SDT_XM_START 16
 
@@ -90,17 +90,21 @@
 #define DPR_NBIT 21
 
 // Data Processing Constants
+#define DPR_MULTIPLY_OPR 0b1000
+
 #define DPR_RD_START 0
 #define DPR_RN_START 5
 #define DPR_RM_START 16
-#define DPR_OPR_START_21
-#define DPR_OPR_SIZE 3
+#define DPR_OPR_START 21
+#define DPR_OPR_LEN 3
 #define DPR_OPC_START 29
-#define DPR_OPC_SIZE 2
+#define DPR_OPC_LEN 2
 #define DPR_SFBIT 31
 #define DPR_SHIFT_START 22
-#define DPR_SHIFT_SIZE 2
-#define DPR_NBIT 21
+#define DPR_SHIFT_LEN 2
+#define DPR_NBIT_POS 21
+#define DPR_RA_START 10 // for multiply
+#define DPR_XBIT_POS 15 // for multiply
 
 // Enum for Instruction Type
 typedef enum {
