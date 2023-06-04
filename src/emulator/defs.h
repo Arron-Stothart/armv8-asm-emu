@@ -99,7 +99,7 @@
 #define DPR_OPR_LEN 3
 #define DPR_OPC_START 29
 #define DPR_OPC_LEN 2
-#define DPR_SFBIT 31
+#define DPR_SFBIT_POS 31
 #define DPR_SHIFT_START 22
 #define DPR_SHIFT_LEN 2
 #define DPR_NBIT_POS 21
