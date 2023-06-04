@@ -2,10 +2,6 @@
 #include "defs.h"
 #include "utils.h"
 
-static void setFlag(bool* flag, bool condition) {
-    flag = condition ? 1 : 0;
-}
-
 static void movz(ARM* arm, int rd, int op, int hw) {
     arm->memory[rd] = op;
 }
@@ -35,7 +31,7 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = (rd == ZR_INDEX) ? arm->memory[rn] + op2 : add(arm, rd, rn, op2, sf);
 
     // // Sets flags for PSTATE
-    // setFlag(arm->pstate.Z, r == 0);
+    // arm->pstate.Z = r == 0);
     // setFlag(arm->pstate.N, getBitAt())
 }
 
@@ -44,7 +40,7 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = (rd == ZR_INDEX) ? arm->memory[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
     // // Set flags for PSTATE
-    // setFlag(arm->pstate.Z, r == 0);
+    // setFlag(arm->pstate.Z = r == 0);
     // setFlag(arm->pstate.Z, );
 }
 
