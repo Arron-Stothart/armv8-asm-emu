@@ -62,9 +62,10 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
     int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
 
-    // Access rd as 32 bit register
-    if (!sf) {
-        rd &= WREGISTER_MASK;
+    // Access rd as 32 bit register if neccessary
+    // Only if rd is not the zero register, since ZR is the same in 32 and 64 bits.
+    if (!sf && rd != ZR_INDEX) {
+        arm->memory[rd] &= WREGISTER_MASK;
     }
 
     switch (opi) {
@@ -82,11 +83,11 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
             // Opc starts with 1 for adds and subs, which change PSTATE flags.
-            if (rd == ZR_INDEX && getBitAt(opc, 1) == 1) {
-                rd = 0;
+            // Only compute if destination is not ZR or operation changes flags.
+            if (rd != ZR_INDEX || getBitAt(opc, 1) == 1) {
+                arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
             }
 
-            arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
             break;
         }
 
