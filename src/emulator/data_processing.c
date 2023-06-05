@@ -149,11 +149,15 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] & op2;
+    int r = arm->memory[rn] & op2;
+    arm->memory[rd] = r;
+    return r;
 }
 
 static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] & ~op2;
+    int r = arm->memory[rn] & ~op2;
+    arm->memory[rd] = r;
+    return r;
 }
 
 static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
@@ -173,11 +177,27 @@ static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
 
+    // Sets flags for PSTATE
+    arm->pstate.Z = (r == 0);
+    // Check negative as 32 or 64 bit
+    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
+    // C and V are set to 0.
+    arm->pstate.C = 0;
+    arm->pstate.V = 0;
 }
 
 static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = (rd == ZR_INDEX) ? arm->memory[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
 
+    // Sets flags for PSTATE
+    arm->pstate.Z = (r == 0);
+    // Check negative as 32 or 64 bit
+    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
+    // C and V are set to 0.
+    arm->pstate.C = 0;
+    arm->pstate.V = 0;
 }
 
 static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
@@ -219,7 +239,10 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
             int x = getBitAt(instruction, DPR_XBIT_POS);
 
-            mutiplyRegister[x](arm, rd, rn, ra, rm, sf);
+            if (rd != ZR_INDEX) {
+                mutiplyRegister[x](arm, rd, rn, ra, rm, sf);
+            }
+
             break;
         }
 
@@ -236,8 +259,13 @@ void dataProcessingRegister(ARM* arm, int instruction) {
                 op2 = ~op2;
             }
 
+            // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
+            // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
+            // Only compute if destination is not ZR or operation changes flags
+            if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
+                arithmeticLogicalRegister[opc](arm, rd, rn, rm, sf);
+            }
 
-            arithmeticLogicalRegister[opc](arm, rd, rn, rm, sf);
             break;
         }
 
