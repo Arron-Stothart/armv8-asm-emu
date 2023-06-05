@@ -17,8 +17,6 @@ static BRANCH_TYPE getBranchType(int instruction) {
         default:
             return -1;
     }
-    // TODO: Implement
-    return -1;
 }
 
 // Determine if ARM PSTATE satisfies cond
@@ -56,7 +54,7 @@ static bool conditionCheck(int cond, ARM* arm) {
 }
 
 // Execute branch instruction TODO: split up into case specific
-void executeBranch(ARM* arm, int instruction) {
+void branch(ARM* arm, int instruction) {
 
     // Get type of branch instruction
     BRANCH_TYPE type = getBranchType(instruction);

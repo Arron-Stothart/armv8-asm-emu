@@ -40,7 +40,7 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
     // Unsigned overflow if carry bit is produced
     arm->pstate.C = sf ?
         ((rncontent > 0 && op2 > ULLONG_MAX - rncontent) ||
-        (rncontent < 0 && op2 < (-ULLONG_MAX + 1) - rncontent)) :
+        (rncontent < 0 && op2 < (-ULLONG_MAX + 1) - rncontent)) : //! No ULLONG_MIN so test
         ((rncontent > 0 && op2 > INT_MAX - rncontent) ||
         (rncontent < 0 && op2 < INT_MIN - rncontent));;
     // Signed overflow/underflow if signs of operand are diferent from result
@@ -66,7 +66,7 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
 }
 
-static void (*logicalImmediate[3])(ARM* arm, int rd, int op, int hw) = {
+static void (*wideMoveImmediate[3])(ARM* arm, int rd, int op, int hw) = {
     &movz, &movn, &movk
 };
 
@@ -123,7 +123,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // No need to compute logical instruction when rd = ZR since write
             // is ignored and PSTATE isn't changed.
             if (rd != ZR_INDEX) {
-                logicalImmediate[opc](arm, rd, imm16, hw);
+                wideMoveImmediate[opc](arm, rd, imm16, hw);
             }
 
             break;
