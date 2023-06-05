@@ -69,11 +69,11 @@ static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int 
     &madd, &msub
 };
 
-static void (*shiftRm32[4])(int rm, int imm6) = {
+static int (*shiftRm32[4])(int rm, int imm6) = {
 
 };
 
-static void (*shiftRm64[4])(int rm, int imm6) = {
+static int (*shiftRm64[4])(int rm, int imm6) = {
 
 };
 
@@ -126,6 +126,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int shift = getBitsAt(instruction, DPR_SHIFT_START, DPR_SHIFT_LEN);
             int n = getBitAt(instruction, DPR_NBIT_POS);
             int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
+            int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
 
             // If sf is not given, read registers as 32 bit; all but rd to be restored later.
             int rntemp;
@@ -138,7 +139,8 @@ void dataProcessingRegister(ARM* arm, int instruction) {
                 arm->memory[rm] &= WREGISTER_MASK;
             }
 
-            int op2 = rm; //TODO add shifts
+            // Shift rm by imm6 with type depending on shift bits.
+            int op2 = sf ? shiftRm64[shift](rm, imm6) : shiftRm32[shift](rm, imm6);
 
             // Negative bits if N bit is given (logical operations).
             if (n) {

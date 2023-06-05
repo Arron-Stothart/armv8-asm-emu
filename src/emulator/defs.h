@@ -25,6 +25,7 @@
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
 #define SIMM26_LEN 26
+#define IMM6_LEN 6
 
 // Single Data Processing Constants
 #define SDT_LBIT_POS 22
@@ -61,6 +62,7 @@
 #define DPR_NBIT_POS 21
 #define DPR_RA_START 10 // for multiply
 #define DPR_XBIT_POS 15 // for multiply
+#define DPR_IMM6_START 10 // for arithemtic/logical
 
 // Enum for Instruction Type
 typedef enum {
