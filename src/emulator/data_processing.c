@@ -254,6 +254,21 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
             int op2 = rm; //TODO add shifts
 
+            switch (rm) {
+                // Logical shift left by imm6 bits
+                case DPR_LSL_SHIFT:
+                    break;
+                // Logical shift right by imm6 bits
+                case DPR_LSR_SHIFT:
+                    break;
+                // Arithmetic shift right by imm6 bits
+                case DPR_ASR_SHIFT:
+                    break;
+                // Rotate right by imm6 bits
+                case DPR_ROR_SHIFT:
+                    break;
+            }
+
             // Negative bits if N bit is given (logical operations).
             if (n) {
                 op2 = ~op2;
