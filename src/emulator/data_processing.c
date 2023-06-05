@@ -4,6 +4,10 @@
 #include "defs.h"
 #include "utils.h"
 
+/*
+Operations
+*/
+
 static void movz(ARM* arm, int rd, int op, int hw) {
     arm->memory[rd] = op;
 }
@@ -66,6 +70,70 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
 }
 
+static int and(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = arm->memory[rn] & op2;
+    arm->memory[rd] = r;
+    return r;
+}
+
+static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = arm->memory[rn] & ~op2;
+    arm->memory[rd] = r;
+    return r;
+}
+
+static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
+    arm->memory[rd] = arm->memory[rn] | op2;
+}
+
+static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
+    arm->memory[rd] = arm->memory[rn] | ~op2;
+}
+
+static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
+    arm->memory[rd] = arm->memory[rn] ^ ~op2;
+}
+
+static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
+    arm->memory[rd] = arm->memory[rn] ^ op2;
+}
+
+static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
+
+    // Sets flags for PSTATE
+    arm->pstate.Z = (r == 0);
+    // Check negative as 32 or 64 bit
+    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
+    // C and V are set to 0.
+    arm->pstate.C = 0;
+    arm->pstate.V = 0;
+}
+
+static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
+    int r = (rd == ZR_INDEX) ? arm->memory[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
+
+    // Sets flags for PSTATE
+    arm->pstate.Z = (r == 0);
+    // Check negative as 32 or 64 bit
+    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
+    // C and V are set to 0.
+    arm->pstate.C = 0;
+    arm->pstate.V = 0;
+}
+
+static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
+    arm->memory[rd] = arm->memory[ra] + (arm->memory[rn] * arm->memory[rm]);
+}
+
+static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
+    arm->memory[rd] = arm->memory[ra] - (arm->memory[rn] * arm->memory[rm]);
+}
+
+/*
+Function Pointers
+*/
+
 static void (*wideMoveImmediate[3])(ARM* arm, int rd, int op, int hw) = {
     &movz, &movn, &movk
 };
@@ -73,6 +141,22 @@ static void (*wideMoveImmediate[3])(ARM* arm, int rd, int op, int hw) = {
 static int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
     &add, &adds, &sub, &subs
 };
+
+static int (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, int op2, int sf) = {
+    &and, &bic, &orr, &orn, &eon, &eor, &ands, &bics
+};
+
+static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int sf) = {
+    &madd, &msub
+};
+
+static uint64_t (*shiftRm[4])(uint64_t rm, int imm6, bool sf) = {
+    &lsl, &lsr, &asr, &ror
+};
+
+/*
+Main functions
+*/
 
 void dataProcessingImmediate(ARM* arm, int instruction) {
     int sf = getBitAt(instruction, DPI_SFBIT);
@@ -147,78 +231,6 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
         arm->memory[rd] &= WREGISTER_MASK;
     }
 }
-
-static int and(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = arm->memory[rn] & op2;
-    arm->memory[rd] = r;
-    return r;
-}
-
-static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = arm->memory[rn] & ~op2;
-    arm->memory[rd] = r;
-    return r;
-}
-
-static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] | op2;
-}
-
-static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] | ~op2;
-}
-
-static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] ^ ~op2;
-}
-
-static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] ^ op2;
-}
-
-static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
-
-    // Sets flags for PSTATE
-    arm->pstate.Z = (r == 0);
-    // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
-    // C and V are set to 0.
-    arm->pstate.C = 0;
-    arm->pstate.V = 0;
-}
-
-static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = (rd == ZR_INDEX) ? arm->memory[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
-
-    // Sets flags for PSTATE
-    arm->pstate.Z = (r == 0);
-    // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
-    // C and V are set to 0.
-    arm->pstate.C = 0;
-    arm->pstate.V = 0;
-}
-
-static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
-    arm->memory[rd] = arm->memory[ra] + (arm->memory[rn] * arm->memory[rm]);
-}
-
-static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
-    arm->memory[rd] = arm->memory[ra] - (arm->memory[rn] * arm->memory[rm]);
-}
-
-static int (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, int op2, int sf) = {
-    &and, &bic, &orr, &orn, &eon, &eor, &ands, &bics
-};
-
-static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int sf) = {
-    &madd, &msub
-};
-
-static uint64_t (*shiftRm[4])(uint64_t rm, int imm6, bool sf) = {
-    &lsl, &lsr, &asr, &ror
-};
 
 // Execute data processing register instructions.
 void dataProcessingRegister(ARM* arm, int instruction) {
