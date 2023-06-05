@@ -60,13 +60,14 @@ void branch(ARM* arm, int instruction) {
     BRANCH_TYPE type = getBranchType(instruction);
 
     switch (type) {
-        case UNCONDITIONAL:
+        case UNCONDITIONAL: {
             int simm26 = getBitsAt(instruction, BR_SIMM26_START, SIMM26_LEN);
             int offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
             (*arm).pc += (offset - BYTES_IN_WORD);
             break;
-        case REGISTER:
+        }
+        case REGISTER: {
             // Determining encoding of register Xn
             int xn = getBitsAt(instruction, BR_XN_START, REG_INDEX_SIZE);
             // Check if xn refers to an exisiting register
@@ -74,7 +75,8 @@ void branch(ARM* arm, int instruction) {
             // Branch to address stored in Xn
             (*arm).pc = (*arm).registers[xn];
             break;
-        case CONDITIONAL:
+        }
+        case CONDITIONAL: {
             int simm19 = getBitsAt(instruction, BR_SIMM19_START, SIMM9_LEN);
             int cond = getBitsAt(instruction, BR_COND_START, BR_COND_LEN);
             // TODO: Check if condition is of some allowed type
@@ -84,5 +86,6 @@ void branch(ARM* arm, int instruction) {
                 (*arm).pc += (offset - BYTES_IN_WORD);
             }
             break;
+        }
     }
 }
