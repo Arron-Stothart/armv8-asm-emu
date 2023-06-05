@@ -4,7 +4,7 @@
 int convert(int32_t value);
 
 // Gets instruction type given instruction in little-endian.
-INSTRUCTION_TYPE getInstructionType(int word);
+INSTRUCTION_TYPE getInstructionType(int32_t word);
 
 // Outputs state of ARM processor into .out file.
 void outputState(ARM* arm);
@@ -19,7 +19,7 @@ int getWord(char* memory);
 uint64_t ror(uint64_t value, int shift, bool is64bit);
 
 // Arithemtic shift right
-uint64_t asr(int64_t value, int shift, bool is64bit);
+uint64_t asr(uint64_t value, int shift, bool is64bit);
 
 // Logical shift left
 uint64_t lsl(uint64_t value, int shift, bool is64bit);

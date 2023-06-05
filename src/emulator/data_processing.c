@@ -69,7 +69,7 @@ static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int 
     &madd, &msub
 };
 
-static int (*shiftRm[4])(int rm, int imm6, bool sf) = {
+static uint64_t (*shiftRm[4])(uint64_t rm, int imm6, bool sf) = {
     &lsl, &lsr, &asr, &ror
 };
 

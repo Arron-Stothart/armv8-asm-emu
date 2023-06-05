@@ -143,12 +143,14 @@ uint64_t lsr(uint64_t value, int shift, bool is64bit) {
 }
 
 // Arithemtic shift right
-uint64_t asr(int64_t value, int shift, bool is64bit) {
+uint64_t asr(uint64_t value, int shift, bool is64bit) {
     assert(shift >= 0);
 
     // Cast value to signed 32 bit integer if in 32 bits.
     if (!is64bit) {
         value = (int32_t) value;
+    } else {
+        value = (int64_t) value;
     }
 
     value = value < 0 ? ~(~value >> shift) : value >> shift;
