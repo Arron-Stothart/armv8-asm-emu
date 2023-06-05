@@ -216,12 +216,8 @@ static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int 
     &madd, &msub
 };
 
-static int (*shiftRm32[4])(int rm, int imm6) = {
-
-};
-
-static int (*shiftRm64[4])(int rm, int imm6) = {
-
+static int (*shiftRm[4])(int rm, int imm6, bool sf) = {
+    &lsl, &lsr, &asr, &ror
 };
 
 // Execute data processing register instructions.
@@ -287,7 +283,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             }
 
             // Shift rm by imm6 with type depending on shift bits.
-            int op2 = sf ? shiftRm64[shift](rm, imm6) : shiftRm32[shift](rm, imm6);
+            int op2 = shiftRm[shift](rm, imm6, sf);
 
             // Negative bits if N bit is given (logical operations).
             if (n) {
