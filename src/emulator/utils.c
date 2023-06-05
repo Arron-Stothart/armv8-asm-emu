@@ -118,7 +118,7 @@ static int rotateRight(uint64_t value, int shift, int bits) {
 
 // Rotates lower 32 bits. Sets top 32 bits to 0.
 int rotateRight32(long long int value, int shift) {
-    int masked = value && WREGISTER_MASK;
+    int masked = value & WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
 

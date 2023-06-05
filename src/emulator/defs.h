@@ -25,6 +25,8 @@
 #define NOP_CODE 0x1f2003d5
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
+#define IMM12_LEN 12
+#define IMM16_LEN 16
 
 // Single Data Processing Constants
 #define SDT_LBIT 22
@@ -36,8 +38,7 @@
 #define SDT_SIMM9_START 12
 #define SDT_XM_START 16
 
-// Data Processing Constants
-// (I for immediate, R for register)
+// Immediate Data Processing Constants
 #define DPI_ARITHMETIC_OPI 0b010
 #define DPI_WIDEMOVE_OPI 0b101
 #define DPI_MOVK_OPC 0b11
