@@ -44,7 +44,6 @@
 #define DPI_ARITHMETIC_OPI 0b010
 #define DPI_WIDEMOVE_OPI 0b101
 #define DPI_MOVK_OPC 0b11
-
 #define DPI_SFBIT 31
 #define DPI_OPC_START 29
 #define DPI_OPC_LEN 2
@@ -61,7 +60,6 @@
 
 // Register Data Processing Constants
 #define DPR_MULTIPLY_OPR 0b1000
-
 #define DPR_RD_START 0
 #define DPR_RN_START 5
 #define DPR_RM_START 16
@@ -133,8 +131,7 @@ typedef struct {
 } PSTATE;
 
 // ARM Proccesor
-// Registers are 64 bit; Memory is byte addressable (char = 1 byte).
-// Leave CIR as char since it is an index in memory.
+// Registers are 64 bit; Memory is byte addressable (sizeof(char) = 1 byte).
 typedef struct {
     uint64_t registers[NUM_OF_REGISTERS];
     char memory[MAX_MEMORY_SIZE];
