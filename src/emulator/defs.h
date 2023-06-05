@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 // Register Constants
-#ifndef ZR
+#ifndef ZR_INDEX
 
 #define REGISTER_SIZE 8 // in bytes
 #define NUM_OF_REGISTERS 32
