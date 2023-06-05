@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include <inttypes.h>
 #include "defs.h"
 
@@ -116,8 +117,8 @@ static int rotateRight(uint64_t value, int shift, int bits) {
 }
 
 // Rotates lower 32 bits. Sets top 32 bits to 0.
-int rotateRight32(uint64_t value, int shift) {
-    int masked = value && WREGISTER_MASK;
+int rotateRight32(long long int value, int shift) {
+    int masked = value & WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
 
@@ -127,30 +128,48 @@ int rotateRight64(uint64_t value, int shift) {
 }
 
 // Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(uint64_t value, int shift) 
+int arithmeticShiftRight64(long long int value, int shift)
 {
     assert(shift >= 0);
     return value < 0 ? ~(~value >> shift) : value >> shift;
 }
 
 // Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(uint64_t value, int shift) 
+int arithmeticShiftRight32(long long int value, int shift)
 {
-    int masked = value && WREGISTER_MASK;
+    int masked = value & WREGISTER_MASK;
     return arithmeticShiftRight64(masked, shift);
 }
 
-// Gets l bits starting from kth positon of n
+// generates binary mask of n ones.
+static int generateMask(int n) {
+    return (int) (pow(2, n) - 1);
+}
+
+// Gets l bits upwards starting from kth positon of n.
 int getBitsAt(int n, int k, int l) {
+    // In kth position we can get up to k + 1 bits
     assert(k >= 0 && l > 0);
-    int mask = 0b0;
-    for (int i = 0; i < l; i++) {
-        mask += 1 << i;
-    }
-    return (n >> k) && mask;
+    // Can be converted into getting bits downards by using:
+    // return (n >> (k - l + 1)) & generateMask(l)
+    return (n >> k) & generateMask(l);
 }
 
 // Gets bit at kth position from n.
 int getBitAt(int n, int k) {
+    assert(k >= 0);
     return (n >> k) & 1;
 }
+
+// Clears l bits downwards starting from kth position of n to 0.
+static int bitClear(int n, int k, int l) {
+    assert(k >= 0 && l > 0);
+    return n & (~(generateMask(l) << (k - l + 1)));
+}
+
+// Sets clearsize bits starting from kth position of n to new to size copysize.
+int setBitsTo(int n, int k, int new, int clearsize, int copysize) {
+    int cleared = bitClear(n, k, clearsize);
+    return cleared | (getBitsAt(new, k, copysize) << k);
+}
+

@@ -26,5 +26,8 @@ int arithmeticShiftRight32(uint64_t value, int shift);
 // Gets bit at kth position from n.
 int getBitAt(int n, int k);
 
-// Gets l bits starting from kth positon of n
+// Gets l bits upwards starting from kth positon of n.
 int getBitsAt(int n, int k, int l);
+
+// Sets clearsize bits starting from kth position of n to new to size copysize.
+int setBitsTo(int n, int k, int new, int clearsize, int copysize);
