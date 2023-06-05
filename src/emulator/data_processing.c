@@ -31,11 +31,21 @@ static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
-
+    int result = and(arm, rd, rn, op2, sf);
+    // TODO: Make 'update flags' function
+    arm->pstate.N = result > 0; 
+    arm->pstate.Z = result = 0;
+    arm->pstate.C = 0;
+    arm->pstate.V = 0;
 }
 
 static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
-
+    int result = bic(arm, rd, rn, op2, sf);
+    // TODO: Make 'update flags' function
+    arm->pstate.N = result > 0;
+    arm->pstate.Z = result = 0;
+    arm->pstate.C = 0;
+    arm->pstate.V = 0;
 }
 
 static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
