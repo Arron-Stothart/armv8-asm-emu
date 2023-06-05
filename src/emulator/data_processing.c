@@ -80,12 +80,6 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
     int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
 
-    // Access rd as 32 bit register if neccessary
-    // Only if rd is not the zero register, since ZR is the same in 32 and 64 bits.
-    if (!sf && rd != ZR_INDEX) {
-        arm->memory[rd] &= WREGISTER_MASK;
-    }
-
     switch (opi) {
 
         // Arithmetic
@@ -99,11 +93,24 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
                 imm12 <<= 12;
             }
 
+            // If sf is not given, read rd and rn as 32 bit; rn to be restored later.
+            int rntemp;
+            if (!sf) {
+                rntemp = arm->memory[rn];
+                arm->memory[rd] &= WREGISTER_MASK;
+                arm->memory[rn] &= WREGISTER_MASK;
+            }
+
             // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
             // Opc starts with 1 for adds and subs, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags.
             if (rd != ZR_INDEX || getBitAt(opc, 0) == 0b1) {
                 arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
+            }
+
+            // Restore rn if it was read as 32 bit;
+            if (!sf) {
+                arm->memory[rn] = rntemp;
             }
 
             break;
@@ -119,6 +126,11 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
                 imm16 <<= (hw * 16);
             }
 
+            // Read rd as 32 bit register if sf is not given.
+            if (!sf) {
+                arm->memory[rd] &= WREGISTER_MASK;
+            }
+
             // Last rd index encodes ZR for wide move processing.
             // No need to compute logical instruction when rd = ZR since write
             // is ignored and PSTATE isn't changed.
@@ -128,5 +140,10 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             break;
         }
+    }
+
+    // Write to rd as a 32 bit register if sf is not given (fixes overflows).
+    if (!sf) {
+        arm->memory[rd] &= WREGISTER_MASK;
     }
 }
