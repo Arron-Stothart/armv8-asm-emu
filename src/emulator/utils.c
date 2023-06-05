@@ -109,36 +109,74 @@ void loadBinary(char* memory, char* path) {
 Bitwise Operations
 */
 
-// Bits are shifted right; rotated back into the left-hand end if carried right.
-static int rotateRight(uint64_t value, int shift, int bits) {
-    assert(shift >= 0);
-    return (value >> shift) | (value << (bits - shift));
+// Rotate right
+uint64_t ror(uint64_t value, int shift, bool is64bit) {
+
 }
 
-// Rotates lower 32 bits. Sets top 32 bits to 0.
-int rotateRight32(uint64_t value, int shift) {
-    int masked = value && WREGISTER_MASK;
-    return rotateRight(masked, shift, 32);
+// Logical shift left
+uint64_t lsl(uint64_t value, int shift, bool is64bit) {
+
 }
 
-// Rotates 64 bit integers.
-int rotateRight64(uint64_t value, int shift) {
-    return rotateRight(value, shift, 64);
+uint64_t lsr(uint64_t value, int shift, bool is64bit) {
+
 }
 
-// Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(int64_t value, int shift)
-{
-    assert(shift >= 0);
-    return value < 0 ? ~(~value >> shift) : value >> shift;
+// Arithemtic shift right
+uint64_t asr(uint64_t value, int shift, bool is64bit) {
+
 }
 
-// Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(int32_t value, int shift)
-{
-    int masked = value && WREGISTER_MASK;
-    return arithmeticShiftRight64(masked, shift);
-}
+// // Rotate right
+// static uint64_t ror(uint64_t value, int shift, int bits) {
+//     assert(shift >= 0);
+//     return (value >> shift) | (value << (bits - shift));
+// }
+
+// // Rotate right 32. Sets top 32 bits to 0.
+// uint64_t ror32(uint64_t value, int shift) {
+//     int masked = value && WREGISTER_MASK;
+//     return ror(masked, shift, 32);
+// }
+
+// // Rotate right 64
+// uint64_t ror64(uint64_t value, int shift) {
+//     return ror(value, shift, 64);
+// }
+
+// // Arithemtic shift right 64; fills vacated bits with sign bit.
+// uint64_t asr64(int64_t value, int shift) {
+//     assert(shift >= 0);
+//     return value < 0 ? ~(~value >> shift) : value >> shift;
+// }
+
+// // Arithemtic shift right 32
+// uint64_t asr32(int32_t value, int shift) {
+//    int masked = value && WREGISTER_MASK;
+//     return arithmeticShiftRight64(masked, shift);
+// }
+
+// // Logical shift left 64
+// uint64_t lsl64(uint64_t value, int shift) {
+//     return (value << shift);
+// }
+
+// // Logical shift left 32
+// uint64_t lsl32(uint32_t value, int shift) {
+//     return (value << shift) & WREGISTER_MASK;
+// }
+
+// // Logical shift right 64
+// uint64_t lsr64(uint64_t value, int shift) {
+//     return (value >> shift);
+// }
+
+// // Logical shift right 32
+// uint64_t lsr32(uint32_t value, int shift) {
+
+// }
+
 
 // Gets l bits starting from kth positon of n
 int getBitsAt(int n, int k, int l) {
