@@ -239,8 +239,30 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
             int x = getBitAt(instruction, DPR_XBIT_POS);
 
+            // If sf is not given, read registers as 32 bit; all but rd to be restored later.
+            int rntemp;
+            int rmtemp;
+            int ratemp;
+            if (!sf) {
+                rntemp = arm->memory[rn];
+                ratemp = arm->memory[ra];
+                rmtemp = arm->memory[rm];
+                arm->memory[rd] &= WREGISTER_MASK;
+                arm->memory[rn] &= WREGISTER_MASK;
+                arm->memory[ra] &= WREGISTER_MASK;
+                arm->memory[rm] &= WREGISTER_MASK;
+            }
+
+            // ZR is read-only and no flags will be changed.
             if (rd != ZR_INDEX) {
                 mutiplyRegister[x](arm, rd, rn, ra, rm, sf);
+            }
+
+            // Restore registers read as 32 bit;
+            if (!sf) {
+                arm->memory[rn] = rntemp;
+                arm->memory[ra] = ratemp;
+                arm->memory[rm] = rmtemp;
             }
 
             break;
@@ -251,6 +273,17 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int shift = getBitsAt(instruction, DPR_SHIFT_START, DPR_SHIFT_LEN);
             int n = getBitAt(instruction, DPR_NBIT_POS);
             int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
+
+            // If sf is not given, read registers as 32 bit; all but rd to be restored later.
+            int rntemp;
+            int rmtemp;
+            if (!sf) {
+                rntemp = arm->memory[rn];
+                rmtemp = arm->memory[rm];
+                arm->memory[rd] &= WREGISTER_MASK;
+                arm->memory[rn] &= WREGISTER_MASK;
+                arm->memory[rm] &= WREGISTER_MASK;
+            }
 
             int op2 = rm; //TODO add shifts
 
@@ -266,9 +299,18 @@ void dataProcessingRegister(ARM* arm, int instruction) {
                 arithmeticLogicalRegister[opc](arm, rd, rn, rm, sf);
             }
 
+            // Restore registers read as 32 bit;
+            if (!sf) {
+                arm->memory[rn] = rntemp;
+                arm->memory[rm] = rmtemp;
+            }
+
             break;
         }
-
     }
 
+    // Write to rd as a 32 bit register if sf is not given (fixes overflows).
+    if (!sf) {
+        arm->memory[rd] &= WREGISTER_MASK;
+    }
 }
