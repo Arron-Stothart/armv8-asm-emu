@@ -1,7 +1,7 @@
 #include "defs.h"
 
 // Converts hexadecimals in 32bits between endians.
-int convert(int value);
+int convert(int32_t value);
 
 // Gets instruction type given instruction in little-endian.
 INSTRUCTION_TYPE getInstructionType(int word);
@@ -15,13 +15,16 @@ void loadBinary(char* memory, char* path);
 // Returns word from byte addressable memory
 int getWord(char* memory);
 
-// Rotate right operations
-int rotateRight64(uint64_t value, int shift);
-int rotateRight32(uint64_t value, int shift);
+// Rotate right
+uint64_t ror(uint64_t value, int shift, bool is64bit);
 
-// Arithmetic shift operations
-int arithmeticShiftRight64(uint64_t value, int shift);
-int arithmeticShiftRight32(uint64_t value, int shift);
+// Arithemtic shift right
+uint64_t asr(int64_t value, int shift, bool is64bit);
+
+// Logical shift left
+uint64_t lsl(uint64_t value, int shift, bool is64bit);
+// Logical shift right
+uint64_t lsr(uint64_t value, int shift, bool is64bit);
 
 // Gets bit at kth position from n.
 int getBitAt(int n, int k);
