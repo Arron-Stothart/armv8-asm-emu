@@ -47,6 +47,10 @@
 
 // Data Processing Constants
 #define DPR_MULTIPLY_OPR 0b1000
+#define DPR_LSL_SHIFT 0b00
+#define DPR_LSR_SHIFT 0b01
+#define DPR_ASR_SHIFT 0b10
+#define DPR_ROR_SHIFT 0b11
 
 #define DPR_RD_START 0
 #define DPR_RN_START 5
