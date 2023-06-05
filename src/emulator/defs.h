@@ -20,13 +20,14 @@
 
 // Instruction Constants
 // Codes are in big endian
-#define INSTRUCTION_SIZE 4
+#define INSTRUCTION_SIZE 4 // in bytes
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
 #define IMM12_LEN 12
 #define IMM16_LEN 16
+#define SIMM26_LEN 26
 
 // Single Data Processing Constants
 #define SDT_LBIT 22
@@ -56,6 +57,25 @@
 #define DPI_HW_START 21 // for logical
 #define DPI_HW_SIZE 2 // for logical
 
+// Branch Constants
+#define BR_EQ 0b0000 // Equal
+#define BR_NE 0b0001 // Not equal
+#define BR_GE 0b1010 // Signed greater or equal
+#define BR_LT 0b1011 // Signed less than
+#define BR_GT 0b1100 // Signed greater than
+#define BR_LE 0b1101 // Signed less than or equal
+#define BR_AL 0b1110 // Always
+#define BR_SIMM26_START 25
+#define BR_SIMM19_START 23
+#define BR_XN_START 9
+#define BR_COND_START 3
+#define BR_COND_LEN 4
+#define BR_DET_BITS_START 31
+#define BR_DET_BITS_LEN 3
+#define BR_DET_BITS_UNCOND 0b000
+#define BR_DET_BITS_REG 0b110
+#define BR_DET_BITS_COND 0b010
+
 // Enum for Instruction Type
 typedef enum {
     DATA_PROCESSING_IMMEDIATE,
@@ -66,6 +86,22 @@ typedef enum {
     NOP,
     DATA
 } INSTRUCTION_TYPE;
+
+// Enum for Branch Instruction Type
+typedef enum {
+    UNCONDITIONAL,
+    REGISTER,
+    CONDITIONAL
+} BRANCH_TYPE;
+
+// Enum for Data Transfer instruction type
+typedef enum {
+    UNSIGNED_OFFSET,
+    PRE_INDEX,
+    POST_INDEX,
+    REGISTER_OFFSET,
+    LITERAL_ADDRESS
+} TRANSFER_TYPE;
 
 // PSTATE tracks flags triggered by last result.
 // N - Negative value; Z - Zero value; C - Carry; V - Overflow.
@@ -85,21 +121,5 @@ typedef struct {
     PSTATE pstate;
     uint64_t pc;
 } ARM;
-
-// Enum for Branch Instruction Type
-typedef enum {
-    UNCONDITIONAL,
-    REGISTER,
-    CONDITIONAL
-} BRANCH_TYPE;
-
-// Enum for Data Transfer instruction type
-typedef enum {
-    UNSIGNED_OFFSET,
-    PRE_INDEX,
-    POST_INDEX,
-    REGISTER_OFFSET,
-    LITERAL_ADDRESS
-} TRANSFER_TYPE;
 
 #endif

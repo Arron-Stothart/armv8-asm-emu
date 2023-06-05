@@ -117,7 +117,7 @@ static int rotateRight(uint64_t value, int shift, int bits) {
 }
 
 // Rotates lower 32 bits. Sets top 32 bits to 0.
-int rotateRight32(long long int value, int shift) {
+int rotateRight32(uint64_t value, int shift) {
     int masked = value & WREGISTER_MASK;
     return rotateRight(masked, shift, 32);
 }
@@ -128,14 +128,14 @@ int rotateRight64(uint64_t value, int shift) {
 }
 
 // Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(long long int value, int shift)
+int arithmeticShiftRight64(uint64_t value, int shift)
 {
     assert(shift >= 0);
     return value < 0 ? ~(~value >> shift) : value >> shift;
 }
 
 // Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(long long int value, int shift)
+int arithmeticShiftRight32(uint64_t value, int shift)
 {
     int masked = value & WREGISTER_MASK;
     return arithmeticShiftRight64(masked, shift);
@@ -172,4 +172,3 @@ int setBitsTo(int n, int k, int new, int clearsize, int copysize) {
     int cleared = bitClear(n, k, clearsize);
     return cleared | (getBitsAt(new, k, copysize) << k);
 }
-

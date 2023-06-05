@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
     };
 
     // Load instructions into memory.
-    loadBinary(&arm.memory, argv[1]);
+    loadBinary(arm.memory, argv[1]);
 
     // Fetch-Decode-Execute Cycle
     for (;;) {
@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
         // Fetch and decode instruction.
         int instruction = getWord(&arm.memory[arm.pc]);
         INSTRUCTION_TYPE type = getInstructionType(instruction);
+        // Pre-increment pc to next instruction location.
         arm.pc += INSTRUCTION_SIZE;
 
         switch(type) {
@@ -46,9 +47,10 @@ int main(int argc, char **argv) {
             case DATA_PROCESSING_REGISTER:
                 break;
             case SINGLE_DATA_TRANSFER:
+                singleDataTransfer(&arm, instruction);
                 break;
             case BRANCH:
-                executeBranch(&arm, instruction);
+                branch(&arm, instruction);
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.

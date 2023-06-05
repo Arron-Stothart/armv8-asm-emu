@@ -1,10 +1,10 @@
 #include "defs.h"
 
 // Converts hexadecimals in 32bits between endians.
-int convert(int value);
+int convert(int32_t value);
 
 // Gets instruction type given instruction in little-endian.
-INSTRUCTION_TYPE getInstructionType(int word);
+INSTRUCTION_TYPE getInstructionType(int32_t word);
 
 // Outputs state of ARM processor into .out file.
 void outputState(ARM* arm);
