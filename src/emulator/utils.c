@@ -110,35 +110,54 @@ void loadBinary(char* memory, char* path) {
 Bitwise Operations
 */
 
-// Bits are shifted right; rotated back into the left-hand end if carried right.
-static int rotateRight(uint64_t value, int shift, int bits) {
+// Masks top 32 bits to 0 if value is 32 bits.
+static void wregisterMask(uint64_t* value, int is64bit) {
+    if (!is64bit) {
+        *value &= WREGISTER_MASK;
+    }
+}
+
+// Rotate right
+uint64_t ror(uint64_t value, int shift, bool is64bit) {
     assert(shift >= 0);
+    int bits = is64bit ? 64 : 32;
+    // If 32 bit, mask top 32 bits after shift.
+    wregisterMask(&value, is64bit);
     return (value >> shift) | (value << (bits - shift));
 }
 
-// Rotates lower 32 bits. Sets top 32 bits to 0.
-int rotateRight32(uint64_t value, int shift) {
-    int masked = value & WREGISTER_MASK;
-    return rotateRight(masked, shift, 32);
-}
-
-// Rotates 64 bit integers.
-int rotateRight64(uint64_t value, int shift) {
-    return rotateRight(value, shift, 64);
-}
-
-// Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(uint64_t value, int shift)
-{
+// Logical shift left
+uint64_t lsl(uint64_t value, int shift, bool is64bit) {
     assert(shift >= 0);
-    return value < 0 ? ~(~value >> shift) : value >> shift;
+    value >>= shift;
+    // If 32 bit, mask top 32 bits after shift.
+    wregisterMask(&value, is64bit);
+    return value;
 }
 
-// Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(uint64_t value, int shift)
-{
-    int masked = value & WREGISTER_MASK;
-    return arithmeticShiftRight64(masked, shift);
+uint64_t lsr(uint64_t value, int shift, bool is64bit) {
+    assert(shift >= 0);
+    value <<= shift;
+    // If 32 bit, mask top 32 bits after shift.
+    wregisterMask(&value, is64bit);
+    return value;
+}
+
+// Arithemtic shift right
+uint64_t asr(uint64_t value, int shift, bool is64bit) {
+    assert(shift >= 0);
+
+    // Cast value to signed 32 bit integer if in 32 bits.
+    if (!is64bit) {
+        value = (int32_t) value;
+    } else {
+        value = (int64_t) value;
+    }
+
+    value = value < 0 ? ~(~value >> shift) : value >> shift;
+    // If 32 bit, mask top 32 bits after shift.
+    wregisterMask(&value, is64bit);
+    return value;
 }
 
 // generates binary mask of n ones.

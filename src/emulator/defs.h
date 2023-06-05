@@ -1,13 +1,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#ifndef ZR
+// Register Constants
+#ifndef ZR_INDEX
 
 // Register Constants
 #define REGISTER_SIZE 8 // in bytes
-#define NUM_OF_REGISTERS 31
-#define ZR_INDEX 31 // Register 32 is zero register (starting from R0)
-#define ZR 0 // Zero register
+#define NUM_OF_REGISTERS 32
+#define ZR_INDEX 31 // Register 32 is zero register (starting from R0); read-only
 #define WREGISTER_MASK 0xff // sets top 32 bits to 0.
 #define REG_INDEX_SIZE 5 // number of bits used in instructions
 
@@ -28,14 +28,15 @@
 #define IMM12_LEN 12
 #define IMM16_LEN 16
 #define SIMM26_LEN 26
+#define IMM6_LEN 6
 
 // Single Data Processing Constants
-#define SDT_LBIT 22
-#define SDT_UBIT 24
-#define SDT_SFBIT 30
+#define SDT_LBIT_POS 22
+#define SDT_UBIT_POS 24
+#define SDT_SFBIT_POS 30
 #define SDT_RT_START 0
 #define SDT_XN_START 5
-#define SDT_IBIT 11
+#define SDT_IBIT_POS 11
 #define SDT_SIMM9_START 12
 #define SDT_XM_START 16
 
@@ -43,7 +44,6 @@
 #define DPI_ARITHMETIC_OPI 0b010
 #define DPI_WIDEMOVE_OPI 0b101
 #define DPI_MOVK_OPC 0b11
-
 #define DPI_SFBIT 31
 #define DPI_OPC_START 29
 #define DPI_OPC_LEN 2
@@ -56,6 +56,24 @@
 #define DPI_IMM16_START 5 // for logical
 #define DPI_HW_START 21 // for logical
 #define DPI_HW_SIZE 2 // for logical
+
+
+// Register Data Processing Constants
+#define DPR_MULTIPLY_OPR 0b1000
+#define DPR_RD_START 0
+#define DPR_RN_START 5
+#define DPR_RM_START 16
+#define DPR_OPR_START 21
+#define DPR_OPR_LEN 3
+#define DPR_OPC_START 29
+#define DPR_OPC_LEN 2
+#define DPR_SFBIT_POS 31
+#define DPR_SHIFT_START 22
+#define DPR_SHIFT_LEN 2
+#define DPR_NBIT_POS 21
+#define DPR_RA_START 10 // for multiply
+#define DPR_XBIT_POS 15 // for multiply
+#define DPR_IMM6_START 10 // for arithemtic/logical
 
 // Branch Constants
 #define BR_EQ 0b0000 // Equal
@@ -113,8 +131,7 @@ typedef struct {
 } PSTATE;
 
 // ARM Proccesor
-// Registers are 64 bit; Memory is byte addressable (char = 1 byte).
-// Leave CIR as char since it is an index in memory.
+// Registers are 64 bit; Memory is byte addressable (sizeof(char) = 1 byte).
 typedef struct {
     uint64_t registers[NUM_OF_REGISTERS];
     char memory[MAX_MEMORY_SIZE];
