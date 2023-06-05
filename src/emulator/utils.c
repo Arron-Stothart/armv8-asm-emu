@@ -128,14 +128,14 @@ int rotateRight64(uint64_t value, int shift) {
 }
 
 // Shift bits right filling vacated bits with sign bit.
-int arithmeticShiftRight64(uint64_t value, int shift)
+int arithmeticShiftRight64(int64_t value, int shift)
 {
     assert(shift >= 0);
     return value < 0 ? ~(~value >> shift) : value >> shift;
 }
 
 // Shifts lower 32 bits right filling vacated bits with sign bit. Sets top 32 bits to 0.
-int arithmeticShiftRight32(uint64_t value, int shift)
+int arithmeticShiftRight32(int32_t value, int shift)
 {
     int masked = value & WREGISTER_MASK;
     return arithmeticShiftRight64(masked, shift);
