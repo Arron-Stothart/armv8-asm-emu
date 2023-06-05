@@ -102,7 +102,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
             // Opc starts with 1 for adds and subs, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags.
-            if (rd != ZR_INDEX || getBitAt(opc, 0) == 1) {
+            if (rd != ZR_INDEX || getBitAt(opc, 0) == 0b1) {
                 arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
             }
 
