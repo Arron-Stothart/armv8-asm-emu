@@ -28,6 +28,16 @@ int getWord(char* memory) {
     return value;
 }
 
+// Returns word from byte addressable memory
+int getDoubleWord(char* memory) {
+    int value = 0;
+    for (int i = 0; i < BYTES_IN_DOUBLE_WORD; i++) {
+        value += *memory >> (SIZE_OF_BYTE * i);
+        memory++;
+    }
+    return value;
+}
+
 // Gets instruction type given instruction in little-endian.
 INSTRUCTION_TYPE getInstructionType(int32_t word) {
     unsigned int instruction = convert(word);

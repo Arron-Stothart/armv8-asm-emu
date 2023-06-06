@@ -14,6 +14,7 @@
 // Memory Constants
 #define MAX_MEMORY_SIZE (1 << 21)
 #define BYTES_IN_WORD 4
+#define BYTES_IN_DOUBLE_WORD 8
 #define SIZE_OF_BYTE 8 // in bits
 #define BYTES_IN_64BIT 8
 #define BYTES_IN_32BIT 4
@@ -39,6 +40,7 @@
 #define SDT_IBIT_POS 11
 #define SDT_SIMM9_START 12
 #define SDT_XM_START 16
+#define SDT_IMM12_START 10
 
 // Immediate Data Processing Constants
 #define DPI_ARITHMETIC_OPI 0b010
