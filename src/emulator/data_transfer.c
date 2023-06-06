@@ -77,15 +77,14 @@ void singleDataTransfer(ARM* arm, int instruction) {
                 // In 32 bit load word at address memory into register.
                 arm->registers[rt] = getWord(&arm->memory[address]);
             }
-
         } else {
             // Store
-            if (sf) {
-                // In 64 bit store rt into 8 bytes at address
-
-            } else {
-                // In 32 bit store rt into 4 bytes at address
-
+            uint64_t rtcontent = arm->registers[rt];
+            int storesize = sf ? BYTES_IN_64BIT : BYTES_IN_32BIT;
+            // Store by shifting 1 byte of register's content at a time into memory.
+            // Since we store least significant bit first, we mantain little endian storage.
+            for (int i = 0; i < storesize; i++) {
+                    arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
             }
         }
     }
