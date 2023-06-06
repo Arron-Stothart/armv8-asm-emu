@@ -25,25 +25,27 @@
 #define INSTRUCTION_SIZE 4 // in bytes
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
+#define IMM6_LEN 6
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
 #define IMM12_LEN 12
 #define IMM16_LEN 16
+#define SIMM19_LEN 19
 #define SIMM26_LEN 26
-#define IMM6_LEN 6
 
 // Single Data Processing Constants
-#define SDT_LOADLITERAL_BIT 29
-#define SDT_REGISTEROFFSET_BIT 0
-#define SDT_LBIT_POS 22
-#define SDT_UBIT_POS 24
-#define SDT_SFBIT_POS 30
+#define SDT_LOADLITERAL_BIT 29 // tests for load literal transfer type
+#define SDT_REGISTEROFFSET_BIT 0 // tests for register offset transfer type
+#define SDT_LBIT_POS 22 // load bit
+#define SDT_UBIT_POS 24 // unsigned offset bit
+#define SDT_SFBIT_POS 30 // 32bit bit
 #define SDT_RT_START 0
 #define SDT_XN_START 5
-#define SDT_IBIT_POS 11
-#define SDT_SIMM9_START 12
-#define SDT_XM_START 16
-#define SDT_IMM12_START 10
+#define SDT_IBIT_POS 11 // for pre/post index
+#define SDT_SIMM9_START 12 // for pre/post index
+#define SDT_XM_START 16 // for register offset
+#define SDT_IMM12_START 10 // for unsigned offset
+#define SDT_SIMM19_START 5 // for load literal
 
 // Immediate Data Processing Constants
 #define DPI_ARITHMETIC_OPI 0b010
@@ -61,7 +63,6 @@
 #define DPI_IMM16_START 5 // for logical
 #define DPI_HW_START 21 // for logical
 #define DPI_HW_SIZE 2 // for logical
-
 
 // Register Data Processing Constants
 #define DPR_MULTIPLY_OPR 0b1000
