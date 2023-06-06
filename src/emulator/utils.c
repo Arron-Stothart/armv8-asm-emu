@@ -5,7 +5,7 @@
 #include <inttypes.h>
 #include "defs.h"
 
-// Converts hexadecimals in 32bits between endians.
+// Converts values in 32bits between endians.
 int convert(int32_t value) {
     int converted = 0;
 
@@ -22,6 +22,16 @@ int convert(int32_t value) {
 int getWord(char* memory) {
     int value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
+        value += *memory >> (SIZE_OF_BYTE * i);
+        memory++;
+    }
+    return value;
+}
+
+// Returns word from byte addressable memory
+int getDoubleWord(char* memory) {
+    int value = 0;
+    for (int i = 0; i < BYTES_IN_DOUBLE_WORD; i++) {
         value += *memory >> (SIZE_OF_BYTE * i);
         memory++;
     }
@@ -77,7 +87,7 @@ void outputState(ARM* arm) {
 
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
 		if (arm->memory[i] > 0) {
-            // Bytes are loaded in little endian so have to convert.
+            // Bytes are stored in little endian so have to convert.
             fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(getWord(&arm->memory[i])));
 		}
 	}

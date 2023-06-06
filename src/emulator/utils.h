@@ -15,6 +15,9 @@ void loadBinary(char* memory, char* path);
 // Returns word from byte addressable memory
 int getWord(char* memory);
 
+// Returns double word from byte addressable memory
+int getDoubleWord(char* memory);
+
 // Rotate right
 uint64_t ror(uint64_t value, int shift, bool is64bit);
 
