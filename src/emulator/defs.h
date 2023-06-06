@@ -32,6 +32,8 @@
 #define IMM6_LEN 6
 
 // Single Data Processing Constants
+#define SDT_LOADLITERAL_BIT 29
+#define SDT_REGISTEROFFSET_BIT 0
 #define SDT_LBIT_POS 22
 #define SDT_UBIT_POS 24
 #define SDT_SFBIT_POS 30
