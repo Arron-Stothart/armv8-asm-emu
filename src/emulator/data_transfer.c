@@ -62,7 +62,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
             break;
         }
         case LITERAL_ADDRESS:{
-            int64_t simm19 = getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN);
+            int64_t simm19 = getBitsAt(instruction, SDT_SIMM19_START, SIMM19_LEN);
             address = arm->pc + (simm19 * BYTES_IN_WORD);
             break;
         }
