@@ -11,8 +11,13 @@
 int main(int argc, char **argv) {
 
     // Check if binary file provided.
-    if (argc != 2) {
+    if (argc < 2) {
         fprintf(stderr, "emulate: no binary file provided.\n");
+        fprintf(stderr, "%i args", argc);
+        for (int i = 0; i < argc; i++) {
+            fputs(argv[i], stderr);
+            fputs(" ", stderr);
+        }
         exit(EXIT_FAILURE);
     }
 
@@ -30,6 +35,9 @@ int main(int argc, char **argv) {
     // Fetch-Decode-Execute Cycle
     for (;;) {
         // Check if address is in memory range.
+        if (!(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE)) {
+            fprintf(stderr, "the PC is: %lu", arm.pc);
+        }
         assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
         // Fetch and decode instruction.
         int instruction = getWord(&arm.memory[arm.pc]);
@@ -39,7 +47,7 @@ int main(int argc, char **argv) {
 
         switch(type) {
             case HALT:
-                goto halt; // Required to break out of two loops.
+                goto halt; // Required to break out of both switch and for loop
                 break;
             case DATA_PROCESSING_IMMEDIATE:
                 dataProcessingImmediate(&arm, instruction);
@@ -55,7 +63,6 @@ int main(int argc, char **argv) {
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.
-                break;
         }
     }
 
