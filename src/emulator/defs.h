@@ -23,7 +23,7 @@
 // Instruction Constants
 // Codes are in big endian
 #define INSTRUCTION_SIZE 4 // in bytes
-#define HALT_CODE 0x0000008a
+#define HALT_CODE 0x8a000000
 #define NOP_CODE 0x1f2003d5
 #define OP0_START 25
 #define OP0_LEN 4
