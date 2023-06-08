@@ -171,7 +171,7 @@ uint64_t asr(uint64_t value, int shift, bool is64bit) {
 
 // generates binary mask of n ones.
 static int generateMask(int n) {
-    return (int) ((1 << n) - 1);
+    return ((1 << n) - 1);
 }
 
 // Gets l bits upwards starting from kth positon of n.
