@@ -22,7 +22,7 @@ int convert(int32_t value) {
 int getWord(char* memory) {
     int value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
-        value += *memory >> (SIZE_OF_BYTE * i);
+        value += *memory << (SIZE_OF_BYTE * i);
         memory++;
     }
     return value;
@@ -32,16 +32,15 @@ int getWord(char* memory) {
 int getDoubleWord(char* memory) {
     int value = 0;
     for (int i = 0; i < BYTES_IN_DOUBLE_WORD; i++) {
-        value += *memory >> (SIZE_OF_BYTE * i);
+        value += *memory << (SIZE_OF_BYTE * i);
         memory++;
     }
     return value;
 }
 
-// Gets instruction type given instruction in little-endian.
-INSTRUCTION_TYPE getInstructionType(int32_t word) {
-    unsigned int instruction = convert(word);
-    unsigned int op0 = (instruction >> 25) & 0x1111; // TODO: test this
+// Gets instruction type given instruction.
+INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
+    unsigned int op0 = getBitsAt(instruction, OP0_START, OP0_LEN);
 
     if (instruction == HALT_CODE) {
         return HALT;
@@ -88,7 +87,7 @@ void outputState(ARM* arm) {
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
 		if (arm->memory[i] > 0) {
             // Bytes are stored in little endian so have to convert.
-            fprintf(output, "0x%08x: 0x%08x\n", i * 4, convert(getWord(&arm->memory[i])));
+            fprintf(output, "0x%08x: 0x%08x\n", i * 4, getWord(&arm->memory[i]));
 		}
 	}
 

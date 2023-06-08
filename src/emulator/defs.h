@@ -25,6 +25,8 @@
 #define INSTRUCTION_SIZE 4 // in bytes
 #define HALT_CODE 0x0000008a
 #define NOP_CODE 0x1f2003d5
+#define OP0_START 25
+#define OP0_LEN 4
 #define IMM6_LEN 6
 #define SIMM9_LEN 9
 #define SIMM12_LEN 12
