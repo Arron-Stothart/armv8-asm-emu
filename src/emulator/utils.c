@@ -6,8 +6,8 @@
 #include "defs.h"
 
 // Converts values in 32bits between endians.
-int convert(int32_t value) {
-    int converted = 0;
+uint32_t convert(uint32_t value) {
+    uint32_t converted = 0;
 
     // Bitshifts for bytes.
     converted |= ((0x000000ff & value) << 24);
@@ -19,8 +19,8 @@ int convert(int32_t value) {
 }
 
 // Returns word from byte addressable memory
-int getWord(char* memory) {
-    int value = 0;
+uint32_t getWord(char* memory) {
+    uint32_t value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
         value += *memory << (SIZE_OF_BYTE * i);
         memory++;
@@ -29,8 +29,8 @@ int getWord(char* memory) {
 }
 
 // Returns word from byte addressable memory
-int getDoubleWord(char* memory) {
-    int value = 0;
+uint64_t getDoubleWord(char* memory) {
+    uint64_t value = 0;
     for (int i = 0; i < BYTES_IN_DOUBLE_WORD; i++) {
         value += *memory << (SIZE_OF_BYTE * i);
         memory++;
@@ -40,8 +40,7 @@ int getDoubleWord(char* memory) {
 
 // Gets instruction type given instruction.
 INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
-    unsigned int op0 = (instruction & (0xF << 24)) >> 24;
-    //getBitsAt(instruction, OP0_START, OP0_LEN);
+    uint32_t op0 = getBitsAt(instruction, OP0_START, OP0_LEN);
 
     if (instruction == HALT_CODE) {
         return HALT;
@@ -86,7 +85,7 @@ void outputState(ARM *arm, char *file) {
     fprintf(output, "Non-zero memory:\n");
 
     for (int i = 0; i < MAX_MEMORY_SIZE; i += 4) {
-		if (getWord(arm->memory[i]) != 0) {
+		if (getWord(&arm->memory[i]) != 0) {
             // Bytes are stored in little endian so have to convert.
             fprintf(output, "0x%08x: 0x%08x\n", i, getWord(&arm->memory[i]));
 		}
@@ -121,14 +120,14 @@ Bitwise Operations
 */
 
 // Masks top 32 bits to 0 if value is 32 bits.
-static void wregisterMask(uint64_t* value, int is64bit) {
+static void wregisterMask(uint64_t* value, bool is64bit) {
     if (!is64bit) {
         *value &= WREGISTER_MASK;
     }
 }
 
 // Rotate right
-uint64_t ror(uint64_t value, int shift, bool is64bit) {
+uint64_t ror(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
     int bits = is64bit ? 64 : 32;
     // If 32 bit, mask top 32 bits after shift.
@@ -137,7 +136,7 @@ uint64_t ror(uint64_t value, int shift, bool is64bit) {
 }
 
 // Logical shift left
-uint64_t lsl(uint64_t value, int shift, bool is64bit) {
+uint64_t lsl(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
     value >>= shift;
     // If 32 bit, mask top 32 bits after shift.
@@ -145,7 +144,7 @@ uint64_t lsl(uint64_t value, int shift, bool is64bit) {
     return value;
 }
 
-uint64_t lsr(uint64_t value, int shift, bool is64bit) {
+uint64_t lsr(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
     value <<= shift;
     // If 32 bit, mask top 32 bits after shift.
@@ -154,7 +153,7 @@ uint64_t lsr(uint64_t value, int shift, bool is64bit) {
 }
 
 // Arithemtic shift right
-uint64_t asr(uint64_t value, int shift, bool is64bit) {
+uint64_t asr(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
 
     // Cast value to signed 32 bit integer if in 32 bits.
@@ -171,12 +170,12 @@ uint64_t asr(uint64_t value, int shift, bool is64bit) {
 }
 
 // generates binary mask of n ones.
-static int generateMask(int n) {
+static uint32_t generateMask(uint32_t n) {
     return ((1 << n) - 1);
 }
 
 // Gets l bits upwards starting from kth positon of n.
-int getBitsAt(int n, int k, int l) {
+int getBitsAt(uint64_t n, int k, int l) {
     // In kth position we can get up to k + 1 bits
     assert(k >= 0 && l > 0);
     // Can be converted into getting bits downards by using:
@@ -185,19 +184,19 @@ int getBitsAt(int n, int k, int l) {
 }
 
 // Gets bit at kth position from n.
-int getBitAt(int n, int k) {
+int getBitAt(uint64_t n, int k) {
     assert(k >= 0);
     return (n >> k) & 1;
 }
 
 // Clears l bits downwards starting from kth position of n to 0.
-static int bitClear(int n, int k, int l) {
+static int bitClear(uint64_t n, int k, int l) {
     assert(k >= 0 && l > 0);
     return n & (~(generateMask(l) << (k - l + 1)));
 }
 
 // Sets clearsize bits starting from kth position of n to new to size copysize.
-int setBitsTo(int n, int k, int new, int clearsize, int copysize) {
+int setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize) {
     int cleared = bitClear(n, k, clearsize);
     return cleared | (getBitsAt(new, k, copysize) << k);
 }

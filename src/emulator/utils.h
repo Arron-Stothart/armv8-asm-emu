@@ -19,21 +19,21 @@ int getWord(char* memory);
 int getDoubleWord(char* memory);
 
 // Rotate right
-uint64_t ror(uint64_t value, int shift, bool is64bit);
+uint64_t ror(uint64_t value, uint32_t shift, bool is64bit);
 
 // Arithemtic shift right
-uint64_t asr(uint64_t value, int shift, bool is64bit);
+uint64_t asr(uint64_t value, uint32_t shift, bool is64bit);
 
 // Logical shift left
-uint64_t lsl(uint64_t value, int shift, bool is64bit);
+uint64_t lsl(uint64_t value, uint32_t shift, bool is64bit);
 // Logical shift right
-uint64_t lsr(uint64_t value, int shift, bool is64bit);
+uint64_t lsr(uint64_t value, uint32_t shift, bool is64bit);
 
 // Gets bit at kth position from n.
-int getBitAt(int n, int k);
+int getBitAt(uint64_t n, int k);
 
 // Gets l bits upwards starting from kth positon of n.
-int getBitsAt(int n, int k, int l);
+int getBitsAt(uint64_t n, int k, int l);
 
 // Sets clearsize bits starting from kth position of n to new to size copysize.
-int setBitsTo(int n, int k, int new, int clearsize, int copysize);
+int setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize);

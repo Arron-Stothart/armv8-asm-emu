@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <limits.h>
+#include <stdlib.h>
 #include "defs.h"
 #include "utils.h"
 
@@ -49,6 +50,7 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
         (rncontent < 0 && op2 < INT_MIN - rncontent));;
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
+    return EXIT_SUCCESS;
 }
 
 static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
@@ -68,6 +70,7 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
         (rncontent > 0 && op2 < INT_MIN + rncontent));
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
+    return EXIT_SUCCESS;
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
@@ -84,18 +87,22 @@ static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
 
 static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] | op2;
+    return EXIT_SUCCESS;
 }
 
 static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] | ~op2;
+    return EXIT_SUCCESS;
 }
 
 static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] ^ ~op2;
+    return EXIT_SUCCESS;
 }
 
 static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] ^ op2;
+    return EXIT_SUCCESS;
 }
 
 static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
@@ -108,6 +115,7 @@ static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
     // C and V are set to 0.
     arm->pstate.C = 0;
     arm->pstate.V = 0;
+    return EXIT_SUCCESS;
 }
 
 static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
@@ -120,6 +128,7 @@ static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
     // C and V are set to 0.
     arm->pstate.C = 0;
     arm->pstate.V = 0;
+    return EXIT_SUCCESS;
 }
 
 static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
@@ -150,7 +159,7 @@ static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int 
     &madd, &msub
 };
 
-static uint64_t (*shiftRm[4])(uint64_t rm, int imm6, bool sf) = {
+static uint64_t (*shiftRm[4])(uint64_t rm, uint32_t imm6, bool sf) = {
     &lsl, &lsr, &asr, &ror
 };
 
