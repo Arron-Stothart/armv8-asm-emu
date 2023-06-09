@@ -82,6 +82,7 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
+    fprintf(stderr, "rd: %x, rn: %x, op2: %x", rd, rn, op2);
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
     fputs("(and)", stderr);
@@ -337,7 +338,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags
             if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
-                arithmeticLogicalRegister[opc](arm, rd, rn, rm, sf);
+                arithmeticLogicalRegister[opc](arm, rd, rn, op2, sf);
             }
 
             // Restore registers read as 32 bit;
