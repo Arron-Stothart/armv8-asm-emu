@@ -22,21 +22,21 @@ static void movk(ARM* arm, int rd, int op, int hw) {
 }
 
 static int add(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = arm->memory[rn] + op2;
+    uint64_t r = arm->memory[rn] + op2;
     arm->registers[rd] = r;
     return r;
 }
 
 static int sub(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = arm->memory[rn] - op2;
+    uint64_t r = arm->memory[rn] - op2;
     arm->registers[rd] = r;
     return r;
 }
 
 static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    int rncontent = arm->memory[rn];
-    int r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
+    uint64_t rncontent = arm->memory[rn];
+    uint64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -55,8 +55,8 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
 
 static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    int rncontent = arm->memory[rn];
-    int r = (rd == ZR_INDEX) ? arm->memory[rn] - op2 : sub(arm, rd, rn, op2, sf);
+    uint64_t rncontent = arm->memory[rn];
+    uint64_t r = (rd == ZR_INDEX) ? arm->memory[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -74,13 +74,13 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = arm->memory[rn] & op2;
+    uint64_t r = arm->memory[rn] & op2;
     arm->memory[rd] = r;
     return r;
 }
 
 static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = arm->memory[rn] & ~op2;
+    uint64_t r = arm->memory[rn] & ~op2;
     arm->memory[rd] = r;
     return r;
 }
@@ -106,7 +106,7 @@ static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
+    uint64_t r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -119,7 +119,7 @@ static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
-    int r = (rd == ZR_INDEX) ? arm->memory[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
+    uint64_t r = (rd == ZR_INDEX) ? arm->memory[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);

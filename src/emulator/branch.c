@@ -64,7 +64,7 @@ void branch(ARM* arm, int instruction) {
             int simm26 = getBitsAt(instruction, BR_SIMM26_START, SIMM26_LEN);
             int offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
-            (*arm).pc += (offset - BYTES_IN_WORD);
+            arm->pc += offset;
             break;
         }
         case REGISTER: {
@@ -73,17 +73,16 @@ void branch(ARM* arm, int instruction) {
             // Check if xn refers to an exisiting register
             assert(xn >= 0 && xn < NUM_OF_REGISTERS);
             // Branch to address stored in Xn
-            (*arm).pc = (*arm).registers[xn];
+            arm->pc = arm->registers[xn];
             break;
         }
         case CONDITIONAL: {
             int simm19 = getBitsAt(instruction, BR_SIMM19_START, SIMM9_LEN);
             int cond = getBitsAt(instruction, BR_COND_START, BR_COND_LEN);
-            // TODO: Check if condition is of some allowed type
             if (conditionCheck(cond, arm)) {
                 int offset = simm19 * BYTES_IN_WORD;
                 // Branch to address encoded by literal
-                (*arm).pc += (offset - BYTES_IN_WORD);
+                arm->pc += offset;
             }
             break;
         }

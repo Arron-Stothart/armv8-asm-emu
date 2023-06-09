@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
                 "the PC is: %lu which is out of range \n",
                 arm.pc);
         }
-        assert(arm.pc >= 0 && arm.pc <= MAX_MEMORY_SIZE);
+
         // Fetch and decode instruction.
         int instruction = getWord(&arm.memory[arm.pc]);
         INSTRUCTION_TYPE type = getInstructionType(instruction);
@@ -57,24 +57,22 @@ int main(int argc, char **argv) {
                 break;
             case DATA_PROCESSING_IMMEDIATE:
                 dataProcessingImmediate(&arm, instruction);
-                arm.pc += INSTRUCTION_SIZE;
                 break;
             case DATA_PROCESSING_REGISTER:
                 dataProcessingRegister(&arm, instruction);
-                arm.pc += INSTRUCTION_SIZE;
                 break;
             case SINGLE_DATA_TRANSFER:
                 singleDataTransfer(&arm, instruction);
-                arm.pc += INSTRUCTION_SIZE;
                 break;
             case BRANCH:
-                arm.pc += INSTRUCTION_SIZE;
                 branch(&arm, instruction);
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.
-                arm.pc += INSTRUCTION_SIZE;
+                break;
         }
+
+        arm.pc += INSTRUCTION_SIZE;
     }
 
     halt:
