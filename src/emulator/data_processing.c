@@ -161,8 +161,8 @@ static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
 Function Pointers
 */
 
-static void (*wideMoveImmediate[3])(ARM* arm, int rd, int op, int hw) = {
-    &movz, &movn, &movk
+static void (*wideMoveImmediate[4])(ARM* arm, int rd, int op, int hw) = {
+    &movn, NULL, &movz, &movk
 };
 
 static int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
@@ -190,7 +190,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     int opc = getBitsAt(instruction, DPI_OPC_START, DPI_OPC_LEN);
     int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
     int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
-    fprintf(stderr, "%d", opi);
+    fprintf(stderr, "%d", opc);
 
     switch (opi) {
 
