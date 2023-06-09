@@ -53,35 +53,26 @@ int main(int argc, char **argv) {
 
         switch(type) {
             case HALT:
-                fputs("HALT \n", stderr);
                 goto halt; // Required to break out of both switch and for loop
                 break;
             case DATA_PROCESSING_IMMEDIATE:
-                fputs("DATA_PROCESSING_IMMEDIATE \n", stderr);
                 dataProcessingImmediate(&arm, instruction);
                 arm.pc += INSTRUCTION_SIZE;
                 break;
             case DATA_PROCESSING_REGISTER:
-                fputs("DATA_PROCESSING_REGISTER \n", stderr);
                 dataProcessingRegister(&arm, instruction);
                 arm.pc += INSTRUCTION_SIZE;
                 break;
             case SINGLE_DATA_TRANSFER:
-                fputs("SINGLE_DATA_TRANSFER \n", stderr);
                 singleDataTransfer(&arm, instruction);
                 arm.pc += INSTRUCTION_SIZE;
                 break;
             case BRANCH:
-                fputs("BRANCH \n", stderr);
                 arm.pc += INSTRUCTION_SIZE;
                 branch(&arm, instruction);
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.
-                fputs("default \n", stderr);
-                if (type == HALT) {
-                    fputs("AGHG", stderr);
-                }
                 arm.pc += INSTRUCTION_SIZE;
         }
     }
