@@ -54,7 +54,6 @@ int main(int argc, char **argv) {
         switch(type) {
             case HALT:
                 fputs("HALT \n", stderr);
-                arm.pc += INSTRUCTION_SIZE;
                 goto halt; // Required to break out of both switch and for loop
                 break;
             case DATA_PROCESSING_IMMEDIATE:
@@ -74,6 +73,7 @@ int main(int argc, char **argv) {
                 break;
             case BRANCH:
                 fputs("BRANCH \n", stderr);
+                arm.pc += INSTRUCTION_SIZE;
                 branch(&arm, instruction);
                 break;
             default:
@@ -88,7 +88,6 @@ int main(int argc, char **argv) {
 
     halt:
         // ensure arm.pc is not too high [off-by-one error]
-        arm.pc -= INSTRUCTION_SIZE;
         if (argc >= 3) {
             outputState(&arm, argv[2]);
         } else {
