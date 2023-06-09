@@ -77,6 +77,8 @@ int main(int argc, char **argv) {
     }
 
     halt:
+        // ensure arm.pc is not too high [off-by-one error]
+        arm.pc -= INSTRUCTION_SIZE;
         if (argc >= 3) {
             outputState(&arm, argv[2]);
         } else {
