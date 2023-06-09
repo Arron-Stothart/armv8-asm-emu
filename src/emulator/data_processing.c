@@ -82,7 +82,7 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
-    fprintf(stderr, "rd: %x, rn: %x, op2: %x", rd, rn, op2);
+    fprintf(stderr, "{rd: %lx, rn: %lx, op2: %x}", arm->registers[rd], arm->registers[rn], op2);
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
     fputs("(and)", stderr);
@@ -327,7 +327,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             }
 
             // Shift rm by imm6 with type depending on shift bits.
-            int op2 = shiftRm[shift](rm, imm6, sf);
+            int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
 
             // Negative bits if N bit is given (logical operations).
             if (n) {
