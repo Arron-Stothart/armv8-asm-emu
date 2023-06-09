@@ -11,7 +11,7 @@ static TRANSFER_TYPE getTransferType(int instruction) {
         return UNSIGNED_OFFSET;
     }
 
-    if (getBitAt(instruction, SDT_LOADLITERAL_BIT)) {
+    if (getBitAt(instruction, SDT_LOADLITERAL_BIT) == 0) {
         return LITERAL_ADDRESS;
      }
 
@@ -41,14 +41,16 @@ void singleDataTransfer(ARM* arm, int instruction) {
     switch (type) {
         case UNSIGNED_OFFSET: {
             uint64_t imm12 = getBitsAt(instruction, SDT_IMM12_START, IMM12_LEN);
-            address = arm->registers[xn] + imm12;
+            int scale = sf ? 8 : 4;
+            address = arm->registers[xn] + (imm12 * scale);
+            fputs("[UNSIGNED_OFFSET]", stderr);
             break;
         }
 
         case PRE_INDEX: {
             int64_t simm9 = getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN);
             arm->registers[xn] += simm9;
-            address = arm->registers[xn] + simm9;
+            address = arm->registers[xn];
             fputs("[PRE_INDEX]", stderr);
             break;
         }
@@ -62,33 +64,35 @@ void singleDataTransfer(ARM* arm, int instruction) {
         case REGISTER_OFFSET: {
             int xm = getBitsAt(instruction, SDT_XM_START, REG_INDEX_SIZE);
             address = arm->registers[xn] + arm->registers[xm];
+            fputs("[REGISTER_OFFSET]", stderr);
             break;
         }
         case LITERAL_ADDRESS:{
             int64_t simm19 = getBitsAt(instruction, SDT_SIMM19_START, SIMM19_LEN);
             address = arm->pc + (simm19 * BYTES_IN_WORD);
+            fputs("[LITERAL_ADDRESS]", stderr);
             break;
         }
+    }
 
-        // If load bit is given then load, else store.
-        if (l) {
-            // Load
-            if (sf) {
-                // In 64 bit load double word at address memory into register.
-                arm->registers[rt] = getDoubleWord(&arm->memory[address]);
-            } else {
-                // In 32 bit load word at address memory into register.
-                arm->registers[rt] = getWord(&arm->memory[address]);
-            }
+    // If load bit is given then load, else store.
+    if (l) {
+        // Load
+        if (sf) {
+            // In 64 bit load double word at address memory into register.
+            arm->registers[rt] = getDoubleWord(&arm->memory[address]);
         } else {
-            // Store
-            uint64_t rtcontent = arm->registers[rt];
-            int storesize = sf ? BYTES_IN_64BIT : BYTES_IN_32BIT;
-            // Store by shifting 1 byte of register's content at a time into memory.
-            // Since we store least significant bit first, we mantain little endian storage.
-            for (int i = 0; i < storesize; i++) {
-                    arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
-            }
+            // In 32 bit load word at address memory into register.
+            arm->registers[rt] = getWord(&arm->memory[address]);
+        }
+    } else {
+        // Store
+        uint64_t rtcontent = arm->registers[rt];
+        int storesize = sf ? BYTES_IN_64BIT : BYTES_IN_32BIT;
+        // Store by shifting 1 byte of register's content at a time into memory.
+        // Since we store least significant bit first, we mantain little endian storage.
+        for (int i = 0; i < storesize; i++) {
+                arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
         }
     }
 }

@@ -37,7 +37,7 @@
 
 // Single Data Processing Constants
 #define SDT_LOADLITERAL_BIT 29 // tests for load literal transfer type
-#define SDT_REGISTEROFFSET_BIT 0 // tests for register offset transfer type
+#define SDT_REGISTEROFFSET_BIT 10 // tests for register offset transfer type
 #define SDT_LBIT_POS 22 // load bit
 #define SDT_UBIT_POS 24 // unsigned offset bit
 #define SDT_SFBIT_POS 30 // 32bit bit
