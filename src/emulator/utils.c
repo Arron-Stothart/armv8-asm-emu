@@ -5,19 +5,6 @@
 #include <inttypes.h>
 #include "defs.h"
 
-// Converts values in 32bits between endians.
-uint32_t convert(uint32_t value) {
-    uint32_t converted = 0;
-
-    // Bitshifts for bytes.
-    converted |= ((0x000000ff & value) << 24);
-    converted |= ((0x0000ff00 & value) << 8);
-    converted |= ((0x00ff0000 & value) >> 8);
-    converted |= ((0xff000000 & value) >> 24);
-
-    return converted;
-}
-
 // Returns word from byte addressable memory
 uint32_t getWord(char* memory) {
     uint32_t value = 0;
@@ -120,10 +107,11 @@ Bitwise Operations
 */
 
 // Masks top 32 bits to 0 if value is 32 bits.
-static void wregisterMask(uint64_t* value, bool is64bit) {
+static uint64_t wregisterMask(uint64_t value, bool is64bit) {
     if (!is64bit) {
-        *value &= WREGISTER_MASK;
+        value &= WREGISTER_MASK;
     }
+    return value;
 }
 
 // Rotate right
@@ -131,7 +119,7 @@ uint64_t ror(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
     int bits = is64bit ? 64 : 32;
     // If 32 bit, mask top 32 bits after shift.
-    wregisterMask(&value, is64bit);
+    value = wregisterMask(value, is64bit);
     return (value >> shift) | (value << (bits - shift));
 }
 
@@ -140,16 +128,14 @@ uint64_t lsl(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
     value >>= shift;
     // If 32 bit, mask top 32 bits after shift.
-    wregisterMask(&value, is64bit);
-    return value;
+    return wregisterMask(value, is64bit);
 }
 
 uint64_t lsr(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
     value <<= shift;
     // If 32 bit, mask top 32 bits after shift.
-    wregisterMask(&value, is64bit);
-    return value;
+    return wregisterMask(value, is64bit);
 }
 
 // Arithemtic shift right
@@ -165,8 +151,7 @@ uint64_t asr(uint64_t value, uint32_t shift, bool is64bit) {
 
     value = value < 0 ? ~(~value >> shift) : value >> shift;
     // If 32 bit, mask top 32 bits after shift.
-    wregisterMask(&value, is64bit);
-    return value;
+    return wregisterMask(value, is64bit);
 }
 
 // generates binary mask of n ones.
