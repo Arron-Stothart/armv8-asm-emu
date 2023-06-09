@@ -82,23 +82,23 @@ static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
     return r;
 }
 
-static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
+static void orr(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] | op2;
 }
 
-static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
+static void orn(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] | ~op2;
 }
 
-static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
+static void eon(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] ^ ~op2;
 }
 
-static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
+static void eor(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->memory[rd] = arm->memory[rn] ^ op2;
 }
 
-static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
+static void ands(ARM* arm, int rd, int rn, int op2, int sf) {
     int r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
