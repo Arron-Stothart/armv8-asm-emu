@@ -62,7 +62,7 @@ void outputState(ARM *arm, char *file) {
 // Given a array of memory and a binary file, data from file will be loaded into array.
 void loadBinary(char* memory, char* path) {
 
-    FILE* binary = fopen(path, "r");
+    FILE* binary = fopen(path, "rb");
 
     // If file pointer is null then return with error.
     if (binary == NULL) {
