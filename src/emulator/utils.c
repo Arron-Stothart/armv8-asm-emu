@@ -40,19 +40,20 @@ int getDoubleWord(char* memory) {
 
 // Gets instruction type given instruction.
 INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
-    unsigned int op0 = getBitsAt(instruction, OP0_START, OP0_LEN);
+    unsigned int op0 = (instruction & (0xF << 24)) >> 24;
+    //getBitsAt(instruction, OP0_START, OP0_LEN);
 
     if (instruction == HALT_CODE) {
         return HALT;
     } else if (instruction == NOP_CODE) {
         return NOP;
-    } else if ((op0 & 0x1110) == 0x1000) {
+    } else if ((op0 & 0b1110) == 0b1000) {
         return DATA_PROCESSING_IMMEDIATE;
-    } else if ((op0 & 0x0111) == 0x0101) {
+    } else if ((op0 & 0b0111) == 0b0101) {
         return DATA_PROCESSING_REGISTER;
-    } else if ((op0 & 0x0101) == 0x0100) {
+    } else if ((op0 & 0b0101) == 0b0100) {
         return SINGLE_DATA_TRANSFER;
-    } else if ((op0 & 0x1110) == 0x1010) {
+    } else if ((op0 & 0b1110) == 0b1010) {
         return BRANCH;
     } else {
         // Default case; not instruction.
