@@ -47,7 +47,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
 
         case PRE_INDEX: {
             int64_t simm9 = getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN);
-            arm->memory[xn] += simm9;
+            arm->registers[xn] += simm9;
             address = arm->registers[xn] + simm9;
             fputs("[PRE_INDEX]", stderr);
             break;
@@ -55,7 +55,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
         case POST_INDEX: {
             int64_t simm9 = getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN);
             address = arm->registers[xn];
-            arm->memory[xn] += simm9;
+            arm->registers[xn] += simm9;
             fputs("[POST_INDEX]", stderr);
             break;
         }

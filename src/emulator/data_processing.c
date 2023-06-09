@@ -18,7 +18,7 @@ static void movn(ARM* arm, int rd, int op, int hw) {
 }
 
 static void movk(ARM* arm, int rd, int op, int hw) {
-    setBitsTo(arm->memory[rd], hw * 16, op, IMM16_LEN, IMM16_LEN);
+    setBitsTo(arm->registers[rd], hw * 16, op, IMM16_LEN, IMM16_LEN);
 }
 
 static int add(ARM* arm, int rd, int rn, int op2, int sf) {
