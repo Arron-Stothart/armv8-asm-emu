@@ -7,7 +7,7 @@ int convert(int32_t value);
 INSTRUCTION_TYPE getInstructionType(int32_t word);
 
 // Outputs state of ARM processor into .out file.
-void outputState(ARM* arm);
+void outputState(ARM* arm, char *file);
 
 // Given a array of memory and a binary file, data from file will be loaded into array.
 void loadBinary(char* memory, char* path);

@@ -61,18 +61,18 @@ INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
 }
 
 // Outputs state of ARM processor into .out file.
-void outputState(ARM* arm) {
-    FILE* output = fopen("output.out", "w");
+void outputState(ARM *arm, char *file) {
+    FILE* output = fopen(file, "w");
 
     // Output registers.
     fprintf(output, "Registers: \n");
 
 	for (int i = 0; i < NUM_OF_REGISTERS; i++) {
-		fprintf(output, "$X%02d = %16" PRId64 "\n",
+		fprintf(output, "X%02d = %016lx\n",
 			   i, arm->registers[i]);
 	}
 
-    fprintf(output, "PC  = %16" PRId64 "\n", arm->pc);
+    fprintf(output, "PC = %016lx\n", arm->pc);
 
     // Output PSTATE //! find better way to do this
     fprintf(output, "PSTATE: ");

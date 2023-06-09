@@ -77,6 +77,10 @@ int main(int argc, char **argv) {
     }
 
     halt:
-        outputState(&arm);
+        if (argc >= 3) {
+            outputState(&arm, argv[2]);
+        } else {
+            outputState(&arm, "output.out");
+        }
         return EXIT_SUCCESS;
 }
