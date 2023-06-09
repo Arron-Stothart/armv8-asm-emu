@@ -222,7 +222,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             }
 
             // Restore rn if it was read as 32 bit;
-            if (!sf) {
+            if (!sf && rd != rn) {
                 arm->registers[rn] = rntemp;
             }
 
@@ -299,7 +299,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             }
 
             // Restore registers read as 32 bit;
-            if (!sf) {
+            if (!sf && rd != rn) {
                 arm->registers[rn] = rntemp;
                 arm->registers[ra] = ratemp;
                 arm->registers[rm] = rmtemp;
@@ -342,7 +342,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             }
 
             // Restore registers read as 32 bit;
-            if (!sf) {
+            if (!sf && rd != rn) {
                 arm->registers[rn] = rntemp;
                 arm->registers[rm] = rmtemp;
             }
