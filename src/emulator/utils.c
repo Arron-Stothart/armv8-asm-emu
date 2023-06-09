@@ -25,28 +25,6 @@ uint64_t getDoubleWord(char* memory) {
     return value;
 }
 
-// Gets instruction type given instruction.
-INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
-    uint32_t op0 = getBitsAt(instruction, OP0_START, OP0_LEN);
-
-    if (instruction == HALT_CODE) {
-        return HALT;
-    } else if (instruction == NOP_CODE) {
-        return NOP;
-    } else if ((op0 & 0b1110) == 0b1000) {
-        return DATA_PROCESSING_IMMEDIATE;
-    } else if ((op0 & 0b0111) == 0b0101) {
-        return DATA_PROCESSING_REGISTER;
-    } else if ((op0 & 0b0101) == 0b0100) {
-        return SINGLE_DATA_TRANSFER;
-    } else if ((op0 & 0b1110) == 0b1010) {
-        return BRANCH;
-    } else {
-        // Default case; not instruction.
-        return DATA;
-    }
-}
-
 // Outputs state of ARM processor into .out file.
 void outputState(ARM *arm, char *file) {
     FILE* output = fopen(file, "w");
@@ -184,4 +162,26 @@ static int bitClear(uint64_t n, int k, int l) {
 int setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize) {
     int cleared = bitClear(n, k, clearsize);
     return cleared | (getBitsAt(new, k, copysize) << k);
+}
+
+// Gets instruction type given instruction.
+INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
+    uint32_t op0 = getBitsAt(instruction, OP0_START, OP0_LEN);
+
+    if (instruction == HALT_CODE) {
+        return HALT;
+    } else if (instruction == NOP_CODE) {
+        return NOP;
+    } else if ((op0 & 0b1110) == 0b1000) {
+        return DATA_PROCESSING_IMMEDIATE;
+    } else if ((op0 & 0b0111) == 0b0101) {
+        return DATA_PROCESSING_REGISTER;
+    } else if ((op0 & 0b0101) == 0b0100) {
+        return SINGLE_DATA_TRANSFER;
+    } else if ((op0 & 0b1110) == 0b1010) {
+        return BRANCH;
+    } else {
+        // Default case; not instruction.
+        return DATA;
+    }
 }
