@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "defs.h"
 #include "utils.h"
 
@@ -11,25 +12,30 @@ Operations
 
 static void movz(ARM* arm, int rd, int op, int hw) {
     arm->registers[rd] = op;
+    fputs("(movz)", stderr);
 }
 
 static void movn(ARM* arm, int rd, int op, int hw) {
     arm->registers[rd] = ~op;
+    fputs("(movn)", stderr);
 }
 
 static void movk(ARM* arm, int rd, int op, int hw) {
     setBitsTo(arm->registers[rd], hw * 16, op, IMM16_LEN, IMM16_LEN);
+    fputs("(movk)", stderr);
 }
 
 static int add(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] + op2;
     arm->registers[rd] = r;
+    fputs("(add)", stderr);
     return r;
 }
 
 static int sub(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] - op2;
     arm->registers[rd] = r;
+    fputs("(sub)", stderr);
     return r;
 }
 
@@ -50,6 +56,7 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
         (rncontent < 0 && op2 < INT_MIN - rncontent));;
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
+    fputs("(adds)", stderr);
     return EXIT_SUCCESS;
 }
 
@@ -70,38 +77,45 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
         (rncontent > 0 && op2 < INT_MIN + rncontent));
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
+    fputs("(subs)", stderr);
     return EXIT_SUCCESS;
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
+    fputs("(and)", stderr);
     return r;
 }
 
 static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] & ~op2;
     arm->registers[rd] = r;
+    fputs("(bic)", stderr);
     return r;
 }
 
 static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] | op2;
+    fputs("(orr)", stderr);
     return EXIT_SUCCESS;
 }
 
 static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] | ~op2;
+    fputs("(orn)", stderr);
     return EXIT_SUCCESS;
 }
 
 static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] ^ ~op2;
+    fputs("(eon)", stderr);
     return EXIT_SUCCESS;
 }
 
 static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] ^ op2;
+    fputs("(eor)", stderr);
     return EXIT_SUCCESS;
 }
 
@@ -115,6 +129,7 @@ static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
     // C and V are set to 0.
     arm->pstate.C = 0;
     arm->pstate.V = 0;
+    fputs("(ands)", stderr);
     return EXIT_SUCCESS;
 }
 
@@ -128,15 +143,18 @@ static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
     // C and V are set to 0.
     arm->pstate.C = 0;
     arm->pstate.V = 0;
+    fputs("(bics)", stderr);
     return EXIT_SUCCESS;
 }
 
 static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
     arm->registers[rd] = arm->registers[ra] + (arm->registers[rn] * arm->registers[rm]);
+    fputs("(madd)", stderr);
 }
 
 static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
     arm->registers[rd] = arm->registers[ra] - (arm->registers[rn] * arm->registers[rm]);
+    fputs("(msub)", stderr);
 }
 
 /*
@@ -172,6 +190,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
     int opc = getBitsAt(instruction, DPI_OPC_START, DPI_OPC_LEN);
     int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
     int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
+    fprintf(stderr, "%d", opi);
 
     switch (opi) {
 
@@ -233,6 +252,9 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             break;
         }
+
+        default:
+            fputs("(NOTHING)", stderr);
     }
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).

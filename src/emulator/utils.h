@@ -7,13 +7,13 @@ INSTRUCTION_TYPE getInstructionType(int32_t word);
 void outputState(ARM* arm, char *file);
 
 // Given a array of memory and a binary file, data from file will be loaded into array.
-void loadBinary(char* memory, char* path);
+void loadBinary(uint8_t* memory, char* path);
 
 // Returns word from byte addressable memory
-int getWord(char* memory);
+int getWord(uint8_t* memory);
 
 // Returns double word from byte addressable memory
-int getDoubleWord(char* memory);
+int getDoubleWord(uint8_t* memory);
 
 // Rotate right
 uint64_t ror(uint64_t value, uint32_t shift, bool is64bit);

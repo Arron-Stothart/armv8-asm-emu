@@ -142,7 +142,7 @@ typedef struct {
 // Registers are 64 bit; Memory is byte addressable (sizeof(char) = 1 byte).
 typedef struct {
     uint64_t registers[NUM_OF_REGISTERS];
-    char memory[MAX_MEMORY_SIZE];
+    uint8_t memory[MAX_MEMORY_SIZE];
     PSTATE pstate;
     uint64_t pc;
 } ARM;

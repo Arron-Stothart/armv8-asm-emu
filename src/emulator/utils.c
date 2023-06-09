@@ -6,7 +6,7 @@
 #include "defs.h"
 
 // Returns word from byte addressable memory
-uint32_t getWord(char* memory) {
+uint32_t getWord(uint8_t* memory) {
     uint32_t value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
         value += ((uint32_t)*memory) << (SIZE_OF_BYTE * i);
@@ -16,7 +16,7 @@ uint32_t getWord(char* memory) {
 }
 
 // Returns word from byte addressable memory
-uint64_t getDoubleWord(char* memory) {
+uint64_t getDoubleWord(uint8_t* memory) {
     uint64_t value = 0;
     for (int i = 0; i < BYTES_IN_DOUBLE_WORD; i++) {
         value += *memory << (SIZE_OF_BYTE * i);
@@ -60,7 +60,7 @@ void outputState(ARM *arm, char *file) {
 }
 
 // Given a array of memory and a binary file, data from file will be loaded into array.
-void loadBinary(char* memory, char* path) {
+void loadBinary(uint8_t* memory, char* path) {
 
     FILE* binary = fopen(path, "rb");
 
@@ -73,11 +73,16 @@ void loadBinary(char* memory, char* path) {
     // Read data from binary until end of file. Only 1 piece of data read each time.
     int i = 0, read = 1;
     while (read) {
-        read = fread(&memory[i], sizeof(char), 1, binary);
+        read = fread(&memory[i], sizeof(uint8_t), 1, binary);
         i++;
     }
 
     fclose(binary);
+    // assert(getWord(&memory[0]) == 0xd28001e1);
+    printf("%02x", memory[1]);
+    
+    //assert(*memory == 0xe1);
+    //assert(memory[1] == 0x01);
 }
 
 /*
