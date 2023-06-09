@@ -10,11 +10,11 @@ Operations
 */
 
 static void movz(ARM* arm, int rd, int op, int hw) {
-    arm->memory[rd] = op;
+    arm->registers[rd] = op;
 }
 
 static void movn(ARM* arm, int rd, int op, int hw) {
-    arm->memory[rd] = ~op;
+    arm->registers[rd] = ~op;
 }
 
 static void movk(ARM* arm, int rd, int op, int hw) {
@@ -22,20 +22,20 @@ static void movk(ARM* arm, int rd, int op, int hw) {
 }
 
 static int add(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = arm->memory[rn] + op2;
+    uint64_t r = arm->registers[rn] + op2;
     arm->registers[rd] = r;
     return r;
 }
 
 static int sub(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = arm->memory[rn] - op2;
+    uint64_t r = arm->registers[rn] - op2;
     arm->registers[rd] = r;
     return r;
 }
 
 static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    uint64_t rncontent = arm->memory[rn];
+    uint64_t rncontent = arm->registers[rn];
     uint64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
@@ -55,8 +55,8 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
 
 static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    uint64_t rncontent = arm->memory[rn];
-    uint64_t r = (rd == ZR_INDEX) ? arm->memory[rn] - op2 : sub(arm, rd, rn, op2, sf);
+    uint64_t rncontent = arm->registers[rn];
+    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -74,39 +74,39 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int and(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = arm->memory[rn] & op2;
-    arm->memory[rd] = r;
+    uint64_t r = arm->registers[rn] & op2;
+    arm->registers[rd] = r;
     return r;
 }
 
 static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = arm->memory[rn] & ~op2;
-    arm->memory[rd] = r;
+    uint64_t r = arm->registers[rn] & ~op2;
+    arm->registers[rd] = r;
     return r;
 }
 
 static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] | op2;
+    arm->registers[rd] = arm->registers[rn] | op2;
     return EXIT_SUCCESS;
 }
 
 static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] | ~op2;
+    arm->registers[rd] = arm->registers[rn] | ~op2;
     return EXIT_SUCCESS;
 }
 
 static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] ^ ~op2;
+    arm->registers[rd] = arm->registers[rn] ^ ~op2;
     return EXIT_SUCCESS;
 }
 
 static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->memory[rd] = arm->memory[rn] ^ op2;
+    arm->registers[rd] = arm->registers[rn] ^ op2;
     return EXIT_SUCCESS;
 }
 
 static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = (rd == ZR_INDEX) ? arm->memory[rn] & op2 : and(arm, rd, rn, op2, sf);
+    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & op2 : and(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -119,7 +119,7 @@ static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = (rd == ZR_INDEX) ? arm->memory[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
+    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -132,11 +132,11 @@ static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
-    arm->memory[rd] = arm->memory[ra] + (arm->memory[rn] * arm->memory[rm]);
+    arm->registers[rd] = arm->registers[ra] + (arm->registers[rn] * arm->registers[rm]);
 }
 
 static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
-    arm->memory[rd] = arm->memory[ra] - (arm->memory[rn] * arm->memory[rm]);
+    arm->registers[rd] = arm->registers[ra] - (arm->registers[rn] * arm->registers[rm]);
 }
 
 /*
@@ -189,9 +189,9 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // If sf is not given, read rd and rn as 32 bit; rn to be restored later.
             int rntemp;
             if (!sf) {
-                rntemp = arm->memory[rn];
-                arm->memory[rd] &= WREGISTER_MASK;
-                arm->memory[rn] &= WREGISTER_MASK;
+                rntemp = arm->registers[rn];
+                arm->registers[rd] &= WREGISTER_MASK;
+                arm->registers[rn] &= WREGISTER_MASK;
             }
 
             // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
@@ -203,7 +203,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             // Restore rn if it was read as 32 bit;
             if (!sf) {
-                arm->memory[rn] = rntemp;
+                arm->registers[rn] = rntemp;
             }
 
             break;
@@ -221,7 +221,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             // Read rd as 32 bit register if sf is not given.
             if (!sf) {
-                arm->memory[rd] &= WREGISTER_MASK;
+                arm->registers[rd] &= WREGISTER_MASK;
             }
 
             // Last rd index encodes ZR for wide move processing.
@@ -237,7 +237,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
     if (!sf) {
-        arm->memory[rd] &= WREGISTER_MASK;
+        arm->registers[rd] &= WREGISTER_MASK;
     }
 }
 
@@ -261,13 +261,13 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int rmtemp;
             int ratemp;
             if (!sf) {
-                rntemp = arm->memory[rn];
-                ratemp = arm->memory[ra];
-                rmtemp = arm->memory[rm];
-                arm->memory[rd] &= WREGISTER_MASK;
-                arm->memory[rn] &= WREGISTER_MASK;
-                arm->memory[ra] &= WREGISTER_MASK;
-                arm->memory[rm] &= WREGISTER_MASK;
+                rntemp = arm->registers[rn];
+                ratemp = arm->registers[ra];
+                rmtemp = arm->registers[rm];
+                arm->registers[rd] &= WREGISTER_MASK;
+                arm->registers[rn] &= WREGISTER_MASK;
+                arm->registers[ra] &= WREGISTER_MASK;
+                arm->registers[rm] &= WREGISTER_MASK;
             }
 
             // ZR is read-only and no flags will be changed.
@@ -277,9 +277,9 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
             // Restore registers read as 32 bit;
             if (!sf) {
-                arm->memory[rn] = rntemp;
-                arm->memory[ra] = ratemp;
-                arm->memory[rm] = rmtemp;
+                arm->registers[rn] = rntemp;
+                arm->registers[ra] = ratemp;
+                arm->registers[rm] = rmtemp;
             }
 
             break;
@@ -296,11 +296,11 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int rntemp;
             int rmtemp;
             if (!sf) {
-                rntemp = arm->memory[rn];
-                rmtemp = arm->memory[rm];
-                arm->memory[rd] &= WREGISTER_MASK;
-                arm->memory[rn] &= WREGISTER_MASK;
-                arm->memory[rm] &= WREGISTER_MASK;
+                rntemp = arm->registers[rn];
+                rmtemp = arm->registers[rm];
+                arm->registers[rd] &= WREGISTER_MASK;
+                arm->registers[rn] &= WREGISTER_MASK;
+                arm->registers[rm] &= WREGISTER_MASK;
             }
 
             // Shift rm by imm6 with type depending on shift bits.
@@ -320,8 +320,8 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
             // Restore registers read as 32 bit;
             if (!sf) {
-                arm->memory[rn] = rntemp;
-                arm->memory[rm] = rmtemp;
+                arm->registers[rn] = rntemp;
+                arm->registers[rm] = rmtemp;
             }
 
             break;
@@ -330,6 +330,6 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
     if (!sf) {
-        arm->memory[rd] &= WREGISTER_MASK;
+        arm->registers[rd] &= WREGISTER_MASK;
     }
 }

@@ -9,7 +9,7 @@
 uint32_t getWord(char* memory) {
     uint32_t value = 0;
     for (int i = 0; i < BYTES_IN_WORD; i++) {
-        value += *memory << (SIZE_OF_BYTE * i);
+        value += ((uint32_t)*memory) << (SIZE_OF_BYTE * i);
         memory++;
     }
     return value;
