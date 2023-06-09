@@ -47,7 +47,6 @@ int main(int argc, char **argv) {
         INSTRUCTION_TYPE type = getInstructionType(instruction);
         // Pre-increment pc to next instruction location.
         // DEBUG: fprintf(stderr, "PC is: %lu \n", arm.pc);
-        arm.pc += INSTRUCTION_SIZE;
 
         const char *names[] = { "DATA_PROCESSING_IMMEDIATE ", "DATA_PROCESSING_REGISTER ", "SINGLE_DATA_TRANSFER ", "BRANCH ", "HALT ", "NOP ", "DATA " };
         fputs(names[type], stderr);
@@ -55,19 +54,23 @@ int main(int argc, char **argv) {
         switch(type) {
             case HALT:
                 fputs("HALT \n", stderr);
+                arm.pc += INSTRUCTION_SIZE;
                 goto halt; // Required to break out of both switch and for loop
                 break;
             case DATA_PROCESSING_IMMEDIATE:
                 fputs("DATA_PROCESSING_IMMEDIATE \n", stderr);
                 dataProcessingImmediate(&arm, instruction);
+                arm.pc += INSTRUCTION_SIZE;
                 break;
             case DATA_PROCESSING_REGISTER:
                 fputs("DATA_PROCESSING_REGISTER \n", stderr);
                 dataProcessingRegister(&arm, instruction);
+                arm.pc += INSTRUCTION_SIZE;
                 break;
             case SINGLE_DATA_TRANSFER:
                 fputs("SINGLE_DATA_TRANSFER \n", stderr);
                 singleDataTransfer(&arm, instruction);
+                arm.pc += INSTRUCTION_SIZE;
                 break;
             case BRANCH:
                 fputs("BRANCH \n", stderr);
@@ -79,6 +82,7 @@ int main(int argc, char **argv) {
                 if (type == HALT) {
                     fputs("AGHG", stderr);
                 }
+                arm.pc += INSTRUCTION_SIZE;
         }
     }
 
