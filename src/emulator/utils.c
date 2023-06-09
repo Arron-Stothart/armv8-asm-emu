@@ -86,7 +86,7 @@ void outputState(ARM *arm, char *file) {
     fprintf(output, "Non-zero memory:\n");
 
     for (int i = 0; i < MAX_MEMORY_SIZE; i++) {
-		if (arm->memory[i] > 0) {
+		if (arm->memory[i] != 0) {
             // Bytes are stored in little endian so have to convert.
             fprintf(output, "0x%08x: 0x%08x\n", i * 4, getWord(&arm->memory[i * 4]));
 		}
