@@ -49,30 +49,36 @@ int main(int argc, char **argv) {
         // DEBUG: fprintf(stderr, "PC is: %lu \n", arm.pc);
         arm.pc += INSTRUCTION_SIZE;
 
+        const char *names[] = { "DATA_PROCESSING_IMMEDIATE ", "DATA_PROCESSING_REGISTER ", "SINGLE_DATA_TRANSFER ", "BRANCH ", "HALT ", "NOP ", "DATA " };
+        fputs(names[type], stderr);
+
         switch(type) {
             case HALT:
-                // fputs("HALT", stderr);
+                fputs("HALT \n", stderr);
                 goto halt; // Required to break out of both switch and for loop
                 break;
             case DATA_PROCESSING_IMMEDIATE:
-                // fputs("DATA_PROCESSING_IMMEDIATE", stderr);
+                fputs("DATA_PROCESSING_IMMEDIATE \n", stderr);
                 dataProcessingImmediate(&arm, instruction);
                 break;
             case DATA_PROCESSING_REGISTER:
-                // fputs("DATA_PROCESSING_REGISTER", stderr);
+                fputs("DATA_PROCESSING_REGISTER \n", stderr);
                 dataProcessingRegister(&arm, instruction);
                 break;
             case SINGLE_DATA_TRANSFER:
-                // fputs("SINGLE_DATA_TRANSFER", stderr);
+                fputs("SINGLE_DATA_TRANSFER \n", stderr);
                 singleDataTransfer(&arm, instruction);
                 break;
             case BRANCH:
-                // fputs("BRANCH", stderr);
+                fputs("BRANCH \n", stderr);
                 branch(&arm, instruction);
                 break;
             default:
                 // Non-instruction data or NOP case; ignore.
-                // fputs("default", stderr);
+                fputs("default \n", stderr);
+                if (type == HALT) {
+                    fputs("AGHG", stderr);
+                }
         }
     }
 
