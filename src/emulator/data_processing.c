@@ -25,21 +25,21 @@ static void movk(ARM* arm, int rd, int op, int hw) {
     fputs("(movk)", stderr);
 }
 
-static int add(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t add(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] + op2;
     arm->registers[rd] = r;
     fputs("(add)", stderr);
     return r;
 }
 
-static int sub(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t sub(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] - op2;
     arm->registers[rd] = r;
     fputs("(sub)", stderr);
     return r;
 }
 
-static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t adds(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
     uint64_t rncontent = arm->registers[rn];
     uint64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
@@ -60,7 +60,7 @@ static int adds(ARM* arm, int rd, int rn, int op2, int sf) {
     return EXIT_SUCCESS;
 }
 
-static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t subs(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
     uint64_t rncontent = arm->registers[rn];
     uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
@@ -81,7 +81,7 @@ static int subs(ARM* arm, int rd, int rn, int op2, int sf) {
     return EXIT_SUCCESS;
 }
 
-static int and(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t and(ARM* arm, int rd, int rn, int op2, int sf) {
     fprintf(stderr, "{rd: %lx, rn: %lx, op2: %x}", arm->registers[rd], arm->registers[rn], op2);
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
@@ -89,38 +89,38 @@ static int and(ARM* arm, int rd, int rn, int op2, int sf) {
     return r;
 }
 
-static int bic(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t bic(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = arm->registers[rn] & ~op2;
     arm->registers[rd] = r;
     fputs("(bic)", stderr);
     return r;
 }
 
-static int orr(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t orr(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] | op2;
     fputs("(orr)", stderr);
     return EXIT_SUCCESS;
 }
 
-static int orn(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t orn(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] | ~op2;
     fputs("(orn)", stderr);
     return EXIT_SUCCESS;
 }
 
-static int eon(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t eon(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] ^ ~op2;
     fputs("(eon)", stderr);
     return EXIT_SUCCESS;
 }
 
-static int eor(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t eor(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->registers[rd] = arm->registers[rn] ^ op2;
     fputs("(eor)", stderr);
     return EXIT_SUCCESS;
 }
 
-static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t ands(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & op2 : and(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
@@ -134,7 +134,7 @@ static int ands(ARM* arm, int rd, int rn, int op2, int sf) {
     return EXIT_SUCCESS;
 }
 
-static int bics(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t bics(ARM* arm, int rd, int rn, int op2, int sf) {
     uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
@@ -221,7 +221,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
                 arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
             }
 
-            // Restore rn if it was read as 32 bit;
+            // Restore rn if it was read as 32 bit and is not the destination register;
             if (!sf && rd != rn) {
                 arm->registers[rn] = rntemp;
             }
@@ -299,10 +299,16 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             }
 
             // Restore registers read as 32 bit;
-            if (!sf && rd != rn) {
-                arm->registers[rn] = rntemp;
-                arm->registers[ra] = ratemp;
-                arm->registers[rm] = rmtemp;
+            if (!sf) {
+                if (rn != rd) {
+                    arm->registers[rn] = rntemp;
+                }
+                if (rm != rd) {
+                    arm->registers[rm] = rmtemp;
+                }
+                if (rm != ra) {
+                    arm->registers[ra] = ratemp;
+                }
             }
 
             break;
@@ -341,10 +347,14 @@ void dataProcessingRegister(ARM* arm, int instruction) {
                 arithmeticLogicalRegister[opc](arm, rd, rn, op2, sf);
             }
 
-            // Restore registers read as 32 bit;
-            if (!sf && rd != rn) {
-                arm->registers[rn] = rntemp;
-                arm->registers[rm] = rmtemp;
+            // Restore registers read as 32 bit if they are not the destination register;
+            if (!sf) {
+                if (rn != rd) {
+                    arm->registers[rn] = rntemp;
+                }
+                if (rm != rd) {
+                    arm->registers[rm] = rmtemp;
+                }
             }
 
             break;
