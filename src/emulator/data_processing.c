@@ -81,7 +81,7 @@ static uint64_t subs(ARM* arm, int rd, int rn, int op2, int sf) {
     return EXIT_SUCCESS;
 }
 
-static uint64_t and(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t and(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     fprintf(stderr, "{rd: %lx, rn: %lx, op2: %x}", arm->registers[rd], arm->registers[rn], op2);
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
@@ -89,38 +89,19 @@ static uint64_t and(ARM* arm, int rd, int rn, int op2, int sf) {
     return r;
 }
 
-static uint64_t bic(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = arm->registers[rn] & ~op2;
-    arm->registers[rd] = r;
-    fputs("(bic)", stderr);
-    return r;
-}
-
-static uint64_t orr(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t orr(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     arm->registers[rd] = arm->registers[rn] | op2;
     fputs("(orr)", stderr);
     return EXIT_SUCCESS;
 }
 
-static uint64_t orn(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->registers[rd] = arm->registers[rn] | ~op2;
-    fputs("(orn)", stderr);
-    return EXIT_SUCCESS;
-}
-
-static uint64_t eon(ARM* arm, int rd, int rn, int op2, int sf) {
-    arm->registers[rd] = arm->registers[rn] ^ ~op2;
-    fputs("(eon)", stderr);
-    return EXIT_SUCCESS;
-}
-
-static uint64_t eor(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t eor(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     arm->registers[rd] = arm->registers[rn] ^ op2;
     fputs("(eor)", stderr);
     return EXIT_SUCCESS;
 }
 
-static uint64_t ands(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t ands(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & op2 : and(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
@@ -131,20 +112,6 @@ static uint64_t ands(ARM* arm, int rd, int rn, int op2, int sf) {
     arm->pstate.C = 0;
     arm->pstate.V = 0;
     fputs("(ands)", stderr);
-    return EXIT_SUCCESS;
-}
-
-static uint64_t bics(ARM* arm, int rd, int rn, int op2, int sf) {
-    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & ~op2 : bic(arm, rd, rn, op2, sf);
-
-    // Sets flags for PSTATE
-    arm->pstate.Z = (r == 0);
-    // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
-    // C and V are set to 0.
-    arm->pstate.C = 0;
-    arm->pstate.V = 0;
-    fputs("(bics)", stderr);
     return EXIT_SUCCESS;
 }
 
@@ -170,8 +137,8 @@ static uint64_t (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int
     &add, &adds, &sub, &subs
 };
 
-static uint64_t (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, int op2, int sf) = {
-    &and, &bic, &orr, &orn, &eon, &eor, &ands, &bics
+static uint64_t (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, uint64_t op2, int sf) = {
+    &and, &orr, &eor, &ands
 };
 
 static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int sf) = {
@@ -323,7 +290,6 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int n = getBitAt(instruction, DPR_NBIT_POS);
             int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
             int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
-            int mneumonic = n + (opc << 1);
 
             // If sf is not given, read registers as 32 bit; all but rd to be restored later.
             int rntemp;
@@ -339,11 +305,15 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             // Shift rm by imm6 with type depending on shift bits.
             int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
 
+            if (n) {
+                op2 = ~op2; 
+            }
+
             // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
             // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags
             if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
-                arithmeticLogicalRegister[mneumonic](arm, rd, rn, op2, sf);
+                arithmeticLogicalRegister[opc](arm, rd, rn, op2, sf);
             }
 
             // Restore registers read as 32 bit if they are not the destination register;
