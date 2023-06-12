@@ -82,7 +82,7 @@ static uint64_t subs(ARM* arm, int rd, int rn, int op2, int sf) {
 }
 
 static uint64_t and(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
-    fprintf(stderr, "{rd: %lx, rn: %lx, op2: %x}", arm->registers[rd], arm->registers[rn], op2);
+    fprintf(stderr, "{rd: %lx, rn: %lx, op2: %lx}", arm->registers[rd], arm->registers[rn], op2);
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
     fputs("(and)", stderr);
