@@ -10,10 +10,10 @@ void outputState(ARM* arm, char *file);
 void loadBinary(uint8_t* memory, char* path);
 
 // Returns word from byte addressable memory
-int getWord(uint8_t* memory);
+uint32_t getWord(uint8_t* memory);
 
 // Returns double word from byte addressable memory
-int getDoubleWord(uint8_t* memory);
+uint64_t getDoubleWord(uint8_t* memory);
 
 // Rotate right
 uint64_t ror(uint64_t value, uint32_t shift, bool is64bit);

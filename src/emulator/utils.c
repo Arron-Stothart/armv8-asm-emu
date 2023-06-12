@@ -17,12 +17,7 @@ uint32_t getWord(uint8_t* memory) {
 
 // Returns word from byte addressable memory
 uint64_t getDoubleWord(uint8_t* memory) {
-    uint64_t value = 0;
-    for (int i = 0; i < BYTES_IN_DOUBLE_WORD; i++) {
-        value += *memory << (SIZE_OF_BYTE * i);
-        memory++;
-    }
-    return value;
+    return (uint64_t) getWord(memory) + ((uint64_t)getWord(memory + BYTES_IN_WORD) << 32);
 }
 
 // Outputs state of ARM processor into .out file.
