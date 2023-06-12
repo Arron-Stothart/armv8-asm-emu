@@ -21,9 +21,9 @@ static BRANCH_TYPE getBranchType(int instruction) {
 
 // Determine if ARM PSTATE satisfies cond
 static bool conditionCheck(int cond, ARM* arm) {
-    int n = (*arm).pstate.N;
-    int z = (*arm).pstate.Z;
-    int v = (*arm).pstate.V;
+    int n = arm->pstate.N;
+    int z = arm->pstate.Z;
+    int v = arm->pstate.V;
 
     switch (cond) {
         // EQ (Equal)

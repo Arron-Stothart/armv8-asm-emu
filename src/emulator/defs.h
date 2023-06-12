@@ -72,7 +72,7 @@
 #define DPR_RN_START 5
 #define DPR_RM_START 16
 #define DPR_OPR_START 21
-#define DPR_OPR_LEN 3
+#define DPR_OPR_LEN 4  
 #define DPR_OPC_START 29
 #define DPR_OPC_LEN 2
 #define DPR_SFBIT_POS 31

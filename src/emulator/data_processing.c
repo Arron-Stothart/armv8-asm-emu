@@ -207,7 +207,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             }
 
             // If sf is not given, read rd and rn as 32 bit; rn to be restored later.
-            int rntemp;
+            uint64_t rntemp;
             if (!sf) {
                 rntemp = arm->registers[rn];
                 arm->registers[rd] &= WREGISTER_MASK;
@@ -283,9 +283,9 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int x = getBitAt(instruction, DPR_XBIT_POS);
 
             // If sf is not given, read registers as 32 bit; all but rd to be restored later.
-            int rntemp;
-            int rmtemp;
-            int ratemp;
+            uint64_t rntemp;
+            uint64_t rmtemp;
+            uint64_t ratemp;
             if (!sf) {
                 rntemp = arm->registers[rn];
                 ratemp = arm->registers[ra];
