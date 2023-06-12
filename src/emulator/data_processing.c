@@ -166,11 +166,11 @@ static void (*wideMoveImmediate[4])(ARM* arm, int rd, int op, int hw) = {
     &movn, NULL, &movz, &movk
 };
 
-static int (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
+static uint64_t (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
     &add, &adds, &sub, &subs
 };
 
-static int (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, int op2, int sf) = {
+static uint64_t (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, int op2, int sf) = {
     &and, &bic, &orr, &orn, &eon, &eor, &ands, &bics
 };
 
@@ -320,6 +320,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int n = getBitAt(instruction, DPR_NBIT_POS);
             int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
             int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
+            int mneumonic = n + (opc << 1);
 
             // If sf is not given, read registers as 32 bit; all but rd to be restored later.
             int rntemp;
@@ -335,16 +336,11 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             // Shift rm by imm6 with type depending on shift bits.
             int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
 
-            // Negative bits if N bit is given (logical operations).
-            if (n) {
-                op2 = ~op2;
-            }
-
             // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
             // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags
             if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
-                arithmeticLogicalRegister[opc](arm, rd, rn, op2, sf);
+                arithmeticLogicalRegister[mneumonic](arm, rd, rn, op2, sf);
             }
 
             // Restore registers read as 32 bit if they are not the destination register;
