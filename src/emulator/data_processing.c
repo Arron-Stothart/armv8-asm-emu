@@ -260,7 +260,10 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
     if (!sf) {
+        fprintf(stderr, "[%d]", rd);
+        fprintf(stderr, "%lx ", arm->registers[rd]);
         arm->registers[rd] &= WREGISTER_MASK;
+        fprintf(stderr, "%lx ", arm->registers[rd]);
     }
 }
 
@@ -346,7 +349,10 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             // Restore registers read as 32 bit if they are not the destination register;
             if (!sf) {
                 if (rn != rd) {
+                    fprintf(stderr, "[accessed %d]", rn);
+                    fprintf(stderr, "[regval before: %lx]", arm->registers[rn]);
                     arm->registers[rn] = rntemp;
+                    fprintf(stderr, "[regval after: %lx]", arm->registers[rn]);
                 }
                 if (rm != rd) {
                     arm->registers[rm] = rmtemp;
@@ -359,6 +365,9 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
     if (!sf) {
+        perror("HERE");
+        fprintf(stderr, "%lx ", arm->registers[12]);
         arm->registers[rd] &= WREGISTER_MASK;
+        fprintf(stderr, "%lx ", arm->registers[12]);
     }
 }
