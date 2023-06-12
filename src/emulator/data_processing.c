@@ -292,8 +292,8 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
 
             // If sf is not given, read registers as 32 bit; all but rd to be restored later.
-            int rntemp;
-            int rmtemp;
+            uint64_t rntemp;
+            uint64_t rmtemp;
             if (!sf) {
                 rntemp = arm->registers[rn];
                 rmtemp = arm->registers[rm];
