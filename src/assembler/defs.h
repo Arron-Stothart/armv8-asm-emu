@@ -15,3 +15,39 @@ typedef enum {
     DIRECTIVE,
     LABEL        
 } LINE_TYPE;
+
+// Enum for opcode (instruction mnemonic); possibly not needed
+typedef enum {
+    // Data Processing
+    ADD, 
+    ADDS, 
+    SUB,
+    SUBS,
+    CMN,
+    NEG,
+    NEGS,
+    AND,
+    ANDS,
+    BIC,
+    BICS,
+    EOR,
+    ORR,
+    ORN,
+    TST,
+    MVN,
+    MOVN,
+    MOVK,
+    MOVZ,
+    MADD,
+    MSUB,
+    MUL,
+    MNEG,
+    B,
+    BR,
+    BCOND,
+    LDR,
+    STR,
+    NOP,
+    HLT, // (and x0, x0, x0)
+    DIR // Directive (.int x) compile to x 
+} OPCODE;
