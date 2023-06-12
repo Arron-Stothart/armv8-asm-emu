@@ -53,13 +53,6 @@ static bool conditionCheck(int cond, ARM* arm) {
     }
 }
 
-// Sign extend numebr to 32-bit container
-static void signextend32(int32_t* num, int size) {
-    if (getBitAt(num, size-1)) {
-        uint32_t mask = (generateMask(32-size) << size);
-        *num = *num & mask;
-    }
-}
 
 // Execute branch instruction TODO: split up into case specific
 void branch(ARM* arm, int instruction) {
@@ -70,7 +63,6 @@ void branch(ARM* arm, int instruction) {
     switch (type) {
         case UNCONDITIONAL: {
             int32_t simm26 = getBitsAt(instruction, BR_SIMM26_START, SIMM26_LEN);
-            signextend32(simm26, SIMM26_LEN);
             int64_t offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
             arm->pc += offset;
@@ -87,7 +79,6 @@ void branch(ARM* arm, int instruction) {
         }
         case CONDITIONAL: {
             int32_t simm19 = getBitsAt(instruction, BR_SIMM19_START, SIMM9_LEN);
-            signextend32(simm19, SIMM19_LEN);
             int cond = getBitsAt(instruction, BR_COND_START, BR_COND_LEN);
             if (conditionCheck(cond, arm)) {
                 int64_t offset = simm19 * BYTES_IN_WORD;
