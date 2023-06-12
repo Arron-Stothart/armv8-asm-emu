@@ -41,13 +41,13 @@ static uint64_t sub(ARM* arm, int rd, int rn, int op2, int sf) {
 
 static uint64_t adds(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    uint64_t rncontent = arm->registers[rn];
-    uint64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
+    int64_t rncontent = arm->registers[rn];
+    int64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
+    arm->pstate.N = sf ? (r < 0) : ((int32_t) r < 0);
     // Unsigned overflow if carry bit is produced
     arm->pstate.C = sf ?
         ((rncontent > 0 && op2 > ULLONG_MAX - rncontent) ||
@@ -55,28 +55,28 @@ static uint64_t adds(ARM* arm, int rd, int rn, int op2, int sf) {
         ((rncontent > 0 && op2 > INT_MAX - rncontent) ||
         (rncontent < 0 && op2 < INT_MIN - rncontent));;
     // Signed overflow/underflow if signs of operand are diferent from result
-    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
+    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < rncontent) || (rncontent < 0 && op2 < 0 && r > rncontent));
     fputs("(adds)", stderr);
     return EXIT_SUCCESS;
 }
 
 static uint64_t subs(ARM* arm, int rd, int rn, int op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    uint64_t rncontent = arm->registers[rn];
-    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
+    int64_t rncontent = arm->registers[rn];
+    int64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
+    arm->pstate.N = sf ?  (r < 0) : ((int32_t) r < 0);
     // Unsigned overflow if subtraction produced a borrow
     arm->pstate.C = sf ?
         ((rncontent < 0 && op2 > ULLONG_MAX + rncontent) ||
-        (rncontent > 0 && op2 < (-ULLONG_MAX + 1) + rncontent)) :
+        (rncontent > 0 && op2 < (~ULLONG_MAX) + rncontent)) :
         ((rncontent < 0 && op2 > INT_MAX + rncontent) ||
         (rncontent > 0 && op2 < INT_MIN + rncontent));
     // Signed overflow/underflow if signs of operand are diferent from result
-    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < 0) || (rncontent < 0 && op2 < 0 && r > 0));
+    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < rncontent) || (rncontent < 0 && op2 < 0 && r > rncontent));
     fputs("(subs)", stderr);
     return EXIT_SUCCESS;
 }
