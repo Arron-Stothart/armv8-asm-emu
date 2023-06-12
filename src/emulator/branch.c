@@ -74,7 +74,6 @@ void branch(ARM* arm, int instruction) {
             assert(xn >= 0 && xn < NUM_OF_REGISTERS);
             // Branch to address stored in Xn
             arm->pc = arm->registers[xn];
-            arm->pc -= INSTRUCTION_SIZE;
             break;
         }
         case CONDITIONAL: {
@@ -88,4 +87,6 @@ void branch(ARM* arm, int instruction) {
             break;
         }
     }
+
+    arm->pc -= INSTRUCTION_SIZE;
 }

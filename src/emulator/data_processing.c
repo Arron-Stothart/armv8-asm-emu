@@ -137,7 +137,7 @@ static uint64_t (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int
     &add, &adds, &sub, &subs
 };
 
-static uint64_t (*arithmeticLogicalRegister[8])(ARM* arm, int rd, int rn, uint64_t op2, int sf) = {
+static uint64_t (*arithmeticLogicalRegister[4])(ARM* arm, int rd, int rn, uint64_t op2, int sf) = {
     &and, &orr, &eor, &ands
 };
 
