@@ -76,8 +76,9 @@ void singleDataTransfer(ARM* arm, int instruction) {
     }
 
     // If load bit is given then load, else store.
-    if (l) {
+    if (l || type == LITERAL_ADDRESS) {
         // Load
+        perror("{LOAD}");
         if (sf) {
             // In 64 bit load double word at address memory into register.
             arm->registers[rt] = getDoubleWord(&arm->memory[address]);
@@ -87,12 +88,13 @@ void singleDataTransfer(ARM* arm, int instruction) {
         }
     } else {
         // Store
+        perror("{STORE}");
         uint64_t rtcontent = arm->registers[rt];
         int storesize = sf ? BYTES_IN_64BIT : BYTES_IN_32BIT;
         // Store by shifting 1 byte of register's content at a time into memory.
         // Since we store least significant bit first, we mantain little endian storage.
         for (int i = 0; i < storesize; i++) {
-                arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
+            arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
         }
     }
 }
