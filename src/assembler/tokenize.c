@@ -1,5 +1,5 @@
 #include <string.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include "tokenize.h"
 
 // Break a line into tokens (label, opcode and operand field(s)) writing to a target array length MAX_WORDS_IN_LINE
@@ -36,8 +36,8 @@ instruction tokenizeinstruction(char* line) {
         exit(EXIT_FAILURE);
     }
 
-    // Add opcode to inst 
-    inst.opcode = getopcode(token);
+    // Obtain opcode from first mneumonic
+    OPCODE opcode = getopcode(token);
 
     // Get second token (Required by loop structure) and initialise operand array builder
     token = strtok_r(line, " ", &saveptr);
@@ -52,8 +52,9 @@ instruction tokenizeinstruction(char* line) {
         i++;
     }
 
-    // Add operands to inst
-    inst.operands = operands;
+    // Add opcode and operands to inst
+    instruction inst = { .opcode = opcode, .operands = operands};
     
-    // return instruction;
+    // return instruction
+    return inst;
 }
