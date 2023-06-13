@@ -67,7 +67,7 @@
 #define DPI_HW_SIZE 2 // for logical
 
 // Register Data Processing Constants
-#define DPR_ARITHEMTICBIT_POS 24
+#define DPR_ARITHMETICBIT_POS 24
 #define DPR_MBIT_POS 28
 #define DPR_MULTIPLY_OPR 0b1000
 #define DPR_RD_START 0

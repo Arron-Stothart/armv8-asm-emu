@@ -245,10 +245,10 @@ void dataProcessingRegister(ARM* arm, int instruction) {
     int rd = getBitsAt(instruction, DPR_RD_START, REG_INDEX_SIZE);
     int rm = getBitsAt(instruction, DPR_RM_START, REG_INDEX_SIZE);
     int rn = getBitsAt(instruction, DPR_RN_START, REG_INDEX_SIZE);
-    bool mbit = getBitAt(instruction, DPR_MBIT_POS);
+    bool m = getBitAt(instruction, DPR_MBIT_POS);
 
-    // Multiply; mbit determines whether its multiply or arithemtic/logical
-    if (mbit) {
+    // Multiply; m determines whether its multiply or arithemtic/logical
+    if (m) {
         int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
         bool x = getBitAt(instruction, DPR_XBIT_POS);
 
@@ -293,6 +293,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         bool n = getBitAt(instruction, DPR_NBIT_POS);
         int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
         int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
+        bool isArithmetic = getBitAt(instruction, DPR_ARITHMETICBIT_POS);
 
         // If sf is not given, read registers as 32 bit; all but rd to be restored later.
         uint64_t rntemp;
@@ -309,6 +310,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
 
         // Negate opearand for logical instructions if n bit is given.
+        // (N bit is de facto 0 for arithmetic instruction so no need to check).
         if (n) {
             op2 = ~op2; 
         }
@@ -316,9 +318,11 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
         // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
         // Only compute if destination is not ZR or operation changes flags
-        if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
+        if (!isArithmetic && (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11)) {
             logical[opc](arm, rd, rn, op2, sf); 
-        }  
+        } else if (rd != ZR_INDEX || getBitAt(opc, 0) == 0b1) {
+            arithmetic[opc](arm, rd, rn, op2, sf);
+        }
 
         // Restore registers read as 32 bit if they are not the destination register;
         if (!sf) {
