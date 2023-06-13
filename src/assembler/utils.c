@@ -19,3 +19,14 @@ void writebinary(char* path, uint32_t* instructions, int n) {
 
 	fclose(output);
 }
+
+// Read and send each line to the parser
+void readassemblyfile(char* path) {
+	FILE* input = fopen(path, "r");
+
+	// If file pointer is null then return with error.
+  	if (input == NULL) {
+        printf("Error in opening file.\n");
+        exit(EXIT_FAILURE);
+    }
+}

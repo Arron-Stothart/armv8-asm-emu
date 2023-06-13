@@ -10,13 +10,7 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
   }
 
-  FILE* input = fopen(argv[1], "r");
-  // If file pointer is null then return with error.
-  if (input == NULL) {
-        printf("Error in opening file.\n");
-        exit(EXIT_FAILURE);
-    }
-
+  readassemblyfile(argv[1]);
 
   // First pass: Create symbol table associating labels with memory addresses
   symbol sym_table[MAX_SYMBOL_TABLE_SIZE];
