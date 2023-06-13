@@ -43,7 +43,6 @@ static uint64_t sub(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
 
 static uint64_t adds(ARM* arm, int rd, int rn, uint64_t u_op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-
     uint64_t u_rncontent = arm->registers[rn];
     uint64_t u_r = (rd == ZR_INDEX) ? u_rncontent + u_op2 : add(arm, rd, rn, u_op2, sf);
 
@@ -72,6 +71,10 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     int64_t rncontent = arm->registers[rn];
     int64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
+    bool sign_1 = (sf ? rncontent < 0 : ((int32_t) (rncontent & 0xFFFFFFFF) < 0));
+    bool sign_2 = (sf ? op2 < 0 : ((int32_t) (op2 & 0xFFFFFFFF)) < 0);
+    bool sign_r = (sf ? r < 0 : ((int32_t) (r & 0xFFFFFFFF)) < 0);
+
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
@@ -79,9 +82,17 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // Unsigned overflow if subtraction produced a borrow
     arm->pstate.C = 0;
     // Signed overflow/underflow if signs of operand are diferent from result
-    arm->pstate.V = 0;
+    arm->pstate.V = (!sign_1 && sign_2 && sign_r) || (sign_1 && !sign_2 && !sign_r);
     fputs("(subs)", stderr);
     return EXIT_SUCCESS;
+    /*
+    uint64_t res = adds(arm, rd, rn, (~op2 + 1), sf);
+    fprintf(stderr, "(neg)(%ld + %ld)", arm->registers[rn], (~op2 + 1));
+    fprintf(stderr, "{FLAGS: Z%d N%d C%d V%d}",
+        arm->pstate.Z, arm->pstate.N, arm->pstate.C, arm->pstate.V
+    );
+    return res;
+    */
 }
 
 static uint64_t and(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
