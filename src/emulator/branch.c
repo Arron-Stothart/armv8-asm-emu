@@ -49,7 +49,7 @@ static bool conditionCheck(int cond, ARM* arm) {
             return 1;
         // Condition not of permitted type
         default:
-            return -1;
+            return 0;
     }
 }
 

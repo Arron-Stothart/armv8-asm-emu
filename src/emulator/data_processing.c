@@ -50,15 +50,9 @@ static uint64_t adds(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // Check negative as 32 or 64 bit
     arm->pstate.N = sf ? (r < 0) : ((int32_t) r < 0);
     // Unsigned overflow if carry bit is produced
-        arm->pstate.C = sf ?
-        // 64-bit
-        ((rncontent >= 0 && op2 >= 0 && LLONG_MAX - rncontent <= op2) ||
-        (rncontent < 0 && op2 < 0 && rncontent <= LLONG_MIN - op2)) : //! No ULLONG_MIN so test
-        // 32-bit
-        ((rncontent >= 0 && op2 >=0 && INT_MAX - rncontent <= op2) ||
-        (rncontent < 0 && op2 < 0 && rncontent <= INT_MIN - op2));
+    arm->pstate.C = 0;
     // Signed overflow/underflow if signs of operand are diferent from result
-    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < rncontent) || (rncontent < 0 && op2 < 0 && r > rncontent));
+    arm->pstate.V = 0;
     fputs("(adds)", stderr);
     return EXIT_SUCCESS;
 }
@@ -80,7 +74,7 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
         ((rncontent < 0 && op2 > INT_MAX + rncontent) ||
         (rncontent > 0 && op2 < INT_MIN + rncontent));
     // Signed overflow/underflow if signs of operand are diferent from result
-    arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < rncontent) || (rncontent < 0 && op2 < 0 && r > rncontent));
+    arm->pstate.V = 0;
     fputs("(subs)", stderr);
     return EXIT_SUCCESS;
 }
