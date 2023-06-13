@@ -104,14 +104,14 @@ uint64_t ror(uint64_t value, uint32_t shift, bool is64bit) {
 // Logical shift left
 uint64_t lsl(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
-    value >>= shift;
+    value <<= shift;
     // If 32 bit, mask top 32 bits after shift.
     return wregisterMask(value, is64bit);
 }
 
 uint64_t lsr(uint64_t value, uint32_t shift, bool is64bit) {
     assert(shift >= 0);
-    value <<= shift;
+    value >>= shift;
     // If 32 bit, mask top 32 bits after shift.
     return wregisterMask(value, is64bit);
 }
