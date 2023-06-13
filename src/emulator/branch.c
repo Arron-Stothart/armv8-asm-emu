@@ -64,7 +64,7 @@ void branch(ARM* arm, int instruction) {
 
     switch (type) {
         case UNCONDITIONAL: {
-            int64_t simm26 = getBitsAt(instruction, BR_SIMM26_START, SIMM26_LEN);
+            int64_t simm26 = extendBits(getBitsAt(instruction, BR_SIMM26_START, SIMM26_LEN), SIMM26_LEN);
             int64_t offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
             arm->pc += offset;
@@ -80,7 +80,7 @@ void branch(ARM* arm, int instruction) {
             break;
         }
         case CONDITIONAL: {
-            int64_t simm19 = getBitsAt(instruction, BR_SIMM19_START, SIMM9_LEN);
+            int64_t simm19 = extendBits(getBitsAt(instruction, BR_SIMM19_START, SIMM19_LEN), SIMM19_LEN);
             int cond = getBitsAt(instruction, BR_COND_START, BR_COND_LEN);
             if (conditionCheck(cond, arm) == 1) {
                 int64_t offset = simm19 * BYTES_IN_WORD;
