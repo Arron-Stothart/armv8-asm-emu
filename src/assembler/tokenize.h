@@ -1,6 +1,5 @@
 #include "defs.h"
 #include "utils.h"
 
-// Breaks a line into its label, opcode and operand field(s)
-// Header types are temporary
-void tokenize(char* line);
+// Break a line into its label, opcode and operand field(s) then write to target array
+void tokenize(char** target_array, char* line);
