@@ -41,19 +41,28 @@ static uint64_t sub(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     return r;
 }
 
-static uint64_t adds(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
+static uint64_t adds(ARM* arm, int rd, int rn, uint64_t u_op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    int64_t rncontent = arm->registers[rn];
-    int64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
+
+    uint64_t u_rncontent = arm->registers[rn];
+    uint64_t u_r = (rd == ZR_INDEX) ? u_rncontent + u_op2 : add(arm, rd, rn, u_op2, sf);
+
+    int64_t rncontent = u_rncontent;
+    int64_t r = u_r;
+    int64_t op2 = op2;
+    
+    bool sign_1 = (sf ? rncontent < 0 : ((int32_t) rncontent) < 0);
+    bool sign_2 = (sf ? op2 < 0 : ((int32_t) op2) < 0);
+    bool sign_r = (sf ? r < 0 : ((int32_t) r) < 0);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? (r < 0) : ((int32_t) r < 0);
+    arm->pstate.N = sign_r;
     // Unsigned overflow if carry bit is produced
-    arm->pstate.C = 0;
+    arm->pstate.C = sf ? u_r < u_rncontent : u_r >= (1UL << 32);
     // Signed overflow/underflow if signs of operand are diferent from result
-    arm->pstate.V = 0;
+    arm->pstate.V = (!sign_1 && !sign_2 && sign_r) || (sign_1 && sign_2 && !sign_r);
     fputs("(adds)", stderr);
     return EXIT_SUCCESS;
 }
