@@ -153,7 +153,7 @@ bool getBitAt(uint64_t n, int k) {
 // Clears l bits downwards starting from kth position of n to 0 (k is zero indexed).
 static uint64_t bitClear(uint64_t n, int k, int l) {
     assert(k >= 0 && l > 0);
-    return n & (~(generateMask(l) << (k - l + 1)));
+    return n & (~(generateMask(l) << (k - l)));
 }
 
 // Sets l bits starting from kth position of n to new.

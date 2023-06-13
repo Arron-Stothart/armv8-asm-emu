@@ -212,7 +212,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             // For movk don't shift imm16.
             if (opc != DPI_MOVK_OPC) {
-                imm16 <<= (hw * 16);
+                imm16 <<= (hw * DPI_SHIFT_VALUE);
             }
 
             // Read rd as 32 bit register if sf is not given.
