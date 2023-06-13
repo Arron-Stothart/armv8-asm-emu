@@ -3,8 +3,8 @@
 #include "utils.h"
 
 static TRANSFER_TYPE getTransferType(int instruction) {
-    int u = getBitAt(instruction, SDT_UBIT_POS);
-    int i = getBitAt(instruction, SDT_IBIT_POS);
+    bool u = getBitAt(instruction, SDT_UBIT_POS);
+    bool i = getBitAt(instruction, SDT_IBIT_POS);
 
     // If u is given then unsigned offset.
     if (u) {
@@ -30,8 +30,8 @@ static TRANSFER_TYPE getTransferType(int instruction) {
 
 // Execute single data transfer.
 void singleDataTransfer(ARM* arm, int instruction) {
-    int l = getBitAt(instruction, SDT_LBIT_POS);
-    int sf = getBitAt(instruction, SDT_SFBIT_POS);
+    bool l = getBitAt(instruction, SDT_LBIT_POS);
+    bool sf = getBitAt(instruction, SDT_SFBIT_POS);
     int rt = getBitsAt(instruction, SDT_RT_START, REG_INDEX_SIZE);
     int xn = getBitsAt(instruction, SDT_XN_START, REG_INDEX_SIZE);
     uint64_t address;

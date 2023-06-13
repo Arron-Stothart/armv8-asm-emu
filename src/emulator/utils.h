@@ -27,7 +27,7 @@ uint64_t lsl(uint64_t value, uint32_t shift, bool is64bit);
 uint64_t lsr(uint64_t value, uint32_t shift, bool is64bit);
 
 // Gets bit at kth position from n.
-int getBitAt(uint64_t n, int k);
+bool getBitAt(uint64_t n, int k);
 
 // Gets l bits upwards starting from kth positon of n.
 int getBitsAt(uint64_t n, int k, int l);

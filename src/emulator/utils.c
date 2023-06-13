@@ -147,7 +147,7 @@ int getBitsAt(uint64_t n, int k, int l) {
 }
 
 // Gets bit at kth position from n.
-int getBitAt(uint64_t n, int k) {
+bool getBitAt(uint64_t n, int k) {
     assert(k >= 0);
     return (n >> k) & 1;
 }

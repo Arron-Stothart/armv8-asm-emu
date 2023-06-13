@@ -159,7 +159,7 @@ Main functions
 */
 
 void dataProcessingImmediate(ARM* arm, int instruction) {
-    int sf = getBitAt(instruction, DPI_SFBIT);
+    bool sf = getBitAt(instruction, DPI_SFBIT);
     int opc = getBitsAt(instruction, DPI_OPC_START, DPI_OPC_LEN);
     int opi = getBitsAt(instruction, DPI_OPI_START, DPI_OPI_LEN);
     int rd = getBitsAt(instruction, DPI_RD_START, REG_INDEX_SIZE);
@@ -169,7 +169,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
         // Arithmetic
         case DPI_ARITHMETIC_OPI: {
-            int sh = getBitAt(instruction, DPI_SHBIT);
+            bool sh = getBitAt(instruction, DPI_SHBIT);
             int imm12 = getBitsAt(instruction, DPI_IMM12_START, IMM12_LEN);
             int rn = getBitsAt(instruction, DPI_RN_START, REG_INDEX_SIZE);
 
@@ -241,19 +241,18 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
 // Execute data processing register instructions.
 void dataProcessingRegister(ARM* arm, int instruction) {
-    int sf = getBitAt(instruction, DPR_SFBIT_POS);
-    int opr = getBitsAt(instruction, DPR_OPR_START, DPR_OPR_LEN);
+    bool sf = getBitAt(instruction, DPR_SFBIT_POS);
     int rd = getBitsAt(instruction, DPR_RD_START, REG_INDEX_SIZE);
     int rm = getBitsAt(instruction, DPR_RM_START, REG_INDEX_SIZE);
     int rn = getBitsAt(instruction, DPR_RN_START, REG_INDEX_SIZE);
-    int mbit = getBitAt(instruction, DPR_MBIT_POS);
+    bool mbit = getBitAt(instruction, DPR_MBIT_POS);
 
     switch (mbit) {
 
         // Multiply
         case 1: {
             int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
-            int x = getBitAt(instruction, DPR_XBIT_POS);
+            bool x = getBitAt(instruction, DPR_XBIT_POS);
 
             // If sf is not given, read registers as 32 bit; all but rd to be restored later.
             uint64_t rntemp;
@@ -293,7 +292,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         // Arithemtic and Logical
         default: {
             int shift = getBitsAt(instruction, DPR_SHIFT_START, DPR_SHIFT_LEN);
-            int n = getBitAt(instruction, DPR_NBIT_POS);
+            bool n = getBitAt(instruction, DPR_NBIT_POS);
             int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
             int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
 
