@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
                 stderr,
                 "the PC is: %lu which is out of range \n",
                 arm.pc);
+            exit(EXIT_FAILURE);
         }
 
         // Fetch and decode instruction.

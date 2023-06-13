@@ -21,9 +21,7 @@ static void movn(ARM* arm, int rd, uint64_t op, int hw) {
 }
 
 static void movk(ARM* arm, int rd, uint64_t op, int hw) {
-    fprintf(stderr, "{rd: %lx}", arm->registers[rd]);
     arm->registers[rd] = setBitsTo(arm->registers[rd], (hw + 1) * DPI_MOVK_OFFSET, op, IMM16_LEN);
-    fprintf(stderr, "{rd: %lx}", arm->registers[rd]);
     fputs("(movk)", stderr);
 }
 
@@ -235,9 +233,6 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
             break;
         }
-
-        default:
-            fputs("(NOTHING)", stderr);
     }
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
@@ -293,8 +288,6 @@ void dataProcessingRegister(ARM* arm, int instruction) {
                 arm->registers[ra] = ratemp;
             }
         }
-
-        
     }
 
     // Arithemtic and Logical
@@ -337,10 +330,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         // Restore registers read as 32 bit if they are not the destination register;
         if (!sf) {
             if (rn != rd) {
-                fprintf(stderr, "[accessed %d]", rn);
-                fprintf(stderr, "[regval before: %lx]", arm->registers[rn]);
                 arm->registers[rn] = rntemp;
-                fprintf(stderr, "[regval after: %lx]", arm->registers[rn]);
             }
             if (rm != rd) {
                 arm->registers[rm] = rmtemp;
