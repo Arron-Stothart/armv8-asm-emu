@@ -22,20 +22,6 @@ void writebinary(char* path, uint32_t* instructions, int n) {
 	fclose(output);
 }
 
-// Read and send each line to the parser
-// Feel free to change to a better implementation
-void readassemblyfile(char* path) {
-	FILE* input = fopen(path, "r");
-
-	// If file pointer is null then return with error
-	if (input == NULL) {
-        printf("Error in opening file.\n");
-        exit(EXIT_FAILURE);
-    }
-
-	// TODO
-}
-
 // Get opcode type from instruction menumonic
 // TODO: remove magic strings, replace with map style structure!, make local to tokenize
 OPCODE getopcode(char* mnemonic) {
