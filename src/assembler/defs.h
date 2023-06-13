@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #define MAX_WORDS_IN_LINE 5
+#define MAX_OPERANDS 4
 #define MAX_SYMBOL_TABLE_SIZE (1 << 11)
 
 // Entries for symbol table: associates a label with memory address
@@ -26,6 +27,7 @@ typedef enum {
     ADDS, 
     SUB,
     SUBS,
+    CMP,
     CMN,
     NEG,
     NEGS,
@@ -34,10 +36,12 @@ typedef enum {
     BIC,
     BICS,
     EOR,
+    EON,
     ORR,
     ORN,
     TST,
     MVN,
+    MOV,
     MOVN,
     MOVK,
     MOVZ,
@@ -55,15 +59,14 @@ typedef enum {
     DIR // Directive (.int x) compile to x 
 } OPCODE;
 
+typedef char* operand_arr[MAX_OPERANDS];
+
 // Structure for assembler file instructions: operation mneumonic and up to four operands
 // Max operands is 4, NULL if not present
 // Feel free to change to a better implementation
 typedef struct {
     OPCODE opcode;
-    char* operand1;
-    char* operand2;
-    char* operand3;
-    char* operand4;
+    operand_arr operands; // TODO: replace with operand type
 } instruction;
 // Labels are same as symbol 
 // Directives are same as single operand as .int N is the only possibility
