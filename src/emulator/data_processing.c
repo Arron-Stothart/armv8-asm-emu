@@ -247,95 +247,90 @@ void dataProcessingRegister(ARM* arm, int instruction) {
     int rn = getBitsAt(instruction, DPR_RN_START, REG_INDEX_SIZE);
     bool mbit = getBitAt(instruction, DPR_MBIT_POS);
 
-    switch (mbit) {
+    // Multiply; mbit determines whether its multiply or arithemtic/logical
+    if (mbit) {
+        int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
+        bool x = getBitAt(instruction, DPR_XBIT_POS);
 
-        // Multiply
-        case 1: {
-            int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
-            bool x = getBitAt(instruction, DPR_XBIT_POS);
-
-            // If sf is not given, read registers as 32 bit; all but rd to be restored later.
-            uint64_t rntemp;
-            uint64_t rmtemp;
-            uint64_t ratemp;
-            if (!sf) {
-                rntemp = arm->registers[rn];
-                ratemp = arm->registers[ra];
-                rmtemp = arm->registers[rm];
-                arm->registers[rd] &= WREGISTER_MASK;
-                arm->registers[rn] &= WREGISTER_MASK;
-                arm->registers[ra] &= WREGISTER_MASK;
-                arm->registers[rm] &= WREGISTER_MASK;
-            }
-
-            // ZR is read-only and no flags will be changed.
-            if (rd != ZR_INDEX) {
-                mutiply[x](arm, rd, rn, ra, rm, sf);
-            }
-
-            // Restore registers read as 32 bit;
-            if (!sf) {
-                if (rn != rd) {
-                    arm->registers[rn] = rntemp;
-                }
-                if (rm != rd) {
-                    arm->registers[rm] = rmtemp;
-                }
-                if (rm != ra) {
-                    arm->registers[ra] = ratemp;
-                }
-            }
-
-            break;
+        // If sf is not given, read registers as 32 bit; all but rd to be restored later.
+        uint64_t rntemp;
+        uint64_t rmtemp;
+        uint64_t ratemp;
+        if (!sf) {
+            rntemp = arm->registers[rn];
+            ratemp = arm->registers[ra];
+            rmtemp = arm->registers[rm];
+            arm->registers[rd] &= WREGISTER_MASK;
+            arm->registers[rn] &= WREGISTER_MASK;
+            arm->registers[ra] &= WREGISTER_MASK;
+            arm->registers[rm] &= WREGISTER_MASK;
         }
 
-        // Arithemtic and Logical
-        default: {
-            int shift = getBitsAt(instruction, DPR_SHIFT_START, DPR_SHIFT_LEN);
-            bool n = getBitAt(instruction, DPR_NBIT_POS);
-            int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
-            int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
+        // ZR is read-only and no flags will be changed.
+        if (rd != ZR_INDEX) {
+            mutiply[x](arm, rd, rn, ra, rm, sf);
+        }
 
-            // If sf is not given, read registers as 32 bit; all but rd to be restored later.
-            uint64_t rntemp;
-            uint64_t rmtemp;
-            if (!sf) {
-                rntemp = arm->registers[rn];
-                rmtemp = arm->registers[rm];
-                arm->registers[rd] &= WREGISTER_MASK;
-                arm->registers[rn] &= WREGISTER_MASK;
-                arm->registers[rm] &= WREGISTER_MASK;
+        // Restore registers read as 32 bit;
+        if (!sf) {
+            if (rn != rd) {
+                arm->registers[rn] = rntemp;
             }
-
-            // Shift rm by imm6 with type depending on shift bits.
-            int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
-
-            // Negate opearand for logical instructions if n bit is given.
-            if (n) {
-                op2 = ~op2; 
+            if (rm != rd) {
+                arm->registers[rm] = rmtemp;
             }
-
-            // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
-            // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
-            // Only compute if destination is not ZR or operation changes flags
-            if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
-                logical[opc](arm, rd, rn, op2, sf); 
-            }  
-
-            // Restore registers read as 32 bit if they are not the destination register;
-            if (!sf) {
-                if (rn != rd) {
-                    fprintf(stderr, "[accessed %d]", rn);
-                    fprintf(stderr, "[regval before: %lx]", arm->registers[rn]);
-                    arm->registers[rn] = rntemp;
-                    fprintf(stderr, "[regval after: %lx]", arm->registers[rn]);
-                }
-                if (rm != rd) {
-                    arm->registers[rm] = rmtemp;
-                }
+            if (rm != ra) {
+                arm->registers[ra] = ratemp;
             }
+        }
 
-            break;
+        
+    }
+
+    // Arithemtic and Logical
+    else {
+        int shift = getBitsAt(instruction, DPR_SHIFT_START, DPR_SHIFT_LEN);
+        bool n = getBitAt(instruction, DPR_NBIT_POS);
+        int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
+        int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
+
+        // If sf is not given, read registers as 32 bit; all but rd to be restored later.
+        uint64_t rntemp;
+        uint64_t rmtemp;
+        if (!sf) {
+            rntemp = arm->registers[rn];
+            rmtemp = arm->registers[rm];
+            arm->registers[rd] &= WREGISTER_MASK;
+            arm->registers[rn] &= WREGISTER_MASK;
+            arm->registers[rm] &= WREGISTER_MASK;
+        }
+
+        // Shift rm by imm6 with type depending on shift bits.
+        int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
+
+        // Negate opearand for logical instructions if n bit is given.
+        if (n) {
+            op2 = ~op2; 
+        }
+
+        // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
+        // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
+        // Only compute if destination is not ZR or operation changes flags
+        if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
+            logical[opc](arm, rd, rn, op2, sf); 
+        }  
+
+        // Restore registers read as 32 bit if they are not the destination register;
+        if (!sf) {
+            if (rn != rd) {
+                fprintf(stderr, "[accessed %d]", rn);
+                fprintf(stderr, "[regval before: %lx]", arm->registers[rn]);
+                arm->registers[rn] = rntemp;
+                fprintf(stderr, "[regval after: %lx]", arm->registers[rn]);
+            }
+            if (rm != rd) {
+                arm->registers[rm] = rmtemp;
+            }
         }
     }
 
