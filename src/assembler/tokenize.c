@@ -38,14 +38,3 @@ instruction tokenizeinstruction(char* line) {
     // return instruction
     return inst;
 }
-
-// Convert a line known to be a label into a symbol type 
-symbol tokenizelabel(char* line) {
-    char* saveptr;
-    char* token;
-
-    // Get first token from line known to be label
-    token = strtok_r(line, " ", &saveptr);
-    // TODO
-
-}
