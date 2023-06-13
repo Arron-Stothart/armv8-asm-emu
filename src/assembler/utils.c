@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "utils.h"
 
 // Writes n instructions from array into binary file
 void writebinary(char* path, uint32_t* instructions, int n) {
@@ -24,8 +25,8 @@ void writebinary(char* path, uint32_t* instructions, int n) {
 void readassemblyfile(char* path) {
 	FILE* input = fopen(path, "r");
 
-	// If file pointer is null then return with error.
-  	if (input == NULL) {
+	// If file pointer is null then return with error
+	if (input == NULL) {
         printf("Error in opening file.\n");
         exit(EXIT_FAILURE);
     }
