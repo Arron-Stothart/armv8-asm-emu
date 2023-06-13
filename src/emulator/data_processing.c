@@ -53,7 +53,7 @@ static uint64_t adds(ARM* arm, int rd, int rn, int op2, int sf) {
         ((rncontent > 0 && op2 > ULLONG_MAX - rncontent) ||
         (rncontent < 0 && op2 < (-ULLONG_MAX + 1) - rncontent)) : //! No ULLONG_MIN so test
         ((rncontent > 0 && op2 > INT_MAX - rncontent) ||
-        (rncontent < 0 && op2 < INT_MIN - rncontent));;
+        (rncontent < 0 && op2 < INT_MIN - rncontent));
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = ((rncontent > 0 && op2 > 0 && r < rncontent) || (rncontent < 0 && op2 < 0 && r > rncontent));
     fputs("(adds)", stderr);
@@ -129,22 +129,27 @@ static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
 Function Pointers
 */
 
-static void (*wideMoveImmediate[4])(ARM* arm, int rd, int op, int hw) = {
+// Used for wide moves in immediate processing.
+static void (*wideMove[4])(ARM* arm, int rd, int op, int hw) = {
     &movn, NULL, &movz, &movk
 };
 
-static uint64_t (*arithmeticImmediate[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
+// Used for arithemtic in immediate and register processing.
+static uint64_t (*arithmetic[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
     &add, &adds, &sub, &subs
 };
 
-static uint64_t (*arithmeticLogicalRegister[4])(ARM* arm, int rd, int rn, uint64_t op2, int sf) = {
+// Used for logical operations in register processing.
+static uint64_t (*logical[4])(ARM* arm, int rd, int rn, uint64_t op2, int sf) = {
     &and, &orr, &eor, &ands
 };
 
-static void (*mutiplyRegister[2])(ARM* arm, int rd, int rn, int ra, int rm, int sf) = {
+// Used for multiply in register processing.
+static void (*mutiply[2])(ARM* arm, int rd, int rn, int ra, int rm, int sf) = {
     &madd, &msub
 };
 
+// Used to shift rm in register processing.
 static uint64_t (*shiftRm[4])(uint64_t rm, uint32_t imm6, bool sf) = {
     &lsl, &lsr, &asr, &ror
 };
@@ -185,7 +190,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // Opc starts with 1 for adds and subs, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags.
             if (rd != ZR_INDEX || getBitAt(opc, 0) == 0b1) {
-                arithmeticImmediate[opc](arm, rd, rn, imm12, sf);
+                arithmetic[opc](arm, rd, rn, imm12, sf);
             }
 
             // Restore rn if it was read as 32 bit and is not the destination register;
@@ -215,7 +220,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
             // No need to compute logical instruction when rd = ZR since write
             // is ignored and PSTATE isn't changed.
             if (rd != ZR_INDEX) {
-                wideMoveImmediate[opc](arm, rd, imm16, hw);
+                wideMove[opc](arm, rd, imm16, hw);
             }
 
             break;
@@ -241,11 +246,12 @@ void dataProcessingRegister(ARM* arm, int instruction) {
     int rd = getBitsAt(instruction, DPR_RD_START, REG_INDEX_SIZE);
     int rm = getBitsAt(instruction, DPR_RM_START, REG_INDEX_SIZE);
     int rn = getBitsAt(instruction, DPR_RN_START, REG_INDEX_SIZE);
+    int mbit = getBitAt(instruction, DPR_MBIT_POS);
 
-    switch (opr) {
+    switch (mbit) {
 
         // Multiply
-        case DPR_MULTIPLY_OPR: {
+        case 1: {
             int ra = getBitsAt(instruction, DPR_RA_START, REG_INDEX_SIZE);
             int x = getBitAt(instruction, DPR_XBIT_POS);
 
@@ -265,7 +271,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
             // ZR is read-only and no flags will be changed.
             if (rd != ZR_INDEX) {
-                mutiplyRegister[x](arm, rd, rn, ra, rm, sf);
+                mutiply[x](arm, rd, rn, ra, rm, sf);
             }
 
             // Restore registers read as 32 bit;
@@ -305,6 +311,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             // Shift rm by imm6 with type depending on shift bits.
             int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
 
+            // Negate opearand for logical instructions if n bit is given.
             if (n) {
                 op2 = ~op2; 
             }
@@ -313,8 +320,8 @@ void dataProcessingRegister(ARM* arm, int instruction) {
             // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
             // Only compute if destination is not ZR or operation changes flags
             if (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11) {
-                arithmeticLogicalRegister[opc](arm, rd, rn, op2, sf);
-            }
+                logical[opc](arm, rd, rn, op2, sf); 
+            }  
 
             // Restore registers read as 32 bit if they are not the destination register;
             if (!sf) {
@@ -335,9 +342,6 @@ void dataProcessingRegister(ARM* arm, int instruction) {
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
     if (!sf) {
-        perror("HERE");
-        fprintf(stderr, "%lx ", arm->registers[12]);
         arm->registers[rd] &= WREGISTER_MASK;
-        fprintf(stderr, "%lx ", arm->registers[12]);
     }
 }
