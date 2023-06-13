@@ -2,8 +2,8 @@
 #include "tokenize.h"
 
 // Break a line into tokens (label, opcode and operand field(s)) writing to a target array length MAX_WORDS_IN_LINE
-// TODO: Finish / Deal with allocation
-void tokenize(char** target_array, char* line) {
+// TODO: Fix header, finish, Deal with allocation
+void tokenize(char* line) {
     char* saveptr;
     char* token;
 
@@ -14,7 +14,6 @@ void tokenize(char** target_array, char* line) {
     int i = 0;
     while (token != NULL) {
         // Add token to target array
-        target_array[i] = token;
         token = strtok_r(line, " ", &saveptr);
         i++;
     }
