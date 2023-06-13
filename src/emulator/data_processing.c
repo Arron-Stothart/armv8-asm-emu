@@ -51,9 +51,9 @@ static uint64_t adds(ARM* arm, int rd, int rn, uint64_t u_op2, int sf) {
     int64_t r = u_r;
     int64_t op2 = op2;
     
-    bool sign_1 = (sf ? rncontent < 0 : ((int32_t) rncontent) < 0);
-    bool sign_2 = (sf ? op2 < 0 : ((int32_t) op2) < 0);
-    bool sign_r = (sf ? r < 0 : ((int32_t) r) < 0);
+    bool sign_1 = (sf ? rncontent < 0 : ((int32_t) (u_rncontent & 0xFFFFFFFF) < 0));
+    bool sign_2 = (sf ? op2 < 0 : ((int32_t) (u_op2 & 0xFFFFFFFF)) < 0);
+    bool sign_r = (sf ? r < 0 : ((int32_t) (u_r & 0xFFFFFFFF)) < 0);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
