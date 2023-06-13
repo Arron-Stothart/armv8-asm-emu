@@ -56,7 +56,6 @@ typedef enum {
     STR,
     NOP,
     HLT, // (and x0, x0, x0)
-    DIR // Directive (.int x) compile to x 
 } OPCODE;
 
 typedef char* operand_arr[MAX_OPERANDS];

@@ -136,5 +136,5 @@ OPCODE getopcode(char* mnemonic) {
 		return NOP;
 	}
 	//! and x0 x0 x0 for halt presents an isssue
-	//! .int may bennefit from being dealt with here?
+	//! .int directive may bennefit from being dealt with here?
 }
