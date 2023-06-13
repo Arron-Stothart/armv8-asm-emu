@@ -10,39 +10,40 @@
 Operations
 */
 
-static void movz(ARM* arm, int rd, int op, int hw) {
+static void movz(ARM* arm, int rd, uint64_t op, int hw) {
     arm->registers[rd] = op;
     fputs("(movz)", stderr);
 }
 
-static void movn(ARM* arm, int rd, int op, int hw) {
+static void movn(ARM* arm, int rd, uint64_t op, int hw) {
     arm->registers[rd] = ~op;
     fputs("(movn)", stderr);
 }
 
-static void movk(ARM* arm, int rd, int op, int hw) {
+static void movk(ARM* arm, int rd, uint64_t op, int hw) {
     arm->registers[rd] = setBitsTo(arm->registers[rd], (hw + 1) * DPI_MOVK_OFFSET, op, IMM16_LEN);
     fputs("(movk)", stderr);
 }
 
-static uint64_t add(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t add(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     uint64_t r = arm->registers[rn] + op2;
     arm->registers[rd] = r;
     fputs("(add)", stderr);
     return r;
 }
 
-static uint64_t sub(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t sub(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     uint64_t r = arm->registers[rn] - op2;
     arm->registers[rd] = r;
     fputs("(sub)", stderr);
     return r;
 }
 
-static uint64_t adds(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t adds(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
     int64_t rncontent = arm->registers[rn];
     int64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
+    op2 = (int64_t) op2; // sign op2 for flag checks
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -60,10 +61,11 @@ static uint64_t adds(ARM* arm, int rd, int rn, int op2, int sf) {
     return EXIT_SUCCESS;
 }
 
-static uint64_t subs(ARM* arm, int rd, int rn, int op2, int sf) {
+static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
     int64_t rncontent = arm->registers[rn];
     int64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
+    op2 = (int64_t) op2; // sign op2 for flag checks.
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -130,12 +132,12 @@ Function Pointers
 */
 
 // Used for wide moves in immediate processing.
-static void (*wideMove[4])(ARM* arm, int rd, int op, int hw) = {
+static void (*wideMove[4])(ARM* arm, int rd, uint64_t op, int hw) = {
     &movn, NULL, &movz, &movk
 };
 
 // Used for arithemtic in immediate and register processing.
-static uint64_t (*arithmetic[4])(ARM* arm, int rd, int rn, int op2, int sf) = {
+static uint64_t (*arithmetic[4])(ARM* arm, int rd, int rn, uint64_t op2, int sf) = {
     &add, &adds, &sub, &subs
 };
 
