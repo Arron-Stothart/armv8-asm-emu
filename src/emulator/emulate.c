@@ -45,8 +45,6 @@ int main(int argc, char **argv) {
         // Fetch and decode instruction.
         int instruction = getWord(&arm.memory[arm.pc]);
         INSTRUCTION_TYPE type = getInstructionType(instruction);
-        // Pre-increment pc to next instruction location.
-        // DEBUG: fprintf(stderr, "PC is: %lu \n", arm.pc);
 
         const char *names[] = { "DATA_PROCESSING_IMMEDIATE ", "DATA_PROCESSING_REGISTER ", "SINGLE_DATA_TRANSFER ", "BRANCH ", "HALT ", "NOP ", "DATA " };
         fputs(names[type], stderr);
@@ -76,7 +74,6 @@ int main(int argc, char **argv) {
     }
 
     halt:
-        // ensure arm.pc is not too high [off-by-one error]
         if (argc >= 3) {
             outputState(&arm, argv[2]);
         } else {
