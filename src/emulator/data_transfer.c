@@ -56,7 +56,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
             break;
         }
         case POST_INDEX: {
-            int64_t simm9 = getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN);
+            int64_t simm9 = extendBits(getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN), SIMM9_LEN);
             address = arm->registers[xn];
             arm->registers[xn] += simm9;
             fputs("[POST_INDEX]", stderr);
@@ -69,7 +69,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
             break;
         }
         case LITERAL_ADDRESS:{
-            int64_t simm19 = getBitsAt(instruction, SDT_SIMM19_START, SIMM19_LEN);
+            int64_t simm19 = extendBits(getBitsAt(instruction, SDT_SIMM19_START, SIMM19_LEN), SIMM19_LEN);
             address = arm->pc + (simm19 * BYTES_IN_WORD);
             fputs("[LITERAL_ADDRESS]", stderr);
             break;

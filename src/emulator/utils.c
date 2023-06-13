@@ -164,6 +164,13 @@ uint64_t setBitsTo(uint64_t n, int k, uint64_t new, int l) {
     return cleared | new << (k - l);
 }
 
+// Sign extends n at lth bit
+uint64_t extendBits(uint64_t n, int l) {
+    n = n & ((1U << l) - 1);
+    uint64_t m = 1U << (l - 1);
+    return (n ^ m) - m;
+}
+
 // Gets instruction type given instruction.
 INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
     uint32_t op0 = getBitsAt(instruction, OP0_START, OP0_LEN);

@@ -34,3 +34,6 @@ uint64_t getBitsAt(uint64_t n, int k, int l);
 
 // Sets clearsize bits starting from kth position of n to new to size copysize.
 uint64_t setBitsTo(uint64_t n, int k, int new, int l);
+
+// Sign extends n at lth bit
+uint64_t extendBits(uint64_t n, int l);
