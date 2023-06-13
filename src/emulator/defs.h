@@ -99,7 +99,7 @@
 #define BR_XN_START 5
 #define BR_COND_START 0
 #define BR_COND_LEN 4
-#define BR_DET_BITS_START 31
+#define BR_DET_BITS_START 29
 #define BR_DET_BITS_LEN 3
 #define BR_DET_BITS_UNCOND 0b000
 #define BR_DET_BITS_REG 0b110

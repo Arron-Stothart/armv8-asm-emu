@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "defs.h"
 #include "utils.h"
 
@@ -79,6 +80,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
     if (l || type == LITERAL_ADDRESS) {
         // Load
         perror("{LOAD}");
+        assert(address < MAX_MEMORY_SIZE);
         if (sf) {
             // In 64 bit load double word at address memory into register.
             arm->registers[rt] = getDoubleWord(&arm->memory[address]);
@@ -93,8 +95,9 @@ void singleDataTransfer(ARM* arm, int instruction) {
         int storesize = sf ? BYTES_IN_64BIT : BYTES_IN_32BIT;
         // Store by shifting 1 byte of register's content at a time into memory.
         // Since we store least significant bit first, we mantain little endian storage.
+        assert(address + storesize < MAX_MEMORY_SIZE);
         for (int i = 0; i < storesize; i++) {
-            arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
+            arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) & BYTE_MASK;
         }
     }
 }

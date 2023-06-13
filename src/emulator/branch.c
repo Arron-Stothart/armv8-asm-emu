@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "defs.h"
 #include "utils.h"
+#include <stdio.h>
 
 // Gets branch type from instruction
 static BRANCH_TYPE getBranchType(int instruction) {
@@ -15,6 +16,7 @@ static BRANCH_TYPE getBranchType(int instruction) {
         case BR_DET_BITS_COND:
             return CONDITIONAL;
         default:
+            // Not valid branch.
             return -1;
     }
 }
@@ -54,7 +56,7 @@ static bool conditionCheck(int cond, ARM* arm) {
 }
 
 
-// Execute branch instruction TODO: split up into case specific
+// Execute branch instruction 
 void branch(ARM* arm, int instruction) {
 
     // Get type of branch instruction
@@ -80,7 +82,7 @@ void branch(ARM* arm, int instruction) {
         case CONDITIONAL: {
             int64_t simm19 = getBitsAt(instruction, BR_SIMM19_START, SIMM9_LEN);
             int cond = getBitsAt(instruction, BR_COND_START, BR_COND_LEN);
-            if (conditionCheck(cond, arm)) {
+            if (conditionCheck(cond, arm) == 1) {
                 int64_t offset = simm19 * BYTES_IN_WORD;
                 // Branch to address encoded by literal
                 arm->pc += offset;
