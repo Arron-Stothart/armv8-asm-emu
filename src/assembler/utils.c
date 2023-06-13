@@ -21,7 +21,8 @@ void writebinary(char* path, uint32_t* instructions, int n) {
 	fclose(output);
 }
 
-// Read and send each line to the parser, Feel free to change to a better implementation
+// Read and send each line to the parser
+// Feel free to change to a better implementation
 void readassemblyfile(char* path) {
 	FILE* input = fopen(path, "r");
 
