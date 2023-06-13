@@ -34,7 +34,7 @@ void outputState(ARM *arm, char *file) {
 
     fprintf(output, "PC = %016lx\n", arm->pc);
 
-    // Output PSTATE //! find better way to do this
+    // Output PSTATE
     fprintf(output, "PSTATE: ");
     fprintf(output, (arm->pstate.N) ? "N" : "-");
     fprintf(output, (arm->pstate.Z) ? "Z" : "-");
@@ -152,16 +152,18 @@ bool getBitAt(uint64_t n, int k) {
     return (n >> k) & 1;
 }
 
-// Clears l bits downwards starting from kth position of n to 0.
+// Clears l bits downwards starting from kth position of n to 0 (k is zero indexed).
 static uint64_t bitClear(uint64_t n, int k, int l) {
     assert(k >= 0 && l > 0);
     return n & (~(generateMask(l) << (k - l + 1)));
 }
 
-// Sets clearsize bits starting from kth position of n to new to size copysize.
-uint64_t setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize) {
-    int cleared = bitClear(n, k, clearsize);
-    return cleared | (getBitsAt(new, k, copysize) << k);
+// Sets l bits starting from kth position of n to new.
+uint64_t setBitsTo(uint64_t n, int k, int new, int l) {
+    printf("%.32lx\n", n);
+    uint64_t cleared = bitClear(n, k, l);
+    printf("%.32lx\n", cleared);
+    return cleared | new << (k - l);
 }
 
 // Gets instruction type given instruction.

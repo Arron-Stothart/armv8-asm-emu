@@ -21,7 +21,7 @@ static void movn(ARM* arm, int rd, int op, int hw) {
 }
 
 static void movk(ARM* arm, int rd, int op, int hw) {
-    setBitsTo(arm->registers[rd], hw * 16, op, IMM16_LEN, IMM16_LEN);
+    arm->registers[rd] = setBitsTo(arm->registers[rd], (hw + 1) * DPI_MOVK_OFFSET, op, IMM16_LEN);
     fputs("(movk)", stderr);
 }
 

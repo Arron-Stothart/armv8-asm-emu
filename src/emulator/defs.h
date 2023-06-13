@@ -66,6 +66,7 @@
 #define DPI_IMM16_START 5 // for logical
 #define DPI_HW_START 21 // for logical
 #define DPI_HW_SIZE 2 // for logical
+#define DPI_MOVK_OFFSET 16 // used to set bits in movk
 
 // Register Data Processing Constants
 #define DPR_ARITHMETICBIT_POS 24
