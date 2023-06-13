@@ -2,33 +2,13 @@
 #include <stdlib.h>
 #include "tokenize.h"
 
-// Break a line into tokens (label, opcode and operand field(s)) writing to a target array length MAX_WORDS_IN_LINE
-// TODO: Fix header, finish, Deal with allocation
-/*
-void tokenize(char* line) {
-    char* saveptr;
-    char* token;
-
-    // Get first token from line
-    token = strtok_r(line, " ", &saveptr);
-
-    // Get successive tokens until end of line
-    int i = 0;
-    while (token != NULL) {
-        // Add token to target array
-        token = strtok_r(line, " ", &saveptr);
-        i++;
-    }
-}
-*/
-
 // Convert a line known to be an instruction into an instruction type 
 instruction tokenizeinstruction(char* line) {
     char* saveptr;
     char* token;
     instruction inst;
 
-    // Get first token from instruction line
+    // Get first token from line known to be instruction
     token = strtok_r(line, " ", &saveptr);
     // If first token is null then return with error
     if (token == NULL) {
@@ -57,4 +37,15 @@ instruction tokenizeinstruction(char* line) {
     
     // return instruction
     return inst;
+}
+
+// Convert a line known to be a label into a symbol type 
+symbol tokenizelabel(char* line) {
+    char* saveptr;
+    char* token;
+
+    // Get first token from line known to be label
+    token = strtok_r(line, " ", &saveptr);
+    // TODO
+
 }

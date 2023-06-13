@@ -6,3 +6,6 @@
 
 // Convert a line known to be an instruction into an instruction type 
 instruction tokenizeinstruction(char* line);
+
+// Convert a line known to be a label into a symbol type 
+symbol tokenizelabel(char* line);
