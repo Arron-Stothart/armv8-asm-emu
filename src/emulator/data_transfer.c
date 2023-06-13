@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "defs.h"
 #include "utils.h"
 
@@ -96,7 +97,7 @@ void singleDataTransfer(ARM* arm, int instruction) {
         // Since we store least significant bit first, we mantain little endian storage.
         assert(address + storesize < MAX_MEMORY_SIZE);
         for (int i = 0; i < storesize; i++) {
-            arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) && BYTE_MASK;
+            arm->memory[address + i] = (rtcontent >> (SIZE_OF_BYTE * i)) & BYTE_MASK;
         }
     }
 }
