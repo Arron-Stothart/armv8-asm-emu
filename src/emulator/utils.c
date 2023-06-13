@@ -27,7 +27,7 @@ void outputState(ARM *arm, char *file) {
     // Output registers.
     fprintf(output, "Registers: \n");
 
-	for (int i = 0; i < NUM_OF_REGISTERS; i++) {
+	for (int i = 0; i < NUM_OF_GENERAL_REGISTERS; i++) {
 		fprintf(output, "X%02d = %016lx\n",
 			   i, arm->registers[i]);
 	}

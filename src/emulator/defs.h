@@ -6,7 +6,8 @@
 
 // Register Constants
 #define REGISTER_SIZE 8 // in bytes
-#define NUM_OF_REGISTERS 31
+#define NUM_OF_GENERAL_REGISTERS 31
+#define NUM_OF_REGISTERS 32 // 31 general registers with 1 special register (ZR)
 #define ZR_INDEX 31 // Register 32 is zero register (starting from R0); read-only
 #define WREGISTER_MASK 0xffffffff // sets top 32 bits to 0.
 #define BYTE_MASK 0xff // sets all but bottom 8 bits to 0.

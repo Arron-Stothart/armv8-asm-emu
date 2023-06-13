@@ -307,7 +307,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         }
 
         // Shift rm by imm6 with type depending on shift bits.
-        int op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
+        uint64_t op2 = shiftRm[shift](arm->registers[rm], imm6, sf);
 
         // Negate opearand for logical instructions if n bit is given.
         // (N bit is de facto 0 for arithmetic instruction so no need to check).
