@@ -2,7 +2,7 @@
 #include "tokenize.h"
 
 // Break a line into tokens (label, opcode and operand field(s)) writing to a target array length MAX_WORDS_IN_LINE
-// TODO: Finish
+// TODO: Finish / Deal with allocation
 void tokenize(char** target_array, char* line) {
     char* saveptr;
     char* token;
