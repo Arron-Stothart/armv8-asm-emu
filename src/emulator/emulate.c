@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     // Fetch-Decode-Execute Cycle
     for (;;) {
         // Check if address is in memory range.
-        if (arm.pc < 0 || arm.pc > MAX_MEMORY_SIZE) {
+        if (arm.pc < 0 || arm.pc >= MAX_MEMORY_SIZE) {
             fprintf(
                 stderr,
                 "the PC is: %lu which is out of range \n",
