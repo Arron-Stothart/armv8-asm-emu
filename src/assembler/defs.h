@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#define MAX_WORDS_IN_LINE 5
+
 // Entries for symbol table: associates a label with memory address
 typedef struct {
     char* label;
