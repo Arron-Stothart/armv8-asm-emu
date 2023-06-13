@@ -66,21 +66,26 @@ static uint64_t adds(ARM* arm, int rd, int rn, uint64_t u_op2, int sf) {
 
 static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
-    int64_t rncontent = arm->registers[rn];
-    int64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
+    uint64_t rncontent = arm->registers[rn];
+    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
 
-    bool sign_1 = (sf ? rncontent < 0 : ((int32_t) (rncontent & WREGISTER_MASK) < 0));
-    bool sign_2 = (sf ? op2 < 0 : ((int32_t) (op2 & WREGISTER_MASK)) < 0);
-    bool sign_r = (sf ? r < 0 : ((int32_t) (r & WREGISTER_MASK)) < 0);
+    bool sign_1 = (sf ? (uint64_t) rncontent < 0 : ((int32_t) (rncontent & WREGISTER_MASK) < 0));
+    bool sign_2 = (sf ? (uint64_t) op2 < 0 : ((int32_t) (op2 & WREGISTER_MASK)) < 0);
+    bool sign_r = (sf ? (uint64_t) r < 0 : ((int32_t) (r & WREGISTER_MASK)) < 0);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ?  (r < 0) : ((int32_t) r < 0);
+    arm->pstate.N = sf ?  ((uint64_t) r < 0) : ((int32_t) r < 0);
     // Unsigned overflow if subtraction produced a borrow
-    arm->pstate.C = (arm->registers[rd] == op2);
-    for (int i = 0; i < (sf ? 64 : 32); i++) {
-        arm->pstate.C |= ((getBitAt(arm->registers[rd], i)) < getBitAt(arm->registers[rd], i));
+    // arm->pstate.C = (arm->registers[rd] == op2);
+    // for (int i = 0; i < (sf ? 64 : 32); i++) {
+    //     arm->pstate.C |= ((getBitAt(arm->registers[rd], i)) < getBitAt(arm->registers[rd], i));
+    // }
+    if (sf) {
+        arm->pstate.C = getBitAt(getBitAt((rncontent & WREGISTER_MASK) + (uint64_t)(-(uint32_t) op2), 32) + (rncontent >> 32) + (op2 >> 32), 32);
+    } else {
+        arm->pstate.C = getBitAt((rncontent & WREGISTER_MASK) + (uint64_t)(-(uint32_t) op2), 32);
     }
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = (!sign_1 && sign_2 && sign_r) || (sign_1 && !sign_2 && !sign_r);
