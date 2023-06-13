@@ -157,7 +157,7 @@ static uint64_t bitClear(uint64_t n, int k, int l) {
 }
 
 // Sets l bits starting from kth position of n to new.
-uint64_t setBitsTo(uint64_t n, int k, int new, int l) {
+uint64_t setBitsTo(uint64_t n, int k, uint64_t new, int l) {
     printf("%.32lx\n", n);
     uint64_t cleared = bitClear(n, k, l);
     printf("%.32lx\n", cleared);

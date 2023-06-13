@@ -21,7 +21,9 @@ static void movn(ARM* arm, int rd, uint64_t op, int hw) {
 }
 
 static void movk(ARM* arm, int rd, uint64_t op, int hw) {
+    fprintf(stderr, "{rd: %lx}", arm->registers[rd]);
     arm->registers[rd] = setBitsTo(arm->registers[rd], (hw + 1) * DPI_MOVK_OFFSET, op, IMM16_LEN);
+    fprintf(stderr, "{rd: %lx}", arm->registers[rd]);
     fputs("(movk)", stderr);
 }
 
