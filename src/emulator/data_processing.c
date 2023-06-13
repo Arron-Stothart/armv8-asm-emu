@@ -43,7 +43,6 @@ static uint64_t adds(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
     int64_t rncontent = arm->registers[rn];
     int64_t r = (rd == ZR_INDEX) ? rncontent + op2 : add(arm, rd, rn, op2, sf);
-    op2 = (int64_t) op2; // sign op2 for flag checks
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
@@ -61,18 +60,13 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // If rd is the zero register then we compute result without changing memory.
     int64_t rncontent = arm->registers[rn];
     int64_t r = (rd == ZR_INDEX) ? arm->registers[rn] - op2 : sub(arm, rd, rn, op2, sf);
-    op2 = (int64_t) op2; // sign op2 for flag checks.
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
     arm->pstate.N = sf ?  (r < 0) : ((int32_t) r < 0);
     // Unsigned overflow if subtraction produced a borrow
-    arm->pstate.C = sf ?
-        ((rncontent >= 0 && op2 >= 0 && op2 <= LLONG_MAX + rncontent) ||
-        (rncontent < 0 && op2 <0 && op2 > LLONG_MIN + rncontent)) :
-        ((rncontent >= 0 && op2 >= 0 && op2 <= INT_MAX + rncontent) ||
-        (rncontent < 0 && op2 <0 && op2 > INT_MIN + rncontent));
+    arm->pstate.C = 0;
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = 0;
     fputs("(subs)", stderr);
@@ -168,7 +162,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
         // Arithmetic
         case DPI_ARITHMETIC_OPI: {
             bool sh = getBitAt(instruction, DPI_SHBIT);
-            int imm12 = getBitsAt(instruction, DPI_IMM12_START, IMM12_LEN);
+            uint64_t imm12 = getBitsAt(instruction, DPI_IMM12_START, IMM12_LEN);
             int rn = getBitsAt(instruction, DPI_RN_START, REG_INDEX_SIZE);
 
             // Shift imm12 by 12 if shift bit is given.
@@ -202,7 +196,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
         // Wide Move
         case DPI_WIDEMOVE_OPI: {
             int hw = getBitsAt(instruction, DPI_HW_START, DPI_HW_SIZE);
-            int imm16 = getBitsAt(instruction, DPI_IMM16_START, IMM16_LEN);
+            uint64_t imm16 = getBitsAt(instruction, DPI_IMM16_START, IMM16_LEN);
 
             // For movk don't shift imm16.
             if (opc != DPI_MOVK_OPC) {
@@ -290,7 +284,7 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         int shift = getBitsAt(instruction, DPR_SHIFT_START, DPR_SHIFT_LEN);
         bool n = getBitAt(instruction, DPR_NBIT_POS);
         int opc = getBitsAt(instruction, DPR_OPC_START, DPR_OPC_LEN);
-        int imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
+        uint64_t imm6 = getBitsAt(instruction, DPR_IMM6_START, IMM6_LEN);
         bool isArithmetic = getBitAt(instruction, DPR_ARITHMETICBIT_POS);
 
         // If sf is not given, read registers as 32 bit; all but rd to be restored later.
