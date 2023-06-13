@@ -133,12 +133,12 @@ uint64_t asr(uint64_t value, uint32_t shift, bool is64bit) {
 }
 
 // generates binary mask of n ones.
-static uint32_t generateMask(uint32_t n) {
+static uint64_t generateMask(uint32_t n) {
     return ((1 << n) - 1);
 }
 
 // Gets l bits upwards starting from kth positon of n.
-int getBitsAt(uint64_t n, int k, int l) {
+uint64_t getBitsAt(uint64_t n, int k, int l) {
     // In kth position we can get up to k + 1 bits
     assert(k >= 0 && l > 0);
     // Can be converted into getting bits downards by using:
@@ -153,13 +153,13 @@ bool getBitAt(uint64_t n, int k) {
 }
 
 // Clears l bits downwards starting from kth position of n to 0.
-static int bitClear(uint64_t n, int k, int l) {
+static uint64_t bitClear(uint64_t n, int k, int l) {
     assert(k >= 0 && l > 0);
     return n & (~(generateMask(l) << (k - l + 1)));
 }
 
 // Sets clearsize bits starting from kth position of n to new to size copysize.
-int setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize) {
+uint64_t setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize) {
     int cleared = bitClear(n, k, clearsize);
     return cleared | (getBitsAt(new, k, copysize) << k);
 }

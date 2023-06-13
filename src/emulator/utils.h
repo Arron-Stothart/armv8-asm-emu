@@ -30,7 +30,7 @@ uint64_t lsr(uint64_t value, uint32_t shift, bool is64bit);
 bool getBitAt(uint64_t n, int k);
 
 // Gets l bits upwards starting from kth positon of n.
-int getBitsAt(uint64_t n, int k, int l);
+uint64_t getBitsAt(uint64_t n, int k, int l);
 
 // Sets clearsize bits starting from kth position of n to new to size copysize.
-int setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize);
+uint64_t setBitsTo(uint64_t n, int k, int new, int clearsize, int copysize);
