@@ -104,13 +104,13 @@ static uint64_t eor(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
 }
 
 static uint64_t ands(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
-    uint64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & op2 : and(arm, rd, rn, op2, sf);
+    int64_t r = (rd == ZR_INDEX) ? arm->registers[rn] & op2 : and(arm, rd, rn, op2, sf);
 
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ? ((int64_t) r < 0) : ((int32_t) r < 0);
-    // C and V are set to 0.
+    arm->pstate.N = sf ? (r < 0) : ((int32_t) r < 0);
+    // C and V are set to 0 after logical operations.
     arm->pstate.C = 0;
     arm->pstate.V = 0;
     fputs("(ands)", stderr);
