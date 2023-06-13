@@ -69,10 +69,10 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     arm->pstate.N = sf ?  (r < 0) : ((int32_t) r < 0);
     // Unsigned overflow if subtraction produced a borrow
     arm->pstate.C = sf ?
-        ((rncontent < 0 && op2 > ULLONG_MAX + rncontent) ||
-        (rncontent > 0 && op2 < (~ULLONG_MAX) + rncontent)) :
-        ((rncontent < 0 && op2 > INT_MAX + rncontent) ||
-        (rncontent > 0 && op2 < INT_MIN + rncontent));
+        ((rncontent >= 0 && op2 >= 0 && op2 <= LLONG_MAX + rncontent) ||
+        (rncontent < 0 && op2 <0 && op2 > LLONG_MIN + rncontent)) :
+        ((rncontent >= 0 && op2 >= 0 && op2 <= INT_MAX + rncontent) ||
+        (rncontent < 0 && op2 <0 && op2 > INT_MIN + rncontent));
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = 0;
     fputs("(subs)", stderr);
