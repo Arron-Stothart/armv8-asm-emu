@@ -73,11 +73,7 @@ typedef struct {
 typedef char* operand_arr[MAX_OPERANDS];
 
 // Structure for assembler file instructions: operation mneumonic and up to four operands
-// Max operands is 4, NULL if not present
-// Feel free to change to a better implementation
 typedef struct {
     OPCODE opcode;
-    operand_arr operands; // TODO: replace with operand type
+    operand_arr operands;
 } instruction;
-// Labels are same as symbol 
-// Directives are same as single operand as .int N is the only possibility
