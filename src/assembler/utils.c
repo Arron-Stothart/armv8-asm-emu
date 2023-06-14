@@ -141,7 +141,7 @@ static bool islabel(char* token) {
 	int val2;
 
 	// Compile regex (create pattern to process comparisons)
-	val1 = regcomp(&rx, "[a-zA-Z_\.]([a-zA-Z0-9$_\.])*.", 0); // Not super sure about this, red '\.'??!!
+	val1 = regcomp(&rx, "[a-zA-Z_\.]([a-zA-Z0-9$_\.])*.", 0);
 	// If returned value is not 0, compilation of regex has failed
 	if (val1 != 0) {
 		printf("Error in generating pattern.\n");

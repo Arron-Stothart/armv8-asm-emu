@@ -23,9 +23,9 @@ int main(int argc, char **argv) {
   // Create empty symbol table
   symbol_table* st = malloc(sizeof(symbol_table));
 
-  // Iterate over each line of file
+  // Iterate over each line until end of file (NULL) is reached: We might want to move this into its own function
   char line[MAX_LINE_LENGTH];
-  while (fgets(line, sizeof(line), input)) {
+  while (fgets(line, MAX_LINE_LENGTH, input)) {
       if (getlinetype(line) == LABEL) {
             uint64_t address;
             // TODO: Determine corresponding address
