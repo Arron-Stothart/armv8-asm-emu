@@ -3,7 +3,6 @@
 #include "tokenize.h"
 
 // Convert a line known to be an instruction into an instruction type 
-//! This may actually be a parser, maybe split up?!
 instruction tokenizeinstruction(char* line) {
     char* saveptr;
     char* token;
