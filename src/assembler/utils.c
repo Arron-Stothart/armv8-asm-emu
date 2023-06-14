@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <regex.h>
 #include "utils.h"
 
 // Writes n instructions from array into binary file
@@ -124,3 +126,67 @@ OPCODE getopcode(char* mnemonic) {
 	//! and x0 x0 x0 for halt presents an isssue
 	//! .int directive may bennefit from being dealt with here?
 }
+
+// Check if token is a label 
+static bool islabel(char* token) {
+	// Return false if first character is not an alphabet (a-z or A-Z)
+	if (!isalpha(*token)) {
+		return false;
+	}
+	// Return false if last character is not a colon
+	if (token[strlen(token) - 1] != ':') {
+		return false;
+	}
+
+	// Return true if token matches regex
+	regex_t rx;
+	int val1;
+	int val2;
+
+	// Compile regex (create pattern to process comparisons)
+	val1 = regcomp(&rx, "[a-zA-Z_\.]([a-zA-Z0-9$_\.])*.", 0); // Not super sure about this, red '\.'??!!
+	// If returned value is not 0, compilation of regex has failed
+	if (val1 != 0) {
+		printf("Error in generating pattern.\n");
+        exit(EXIT_FAILURE);
+	}
+
+	// Match pattern of regex with token
+	val2 = regexec(&rx, token, 0, NULL, 0); // May be able to use pmatch parameter instead of the above separate checks
+	// If returned value is 0, match has been found
+	if (val2 == 0) {
+		return true;
+	}
+	return false;
+}
+
+// Check if token is a directive
+static bool isdirective(char* token) {
+	// Return true if first character is '.'
+	return (*token == '.');
+}
+
+// Use first token to identify type of line (Instruction, Directive, Label)
+LINE_TYPE identifyline(char* line) {
+	char* saveptr;
+    char* token;
+
+	// Get first token from line 
+    token = strtok_r(line, " ", &saveptr);
+	// If first token is null then return with error
+    if (token == NULL || strlen(token) == 0) {
+        printf("Error in parsing content from line.\n");
+        exit(EXIT_FAILURE);
+    }
+
+	// Check if token is a label, return accordingly
+	if (islabel(token)) {
+		return LABEL;
+	}
+	// Check if token is a directive, return accordingly
+	if (isdirective(token)) {
+		return DIRECTIVE;
+	}
+	// Assumption: All lines are either Instruction, Directive or Label
+	return INSTRUCTION;
+} 
