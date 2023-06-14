@@ -61,7 +61,7 @@ typedef enum {
 typedef enum {
     register_operand,
     immediate_value_operand,
-    memory_address_operand,
+    label_operand, // i.e. immediate address
 } operand_type;
 
 // Structure for operand
