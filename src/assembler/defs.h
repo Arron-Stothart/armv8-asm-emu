@@ -5,16 +5,15 @@
 #define MAX_CHARS_IN_LINE 128 // Arbitrary choice
 #define MAX_LABELS 1024 // Arbitrary Choice
 
-// Entries for symbol table: associates a label with memory address
+// Structure for symbol table
 typedef struct {
     char* label;
     uint64_t address;
+    symbol* next;
  } symbol;
 
-// Static size symbol table, Please could somebody make Dictionary-style functions for this
 typedef struct {
-    symbol labels[MAX_LABELS];
-    uint8_t size; // size is < max size = MAX_LABELS
+    symbol* first;
 } symbol_table;
 
 // Enum for type of assembly line; possibly not needed
@@ -64,22 +63,21 @@ typedef enum {
     HLT // i.e. and x0, x0, x0
 } OPCODE;
 
-// Enum for operand type
+// Structure for operand
 typedef enum {
     register_operand,
     immediate_value_operand,
     label_operand, // i.e. immediate address
 } operand_type;
 
-// Structure for operand
 typedef struct {
     operand_type type;
     int value;
 } operand;
 
+// Structure for assembler file instructions: operation mneumonic and up to four operands
 typedef char* operand_arr[MAX_OPERANDS];
 
-// Structure for assembler file instructions: operation mneumonic and up to four operands
 typedef struct {
     OPCODE opcode;
     operand_arr operands;
