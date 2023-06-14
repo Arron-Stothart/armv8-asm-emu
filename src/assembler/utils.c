@@ -187,7 +187,7 @@ LINE_TYPE getlinetype(char* line) {
 	return INSTRUCTION;
 }
 
-// Add symbol to symbol table
+// Add symbol to start of symbol table
 void addsymbol(uint64_t address, char* label, symbol_table* st) {
 	symbol* sym = malloc(sizeof(symbol));
 	sym->label = label;
@@ -201,7 +201,7 @@ uint64_t getaddress(char* label, symbol_table* st) {
 	symbol* sym = st->first;
 
 	while (sym != NULL) {
-		if (strcmp(sym->label, label)) {
+		if (strcmp(sym->label, label) == 0) {
 			return sym->address;
 		}
 		sym = sym->next;
