@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#define MAX_LINE_LENGTH 512
 #define MAX_WORDS_IN_LINE 5
 #define MAX_OPERANDS 4
 
