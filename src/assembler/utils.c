@@ -167,7 +167,7 @@ static bool isdirective(char* token) {
 }
 
 // Use first token to identify type of line (Instruction, Directive, Label)
-LINE_TYPE identifyline(char* line) {
+LINE_TYPE getlinetype(char* line) {
 	char* saveptr;
     char* token;
 

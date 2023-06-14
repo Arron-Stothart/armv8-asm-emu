@@ -8,4 +8,4 @@ void writebinary(char* path, uint32_t* instructions, int n);
 OPCODE getopcode(char* mnemonic);
 
 // Use first token to identify type of line (Instruction, Directive, Label)
-LINE_TYPE identifyline(char* line);
+LINE_TYPE getlinetype(char* line);
