@@ -129,16 +129,13 @@ OPCODE getopcode(char* mnemonic) {
 
 // Check if token is a label 
 static bool islabel(char* token) {
-	// Return false if first character is not an alphabet (a-z or A-Z)
 	if (!isalpha(*token)) {
 		return false;
 	}
-	// Return false if last character is not a colon
 	if (token[strlen(token) - 1] != ':') {
 		return false;
 	}
 
-	// Return true if token matches regex
 	regex_t rx;
 	int val1;
 	int val2;
@@ -152,7 +149,7 @@ static bool islabel(char* token) {
 	}
 
 	// Match pattern of regex with token
-	val2 = regexec(&rx, token, 0, NULL, 0); // May be able to use pmatch parameter instead of the above separate checks
+	val2 = regexec(&rx, token, 0, NULL, 0);
 	// If returned value is 0, match has been found
 	if (val2 == 0) {
 		return true;
@@ -162,7 +159,6 @@ static bool islabel(char* token) {
 
 // Check if token is a directive
 static bool isdirective(char* token) {
-	// Return true if first character is '.'
 	return (*token == '.');
 }
 
