@@ -14,6 +14,7 @@ typedef struct {
 
 typedef struct {
     symbol* first;
+    uint8_t size; // max size < MAX_LABELS
 } symbol_table;
 
 // Enum for type of assembly line; possibly not needed
