@@ -4,6 +4,11 @@
 #include "defs.h"
 #include "utils.h"
 #include "symbol_table.h"
+#include "tokenize.c"
+
+uint8_t (*instructions[])(char* operands[MAX_OPERANDS]) = {
+  // Add all functions
+};
 
 int main(int argc, char **argv) {
 
@@ -25,8 +30,17 @@ int main(int argc, char **argv) {
   // Allocate memory for instructions
   uint32_t* instructions = (uint32_t*) calloc(numIns, sizeof(uint32_t));
 
-  // Second pass: Read in each instruction and .int directive, generate corresponding binary encoding
+  // Second pass: Read in each instruction and .int directive, write instructions into array
   // TODO: implement
+  // instruction instr;
+  // for (int i = 0; i < numRead; i++) {
+  //   if () {
+  //     instr = tokenizeinstruction(buffer[i]);
+
+
+  //     instructions[i] = instructions[hashedOpc](instr.operands);
+  //   }
+  }
 
   writeBinary(argv[2], instructions, numRead);
   free(st);

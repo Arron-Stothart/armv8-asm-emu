@@ -1,12 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
-#include "tokenize.h"
+#include "defs.h"
 
 // Convert a line known to be an instruction into an instruction type
 instruction tokenizeinstruction(char* line) {
     char* saveptr;
     char* token;
-    instruction inst;
 
     // Get first token from line known to be instruction
     token = strtok_r(line, " ", &saveptr);
@@ -22,9 +21,9 @@ instruction tokenizeinstruction(char* line) {
     // Get second token (Required by loop structure) and initialise operand array builder
     token = strtok_r(line, " ", &saveptr);
     char* operands[MAX_OPERANDS];
-    int i = 0;
 
     // Add operand tokens to operand array builder until end of line
+    int i = 0;
     while (token != NULL) {
         // TODO: replace strings with operand type, create function determining operand_type of each
         operands[i] = token;
@@ -33,8 +32,6 @@ instruction tokenizeinstruction(char* line) {
     }
 
     // Add opcode and operands to inst
-    instruction inst = { .opcode = opcode, .operands = operands};
-
-    // return instruction
+    instruction inst = {.opcode = opcode, .operands = operands};
     return inst;
 }
