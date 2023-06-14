@@ -9,16 +9,16 @@
 // Writes n instructions from array into binary file
 void writebinary(char* path, uint32_t* instructions, int n) {
 	// Creating the output file
-	FILE* output = fopen(path, "wb");
+	FILE* output = fopen(path, "w");
 
-	// Verifying the output
+	// Check if file has been loaded into memory
 	if(output == NULL) {
 		fprintf(stderr, "Error opening file at %s\n", path);
 		exit(EXIT_FAILURE);
 	}
 
 	for (int i = 0; i < n; i++) {
-		fwrite(&(instructions[i]) , sizeof(uint32_t), 1, output);
+		fwrite(&(instructions[i]), sizeof(uint32_t), 1, output);
 	}
 
 	fclose(output);
@@ -26,7 +26,7 @@ void writebinary(char* path, uint32_t* instructions, int n) {
 
 // Get opcode type from instruction menumonic
 // TODO: remove magic strings, replace with map style structure!, make local to tokenize
-OPCODE getopcode(char* mnemonic) {
+OPCODE getOpcode(char* mnemonic) {
 	if (strcmp(mnemonic, "add") == 0) {
 		return ADD;
 	}
@@ -127,7 +127,7 @@ OPCODE getopcode(char* mnemonic) {
 	//! .int directive may bennefit from being dealt with here?
 }
 
-// Check if token is a label 
+// Check if token is a label
 static bool islabel(char* token) {
 	// Return false if first character is not an alphabet (a-z or A-Z)
 	if (!isalpha(*token)) {
@@ -171,7 +171,7 @@ LINE_TYPE getlinetype(char* line) {
 	char* saveptr;
     char* token;
 
-	// Get first token from line 
+	// Get first token from line
     token = strtok_r(line, " ", &saveptr);
 	// If first token is null then return with error
     if (token == NULL || strlen(token) == 0) {
@@ -189,4 +189,4 @@ LINE_TYPE getlinetype(char* line) {
 	}
 	// Assumption: All lines are either Instruction, Directive or Label
 	return INSTRUCTION;
-} 
+}

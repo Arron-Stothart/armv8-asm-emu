@@ -2,7 +2,8 @@
 
 #define MAX_WORDS_IN_LINE 5
 #define MAX_OPERANDS 4
-#define MAX_SYMBOL_TABLE_SIZE 1024 // Random choice
+#define MAX_CHARS_IN_LINE 128 // Arbitrary choice
+#define MAX_LABELS 1024 // Arbitrary Choice
 
 // Entries for symbol table: associates a label with memory address
 typedef struct {
@@ -10,23 +11,26 @@ typedef struct {
     uint64_t address;
  } symbol;
 
-// Static size symbol table, Please could somebody make Dictionary-style functions for this 
- typedef symbol symbol_table[MAX_SYMBOL_TABLE_SIZE];
+// Static size symbol table, Please could somebody make Dictionary-style functions for this
+typedef struct {
+    symbol labels[MAX_LABELS];
+    uint8_t size; // size is < max size = MAX_LABELS
+} symbol_table;
 
 // Enum for type of assembly line; possibly not needed
 // INSTRUCTION = an operation mnemonic (e.g. add, ldr, . . . ), and one, two, three or four operand fields
 // DIRECTIVE = strings that start with a ‘.’; the only one is ‘.int’
-// LABEL = strings that begin with an alphabetical character (a–z or A–Z) and end with a ‘:’ 
+// LABEL = strings that begin with an alphabetical character (a–z or A–Z) and end with a ‘:’
 typedef enum {
-    INSTRUCTION, 
+    INSTRUCTION,
     DIRECTIVE,
-    LABEL        
+    LABEL
 } LINE_TYPE;
 
 // Enum for opcode (instruction mnemonic)
 typedef enum {
-    ADD, 
-    ADDS, 
+    ADD,
+    ADDS,
     SUB,
     SUBS,
     CMP,

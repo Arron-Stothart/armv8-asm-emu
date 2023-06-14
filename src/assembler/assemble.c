@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 
   if (argc < 3) {
-        fprintf(stderr, "emulate: no assembler file provided.\n");
+        fprintf(stderr, "assemble: ./assemble <file_in> <file_out>.\n");
         exit(EXIT_FAILURE);
   }
 
@@ -19,8 +19,9 @@ int main(int argc, char **argv) {
   }
 
   // First pass: Create symbol table associating labels with memory addresses
-  symbol sym_table[MAX_SYMBOL_TABLE_SIZE];
+  symbol sym_table[MAX_LABELS];
   // TODO: implement
+
 
   // Second pass: Read in each instruction and .int directive, generate corresponding binary encoding
   // TODO: implement
