@@ -4,10 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <regex.h>
-#include "utils.h"
 
 // Writes n instructions from array into binary file
-void writebinary(char* path, uint32_t* instructions, int n) {
+void writeBinary(char* path, uint32_t* instructions, int n) {
 	// Creating the output file
 	FILE* output = fopen(path, "w");
 
@@ -23,6 +22,32 @@ void writebinary(char* path, uint32_t* instructions, int n) {
 
 	fclose(output);
 }
+
+// Reads each line of file into buffer with maximum of MAX_LINES lines. Returns number of lines read.
+uint8_t readFile(char* buffer[MAX_LINES], char* path) {
+
+	// Input file
+	FILE* input = fopen(path, "r");
+
+	// Verifying the input
+	if (input == NULL) {
+		printf("ERROR: Cannot open file: %s\n", path);
+		exit(EXIT_FAILURE);
+	}
+
+	// Read content of input file
+	uint8_t i = 0;
+	while(fgets(buff[i], MAX_CHARS_IN_LINE, input)) {
+		i++;
+	}
+
+	fclose(input);
+	return i;
+}
+
+// uint8_t addLabels(char* bufdf) {
+
+// }
 
 // Get opcode type from instruction menumonic
 // TODO: remove magic strings, replace with map style structure!, make local to tokenize
@@ -128,7 +153,7 @@ OPCODE getOpcode(char* mnemonic) {
 }
 
 // Check if token is a label
-static bool islabel(char* token) {
+static bool isLabel(char* token) {
 	if (!isalpha(*token)) {
 		return false;
 	}
@@ -158,12 +183,12 @@ static bool islabel(char* token) {
 }
 
 // Check if token is a directive
-static bool isdirective(char* token) {
+static bool isDirective(char* token) {
 	return (*token == '.');
 }
 
 // Use first token to identify type of line (Instruction, Directive, Label)
-LINE_TYPE getlinetype(char* line) {
+LINE_TYPE getLineType(char* line) {
 	char* saveptr;
     char* token;
 
@@ -176,11 +201,11 @@ LINE_TYPE getlinetype(char* line) {
     }
 
 	// Check if token is a label, return accordingly
-	if (islabel(token)) {
+	if (isLabel(token)) {
 		return LABEL;
 	}
 	// Check if token is a directive, return accordingly
-	if (isdirective(token)) {
+	if (isDirective(token)) {
 		return DIRECTIVE;
 	}
 	// Assumption: All lines are either Instruction, Directive or Label

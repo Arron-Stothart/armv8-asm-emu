@@ -4,6 +4,7 @@
 #define MAX_OPERANDS 4
 #define MAX_CHARS_IN_LINE 128 // Arbitrary choice
 #define MAX_LABELS 1024 // Arbitrary Choice
+#define MAX_LINES 128 // Arbitrary Choice
 
 // Structure for symbol table
 typedef struct {
