@@ -7,8 +7,11 @@
 #include "defs.h"
 
 // Creates new symbol table.
-symbol_table newSymbolTable() {
-    return (symbol_table) {.first = NULL, .size = 0};
+symbol_table* newSymbolTable() {
+    symbol_table* st = (symbol_table*) malloc (sizeof(symbol_table));
+    st->first = NULL;
+    st->size = 0;
+    return st;
 }
 
 // Checks whether a given label is already in the table.
@@ -31,6 +34,7 @@ void addSymbol(symbol_table* st, uint64_t address, char* label) {
     assert(st->size < MAX_LABELS);
 
 	symbol* sym = malloc(sizeof(symbol));
+    assert(sym != NULL);
 	sym->label = label;
 	sym->address = address;
 	sym->next = st->first;

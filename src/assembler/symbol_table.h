@@ -3,7 +3,7 @@
 #include "defs.h"
 
 // Creates new symbol table.
-symbol_table newSymbolTable();
+symbol_table* newSymbolTable();
 
 // Checks whether a given label is already in the table.
 bool hasLabel(symbol_table* st, char* label);

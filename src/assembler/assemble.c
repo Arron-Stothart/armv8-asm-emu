@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "defs.h"
 #include "utils.h"
+#include "symbol_table.h"
 
 int main(int argc, char **argv) {
 
@@ -20,11 +21,12 @@ int main(int argc, char **argv) {
 
   // First pass: Create symbol table associating labels with memory addresses
   // Create empty symbol table
-  symbol_table* st = malloc(sizeof(symbol_table));
+  symbol_table* st = newSymbolTable();
+  assert(st != NULL);
 
   // Iterate over each line until end of file (NULL) is reached: We might want to move this into its own function
-  char line[MAX_LINE_LENGTH];
-  while (fgets(line, MAX_LINE_LENGTH, input)) {
+  char line[MAX_CHARS_IN_LINE];
+  while (fgets(line, MAX_CHARS_IN_LINE, input)) {
       if (getlinetype(line) == LABEL) {
             uint64_t address;
             // TODO: Determine corresponding address
