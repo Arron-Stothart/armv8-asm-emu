@@ -12,7 +12,7 @@ typedef struct {
  } symbol;
 
 // Linked symbol table
-typdef struct {
+typedef struct {
     symbol* first;
 } symbol_table;
 
