@@ -19,8 +19,10 @@ int main(int argc, char **argv) {
   }
 
   // First pass: Create symbol table associating labels with memory addresses
-  symbol_table* st = createsymboltable();
   // TODO: implement
+
+  // Create empty symbol table
+  symbol_table* st = malloc(sizeof(symbol_table));
 
   // Second pass: Read in each instruction and .int directive, generate corresponding binary encoding
   // TODO: implement
