@@ -10,6 +10,9 @@ OPCODE getopcode(char* mnemonic);
 // Use first token to identify type of line (Instruction, Directive, Label)
 LINE_TYPE getlinetype(char* line);
 
+// Create empty symbol table
+symbol_table* createsymboltable()
+
 // Add symbol to symbol table
 void addsymbol(uint64_t address, char* label, symbol_table* st);
 
