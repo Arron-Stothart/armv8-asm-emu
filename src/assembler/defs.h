@@ -2,7 +2,7 @@
 
 #define MAX_WORDS_IN_LINE 5
 #define MAX_OPERANDS 4
-#define MAX_SYMBOL_TABLE_SIZE 512 // Random choice
+#define MAX_SYMBOL_TABLE_SIZE 1024 // Random choice
 
 // Entries for symbol table: associates a label with memory address
 typedef struct {
@@ -10,7 +10,7 @@ typedef struct {
     uint64_t address;
  } symbol;
 
-// Static size symbol table
+// Static size symbol table, Please could somebody make Dictionary-style functions for this 
  typedef symbol symbol_table[MAX_SYMBOL_TABLE_SIZE];
 
 // Enum for type of assembly line; possibly not needed
