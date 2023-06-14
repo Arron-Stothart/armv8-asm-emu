@@ -6,3 +6,6 @@ void writebinary(char* path, uint32_t* instructions, int n);
 
 // Get opcode type from instruction menumonic
 OPCODE getopcode(char* mnemonic);
+
+// Use first token to identify type of line (Instruction, Directive, Label)
+LINE_TYPE identifyline(char* line);
