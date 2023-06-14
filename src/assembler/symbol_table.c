@@ -28,17 +28,17 @@ bool hasLabel(symbol_table* st, char* label) {
     return false;
 }
 
-
 // Add symbol to start of symbol table
 void addSymbol(symbol_table* st, uint64_t address, char* label) {
     assert(st->size < MAX_LABELS);
 
 	symbol* sym = malloc(sizeof(symbol));
     assert(sym != NULL);
-	sym->label = label;
+	sym->label = strdup(label);
 	sym->address = address;
 	sym->next = st->first;
 	st->first = sym;
+	st->size++;
 }
 
 // Get adddress in symbol table from label, returns -1 otherwise. Note return int is signed.

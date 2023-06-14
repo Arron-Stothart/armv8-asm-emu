@@ -1,16 +1,20 @@
 #include <stdint.h>
 
+// Parser Constants
 #define MAX_WORDS_IN_LINE 5
 #define MAX_OPERANDS 4
 #define MAX_CHARS_IN_LINE 128 // Arbitrary choice
 #define MAX_LABELS 1024 // Arbitrary Choice
 #define MAX_LINES 128 // Arbitrary Choice
 
+// Instruction Constants
+#define INSTRUCTION_SIZE 4 // in bytes
+
 // Structure for symbol table
 typedef struct {
     char* label;
     uint64_t address;
-    symbol* next;
+    symbol* next; // linked list structure
  } symbol;
 
 typedef struct {
@@ -78,9 +82,7 @@ typedef struct {
 } operand;
 
 // Structure for assembler file instructions: operation mneumonic and up to four operands
-typedef char* operand_arr[MAX_OPERANDS];
-
 typedef struct {
     OPCODE opcode;
-    operand_arr operands;
+    char* operands[MAX_OPERANDS];
 } instruction;

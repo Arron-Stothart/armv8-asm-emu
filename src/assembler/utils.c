@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <regex.h>
+#include "symbol_table.h"
 
 // Writes n instructions from array into binary file
 void writeBinary(char* path, uint32_t* instructions, int n) {
@@ -45,9 +46,21 @@ uint8_t readFile(char* buffer[MAX_LINES], char* path) {
 	return i;
 }
 
-// uint8_t addLabels(char* bufdf) {
+// Takes read files and adds any labels and corresponding addresses to symbol table.
+uint8_t populateSymbolTable(char* buffer[MAX_LINES], symbol_table* st, uint8_t numRead) {
+	int numInstr = 0;
 
-// }
+	for (int i = 0; i < numRead, i++) {
+		if (isLabel(buffer[i])) {
+			addSymbol(st, ins * INSTRUCTION_SIZE, label); //! The address might not be correct
+		} else {
+			// Labels are not instructions (but take up an extra space in assembly code);
+			numInstr++;
+		}
+	}
+
+	return numInstr;
+}
 
 // Get opcode type from instruction menumonic
 // TODO: remove magic strings, replace with map style structure!, make local to tokenize

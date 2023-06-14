@@ -15,16 +15,20 @@ int main(int argc, char **argv) {
   // Create empty symbol table
   symbol_table* st = newSymbolTable();
   assert(st != NULL);
-  // Read file into buffer
+
+  // Read file into buffer. Buffer is initalized as terminating characters.
   char* buffer[MAX_LINES] = {"\0"};
   int numRead = readFile(buffer, argv[1]);
 
   // First pass: Create symbol table associating labels with memory addresses
-
-
+  uint8_t numIns = populateSymbolTable(buffer, st, numRead);
+  // Allocate memory for instructions
+  uint32_t* instructions = (uint32_t*) calloc(numIns, sizeof(uint32_t));
 
   // Second pass: Read in each instruction and .int directive, generate corresponding binary encoding
   // TODO: implement
 
+  writeBinary(argv[2], instructions, numRead);
+  free(st);
   return EXIT_SUCCESS;
 }

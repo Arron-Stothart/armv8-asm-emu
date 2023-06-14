@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "tokenize.h"
 
-// Convert a line known to be an instruction into an instruction type 
+// Convert a line known to be an instruction into an instruction type
 instruction tokenizeinstruction(char* line) {
     char* saveptr;
     char* token;
@@ -17,11 +17,11 @@ instruction tokenizeinstruction(char* line) {
     }
 
     // Obtain opcode from first mneumonic
-    OPCODE opcode = getopcode(token);
+    OPCODE opcode = getOpcode(token);
 
     // Get second token (Required by loop structure) and initialise operand array builder
     token = strtok_r(line, " ", &saveptr);
-    operand_arr operands;
+    char* operands[MAX_OPERANDS];
     int i = 0;
 
     // Add operand tokens to operand array builder until end of line
@@ -34,7 +34,7 @@ instruction tokenizeinstruction(char* line) {
 
     // Add opcode and operands to inst
     instruction inst = { .opcode = opcode, .operands = operands};
-    
+
     // return instruction
     return inst;
 }
