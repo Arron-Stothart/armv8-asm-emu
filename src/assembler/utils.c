@@ -191,6 +191,12 @@ LINE_TYPE getlinetype(char* line) {
 	return INSTRUCTION;
 } 
 
+// Create empty symbol table
+symbol_table* createsymboltable() {
+	symbol_table* st = malloc(sizeof(symbol_table));
+	return st;
+}
+
 // Add symbol to symbol table
 void addsymbol(uint64_t address, char* label, symbol_table* st) {
 	symbol* sym = malloc(sizeof(symbol));
