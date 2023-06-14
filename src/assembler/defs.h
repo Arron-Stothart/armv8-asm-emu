@@ -2,7 +2,6 @@
 
 #define MAX_WORDS_IN_LINE 5
 #define MAX_OPERANDS 4
-// #define MAX_SYMBOL_TABLE_SIZE 
 
 // Structure for symbol table
 typedef struct {
