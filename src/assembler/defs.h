@@ -20,7 +20,7 @@ typedef enum {
     LABEL        
 } LINE_TYPE;
 
-// Enum for opcode (instruction mnemonic); possibly not needed
+// Enum for opcode (instruction mnemonic)
 typedef enum {
     // Data Processing
     ADD, 
@@ -55,8 +55,21 @@ typedef enum {
     LDR,
     STR,
     NOP,
-    HLT, // (and x0, x0, x0)
+    HLT // i.e. and x0, x0, x0
 } OPCODE;
+
+// Enum for operand type
+typedef enum {
+    register,
+    immediate_value,
+    memory_address,
+} operand_type;
+
+// Structure for operand
+typedef struct {
+    operand_type type;
+    int value;
+} operand;
 
 typedef char* operand_arr[MAX_OPERANDS];
 

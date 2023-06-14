@@ -27,7 +27,7 @@ instruction tokenizeinstruction(char* line) {
 
     // Add operand tokens to operand array builder until end of line
     while (token != NULL) {
-        // TODO: replace strings with operand type
+        // TODO: replace strings with operand type, create function determining operand_type of each
         operands[i] = token;
         token = strtok_r(line, " ", &saveptr);
         i++;
