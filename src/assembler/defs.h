@@ -22,7 +22,6 @@ typedef enum {
 
 // Enum for opcode (instruction mnemonic)
 typedef enum {
-    // Data Processing
     ADD, 
     ADDS, 
     SUB,
@@ -60,9 +59,9 @@ typedef enum {
 
 // Enum for operand type
 typedef enum {
-    register,
-    immediate_value,
-    memory_address,
+    register_operand,
+    immediate_value_operand,
+    memory_address_operand,
 } operand_type;
 
 // Structure for operand
