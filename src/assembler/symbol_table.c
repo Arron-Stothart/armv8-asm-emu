@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include "symbol_table.h"
 #include "defs.h"
 
 // Creates new symbol table.

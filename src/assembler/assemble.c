@@ -4,10 +4,21 @@
 #include "defs.h"
 #include "utils.h"
 #include "symbol_table.h"
-#include "tokenize.c"
+#include "tokenize.h"
+#include "data_processing.h"
+#include "data_processing.h"
+#include "branch.h"
 
-uint8_t (*instructions[])(char* operands[MAX_OPERANDS]) = {
-  // Add all functions
+uint8_t (*instructions[59])(char* operands[MAX_OPERANDS]) = {
+  &mov, &b, &eor, &br, NULL, NULL, &madd, //6
+  &bic, &bics, &movk, NULL, &blt, &orn, &bal, // 13
+  NULL, NULL, &cmp, &bne, NULL, NULL, &msub, //20
+  &intdir, &nop, &bgt, &cmn, NULL, &movn, &beq, //27
+  NULL, &ble, NULL, &tst, &ands, NULL, &movz, //34
+  &negs, NULL, NULL, &mneg, &str, &sub, NULL, //41
+  NULL, &mon, &bge, &orr, &adds, &mul, &ldr, //48
+  NULL, &neg, &add, NULL, &eon, NULL, &subs, // 55
+  NULL, NULL, &and
 };
 
 int main(int argc, char **argv) {
