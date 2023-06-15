@@ -1,3 +1,25 @@
-#include "data_transfer.h"
+#include <stdint.h>
 
-// TODO: Add function for assembling Load and Store instructions.
+/*
+Data Transfer
+*/
+
+uint32_t ldr(char** operands) {
+
+}
+
+uint32_t str(char** operands) {
+
+}
+
+/*
+Special instructions and .int directive included here
+*/
+
+uint32_t nop(char** operands) {
+
+}
+
+uint32_t intdir(char** operands) {
+
+}

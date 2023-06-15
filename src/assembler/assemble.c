@@ -5,7 +5,9 @@
 #include "utils.h"
 #include "symbol_table.h"
 #include "tokenize.h"
-
+#include "branch.h"
+#include "data_processing.h"
+#include "data_transfer.h"
 
 uint32_t (*instructionFunctions[59])(char** operands) = {
     &mov, &b, &eor, &br, NULL, NULL, &madd, //6
@@ -14,7 +16,7 @@ uint32_t (*instructionFunctions[59])(char** operands) = {
     &intdir, &nop, &bgt, &cmn, NULL, &movn, &beq, //27
     NULL, &ble, NULL, &tst, &ands, NULL, &movz, //34
     &negs, NULL, NULL, &mneg, &str, &sub, NULL, //41
-    NULL, &mon, &bge, &orr, &adds, &mul, &ldr, //48
+    NULL, &mvn, &bge, &orr, &adds, &mul, &ldr, //48
     NULL, &neg, &add, NULL, &eon, NULL, &subs, // 55
     NULL, NULL, &and
 };

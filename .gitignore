@@ -19,6 +19,7 @@
 emulate
 assemble
 test.c
+tempCodeRunnerFile.c
 
 #ignore junk files from compiling Haskell code
 *.hi
