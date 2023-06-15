@@ -8,7 +8,7 @@ instruction tokenizeinstruction(char* line) {
     char* token;
 
     // Get first token from line known to be instruction
-    token = strtok_r(line, " ", &saveptr);
+    token = strtok_r(line, " ", &saveptr); //! Likely an issue with operands of the form [xn, offset]
     // If first token is null then return with error
     if (token == NULL) {
         printf("Error in parsing any token.\n");
