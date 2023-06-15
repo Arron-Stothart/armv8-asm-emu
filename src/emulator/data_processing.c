@@ -76,7 +76,7 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // Sets flags for PSTATE
     arm->pstate.Z = (r == 0);
     // Check negative as 32 or 64 bit
-    arm->pstate.N = sf ?  ((uint64_t) r < 0) : ((int32_t) r < 0);
+    arm->pstate.N = sf ? (r & (1UL << 63)) : (r & (1UL << 31));
     // Unsigned overflow if subtraction produced a borrow
     // arm->pstate.C = (arm->registers[rd] == op2);
     // for (int i = 0; i < (sf ? 64 : 32); i++) {
