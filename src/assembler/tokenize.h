@@ -5,4 +5,4 @@
 // void tokenize(char* line);
 
 // Convert a line known to be an instruction into an instruction type
-instruction tokenizeinstruction(char* line);
+instruction tokenizeInstruction(char* line);
