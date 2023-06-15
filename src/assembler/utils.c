@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <regex.h>
 #include "symbol_table.h"
+#include "utils.h"
 
 // Writes n instructions from array into binary file
 void writeBinary(char* path, uint32_t* instructions, int n) {
