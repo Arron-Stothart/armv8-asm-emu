@@ -4,12 +4,9 @@
 #include "defs.h"
 #include "utils.h"
 #include "symbol_table.h"
-#include "tokenize.h"
-#include "data_processing.h"
-#include "data_processing.h"
-#include "branch.h"
 
-uint8_t (*instructions[59])(char* operands[MAX_OPERANDS]) = {
+
+uint8_t (*instructions[59])(char** operands) = {
   &mov, &b, &eor, &br, NULL, NULL, &madd, //6
   &bic, &bics, &movk, NULL, &blt, &orn, &bal, // 13
   NULL, NULL, &cmp, &bne, NULL, NULL, &msub, //20
@@ -49,7 +46,7 @@ int main(int argc, char **argv) {
   //     instr = tokenizeinstruction(buffer[i]);
 
 
-  //     instructions[i] = instructions[hashedOpc](instr.operands);
+  //     instructions[i] = instructions[hashed](instr.operands);
   //   }
   // }
 

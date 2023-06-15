@@ -34,43 +34,6 @@ typedef enum {
     LABEL
 } LINE_TYPE;
 
-// Enum for opcode (instruction mnemonic)
-typedef enum {
-    ADD,
-    ADDS,
-    SUB,
-    SUBS,
-    CMP,
-    CMN,
-    NEG,
-    NEGS,
-    AND,
-    ANDS,
-    BIC,
-    BICS,
-    EOR,
-    EON,
-    ORR,
-    ORN,
-    TST,
-    MVN,
-    MOV,
-    MOVN,
-    MOVK,
-    MOVZ,
-    MADD,
-    MSUB,
-    MUL,
-    MNEG,
-    B,
-    BR,
-    BCOND,
-    LDR,
-    STR,
-    NOP,
-    HLT // i.e. and x0, x0, x0
-} OPCODE;
-
 // Structure for operand
 typedef enum {
     register_operand,
@@ -85,6 +48,6 @@ typedef struct {
 
 // Structure for assembler file instructions: operation mneumonic and up to four operands
 typedef struct {
-    OPCODE opcode;
-    char* operands[MAX_OPERANDS];
+    char* opcode;
+    char** operands;
 } instruction;
