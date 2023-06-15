@@ -10,7 +10,7 @@
 // Writes n instructions from array into binary file
 void writeBinary(char* path, uint32_t* instructions, int n) {
 	// Creating the output file
-	FILE* output = fopen(path, "w");
+	FILE* output = fopen(path, "wb");
 
 	// Check if file has been loaded into memory
 	if(output == NULL) {
