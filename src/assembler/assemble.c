@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
   //     instructions[i] = instructions[hashedOpc](instr.operands);
   //   }
-  }
+  // }
 
   writeBinary(argv[2], instructions, numRead);
   free(st);
