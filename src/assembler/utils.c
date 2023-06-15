@@ -80,10 +80,10 @@ uint8_t hash(char* t) {
 	// Manually check for 'b' and 'br' since they are not long enough to has using the hash function.
 	// This avoid accessing memory which is inconsitent (and would break the hash function).
     if (strlen(t) == 1) {
-        return 1;
+        return 11;
     } else if (strlen(t) == 2) {
-        return 3;
+        return 13;
     }
 
-	return (110773 * (t[0] ^ t[1]) ^ 63 * (t[2] ^ t[3])) % 59;
+	return (710 * (t[0] ^ t[1]) ^ 21 * (t[2] ^ t[3])) % 59;
 }

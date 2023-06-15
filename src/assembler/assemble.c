@@ -10,15 +10,15 @@
 #include "data_transfer.h"
 
 uint32_t (*instructionFunctions[59])(char** operands) = {
-    &mov, &b, &eor, &br, NULL, NULL, &madd, //6
-    &bic, &bics, &movk, NULL, &blt, &orn, &bal, // 13
-    NULL, NULL, &cmp, &bne, NULL, NULL, &msub, //20
-    &intdir, &nop, &bgt, &cmn, NULL, &movn, &beq, //27
-    NULL, &ble, NULL, &tst, &ands, NULL, &movz, //34
-    &negs, NULL, NULL, &mneg, &str, &sub, NULL, //41
-    NULL, &mvn, &bge, &orr, &adds, &mul, &ldr, //48
-    NULL, &neg, &add, NULL, &eon, NULL, &subs, // 55
-    NULL, NULL, &and
+    &eor, &bge, &subs, &orr, &bics, &sub, &adds, // 6
+    &bic, &and, &negs, &ble, &b, &bal, &br, // 13
+    NULL, &eon, NULL, NULL, &ldr, &movn, &blt, // 20
+    &beq, &mul, &movk, &madd, NULL, &msub, NULL, // 27
+    NULL, &cmn, &intdir, NULL, &neg, NULL, &mvn, // 34
+    &movz, &ands, &str, &mov, &add, NULL, NULL, // 41
+    NULL, &bgt, &mneg, NULL, NULL, &cmp, NULL, // 48
+    NULL, &tst, NULL, NULL, &nop, NULL, &orn, // 55
+    NULL, NULL, &bne
 };
 
 int main(int argc, char **argv) {
