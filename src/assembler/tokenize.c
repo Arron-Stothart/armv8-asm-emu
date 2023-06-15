@@ -136,6 +136,5 @@ instruction tokenizeinstruction(char* line) {
     }
 
     // Add opcode and operands to inst
-    instruction inst = {.opcode = opcode, .operands = operands};
-    return inst;
+    return (instruction) {.opcode = opcode, .operands = operands};
 }

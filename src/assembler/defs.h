@@ -4,18 +4,20 @@
 #define MAX_WORDS_IN_LINE 5
 #define MAX_OPERANDS 4
 #define MAX_CHARS_IN_LINE 128 // Arbitrary choice
-#define MAX_LABELS 1024 // Arbitrary Choice
+#define MAX_LABELS 128 // Arbitrary Choice
 #define MAX_LINES 128 // Arbitrary Choice
 
 // Instruction Constants
 #define INSTRUCTION_SIZE 4 // in bytes
 
 // Structure for symbol table
-typedef struct {
+// Has to be defined this way since symbol is self-referential
+ typedef struct symbol symbol;
+struct symbol {
     char* label;
     uint64_t address;
     symbol* next; // linked list structure
- } symbol;
+ };
 
 typedef struct {
     symbol* first;
