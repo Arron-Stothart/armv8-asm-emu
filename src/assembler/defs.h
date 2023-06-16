@@ -14,7 +14,7 @@
 
 // Structure for symbol table
 // Has to be defined this way since symbol is self-referential
- typedef struct symbol symbol;
+typedef struct symbol symbol;
 struct symbol {
     char* label;
     uint64_t address;
