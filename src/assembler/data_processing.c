@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include "utils.h"
+#include "defs.h"
 
 uint32_t add(char** operands) {
 

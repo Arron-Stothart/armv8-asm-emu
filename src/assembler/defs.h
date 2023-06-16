@@ -9,6 +9,8 @@
 
 // Instruction Constants
 #define INSTRUCTION_SIZE 4 // in bytes
+#define OPERAND_WZR "wzr"
+#define OPERAND_XZR "xzr"
 
 // Structure for symbol table
 // Has to be defined this way since symbol is self-referential

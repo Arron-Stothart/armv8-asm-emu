@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 #include "defs.h"
 
 // Writes n instructions from array into binary file
@@ -15,3 +16,9 @@ LINE_TYPE getLineType(char* line);
 
 // Returns the hash used to find the instruction function given the opcode.
 uint8_t hash(char* t);
+
+// Checks if operand is a 64bit register
+bool is64BitReg(char* operand);
+
+// Returns string for correct zero register
+char* giveZeroReg(char* operand);

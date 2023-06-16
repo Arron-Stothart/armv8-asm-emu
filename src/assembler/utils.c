@@ -49,7 +49,20 @@ uint8_t readFile(char* buffer[MAX_LINES], char* path) {
 
 // Check if token is a directive (starts with .)
 static bool isDirective(char* token) {
+	assert(token != NULL);
 	return strncmp(token, ".", 1) == 0;
+}
+
+// Checks if operand is a 64bit register
+bool is64BitReg(char* operand) {
+	assert(operand != NULL);
+	return strncmp(islower(operand), "x", 1) == 0;
+}
+
+// Returns string for correct zero register
+char* giveZeroReg(char* operand) {
+	assert(operand != NULL);
+	return is64BitReg(operand) ? OPERAND_XZR : OPERAND_WZR;
 }
 
 // Use first token to identify type of line (Instruction, Directive, Label)
