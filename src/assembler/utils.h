@@ -22,3 +22,6 @@ bool is64BitReg(char* operand);
 
 // Returns string for correct zero register
 char* giveZeroReg(char* operand);
+
+// check if line is blank
+bool isBlankLine(char *line);

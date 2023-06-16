@@ -100,3 +100,13 @@ uint8_t hash(char* t) {
 
 	return (710 * (t[0] ^ t[1]) ^ 21 * (t[2] ^ t[3])) % 59;
 }
+
+// check if line is blank
+bool isBlankLine(char *line) {
+	while (*line != NULL) {
+		if (!isspace(*(line++))) {
+			return false;
+		}
+	}
+	return true;
+}
