@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 #include "defs.h"
 #include "utils.h"
 #include "symbol_table.h"
