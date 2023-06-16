@@ -82,10 +82,17 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // for (int i = 0; i < (sf ? 64 : 32); i++) {
     //     arm->pstate.C |= ((getBitAt(arm->registers[rd], i)) < getBitAt(arm->registers[rd], i));
     // }
-    if (sf) {
-        arm->pstate.C = getBitAt(getBitAt((rncontent & WREGISTER_MASK) + (uint64_t)(-(uint32_t) op2), 32) + (rncontent >> 32) + (op2 >> 32), 32);
-    } else {
-        arm->pstate.C = getBitAt((rncontent & WREGISTER_MASK) + (uint64_t)(-(uint32_t) op2), 32);
+    if (r==0){
+        arm->pstate.C = true;
+    }
+    else {
+        printf("op2 %ld\n", op2);
+        if (sf) {//64 bit
+            arm->pstate.C = getBitAt(getBitAt((rncontent & WREGISTER_MASK) + (uint64_t)(-(uint32_t) op2), 32) + (rncontent >> 32) + (op2 >> 32), 32);
+        } else {// 32 bit
+        printf("negated op2 %d \n", (-(uint32_t) op2));
+            arm->pstate.C = getBitAt((rncontent & WREGISTER_MASK) + (uint64_t)(-(uint32_t) op2), 32);
+        }
     }
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = (!sign_1 && sign_2 && sign_r) || (sign_1 && !sign_2 && !sign_r);
