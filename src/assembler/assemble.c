@@ -9,7 +9,7 @@
 #include "data_processing.h"
 #include "data_transfer.h"
 
-uint32_t (*instructionFunctions[59])(char** operands) = {
+uint32_t (*instructionFunctions[59])(char* arg1, char* arg2, char* arg3, char* arg4) = {
     &eor, &bge, &subs, &orr, &bics, &sub, &adds, // 6
     &bic, &and, &negs, &ble, &b, &bal, &br, // 13
     NULL, &eon, NULL, NULL, &ldr, &movn, &blt, // 20
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
             // Tokenize instruction into opcode and operands.
             instr = tokenizeInstruction(buffer[i]);
             // Hash opcode to get correct function. This function will return the word to be written to memory given the operands.
-            instructions[i] = instructionFunctions[hash(instr.opcode)](instr.operands);
+            instructions[i] = instructionFunctions[hash(instr.opcode)](instr.operands[0], instr.operands[1], instr.operands[2], instr.operands[3]);
         } else {
             // If not instruction, then don't increment i.
             // This keeps track of where to store next instruction in array.
