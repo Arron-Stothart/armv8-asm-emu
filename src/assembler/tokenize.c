@@ -21,7 +21,7 @@ instruction tokenizeInstruction(char* line) {
 
     // Get second token (Required by loop structure) and initialise operand array builder
     token = strtok_r(line, " ", &saveptr);
-    char* operands[MAX_OPERANDS];
+    char* operands[MAX_OPERANDS] = {""}; // initalized as array of empty strings
 
     // Add operand tokens to operand array builder until end of line
     int i = 0;

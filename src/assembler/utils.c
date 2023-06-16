@@ -60,7 +60,7 @@ bool is64BitReg(char* operand) {
 }
 
 // Returns string for correct zero register
-char* giveZeroReg(char* operand) {
+char* getZeroReg(char* operand) {
 	assert(operand != NULL);
 	return is64BitReg(operand) ? OPERAND_XZR : OPERAND_WZR;
 }
