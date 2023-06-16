@@ -1,7 +1,7 @@
 #include "defs.h"
 
-// Gets instruction type given instruction in little-endian.
-INSTRUCTION_TYPE getInstructionType(int32_t word);
+// Gets instruction type given instruction.
+INSTRUCTION_TYPE getInstructionType(uint32_t instruction);
 
 // Outputs state of ARM processor into .out file.
 void outputState(ARM* arm, char *file);
