@@ -56,7 +56,7 @@ static bool conditionCheck(int cond, ARM* arm) {
 }
 
 
-// Execute branch instruction 
+// Execute branch instruction
 void branch(ARM* arm, int instruction) {
 
     // Get type of branch instruction

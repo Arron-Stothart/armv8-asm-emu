@@ -19,7 +19,7 @@ uint64_t getDoubleWord(uint8_t* memory);
 uint64_t ror(uint64_t value, uint32_t shift, bool is64bit);
 
 // Arithemtic shift right
-uint64_t asr(uint64_t value, uint32_t shift, bool is64bit);
+uint64_t asr(int64_t value, uint32_t shift, bool is64bit);
 
 // Logical shift left
 uint64_t lsl(uint64_t value, uint32_t shift, bool is64bit);

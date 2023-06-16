@@ -47,7 +47,7 @@ static uint64_t adds(ARM* arm, int rd, int rn, uint64_t u_op2, int sf) {
     int64_t rncontent = u_rncontent;
     int64_t r = u_r;
     int64_t op2 = op2;
-    
+
     bool sign_1 = (sf ? rncontent < 0 : ((int32_t) (u_rncontent & WREGISTER_MASK) < 0));
     bool sign_2 = (sf ? op2 < 0 : ((int32_t) (u_op2 & WREGISTER_MASK)) < 0);
     bool sign_r = (sf ? r < 0 : ((int32_t) (u_r & WREGISTER_MASK)) < 0);
@@ -320,14 +320,14 @@ void dataProcessingRegister(ARM* arm, int instruction) {
         // Negate opearand for logical instructions if n bit is given.
         // (N bit is de facto 0 for arithmetic instruction so no need to check).
         if (n) {
-            op2 = ~op2; 
+            op2 = ~op2;
         }
 
         // Index 32 encodes ZR for arithmetic instructions which change PSTATE.
         // Opc starts with 0b11 for ands and bics, which change PSTATE flags.
         // Only compute if destination is not ZR or operation changes flags
         if (!isArithmetic && (rd != ZR_INDEX || getBitsAt(opc, 0, 2) == 0b11)) {
-            logical[opc](arm, rd, rn, op2, sf); 
+            logical[opc](arm, rd, rn, op2, sf);
         } else if (rd != ZR_INDEX || getBitAt(opc, 0) == 0b1) {
             arithmetic[opc](arm, rd, rn, op2, sf);
         }

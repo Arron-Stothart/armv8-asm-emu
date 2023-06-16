@@ -75,7 +75,7 @@ void loadBinary(uint8_t* memory, char* path) {
     fclose(binary);
     // assert(getWord(&memory[0]) == 0xd28001e1);
     printf("%02x", memory[1]);
-    
+
     //assert(*memory == 0xe1);
     //assert(memory[1] == 0x01);
 }
@@ -123,7 +123,7 @@ uint64_t asr(int64_t value, uint32_t shift, bool is64bit) {
     // Cast value to signed 32 bit integer if in 32 bits.
     if (!is64bit) {
         value = (int32_t) value;
-    } 
+    }
 
     value = value < 0 ? ~(~value >> shift) : value >> shift;
     // If 32 bit, mask top 32 bits after shift.
