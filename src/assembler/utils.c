@@ -93,8 +93,7 @@ uint32_t getImmediate(char* operand) {
 }
 
 // generates binary mask of n ones.
-//! Duplicate funciton (move shared utils function into library)
-static uint64_t generateMask(uint32_t n) {
+uint64_t generateMask(uint32_t n) {
     return ((1 << n) - 1);
 }
 
