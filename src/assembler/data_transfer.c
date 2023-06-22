@@ -49,7 +49,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         perror("pre-indexed\n"); fflush(stderr);
         memmove(simm+1, simm, strlen(simm) + 1);
         simm[0] = '#';
-        return instr | (getRegNum(xn) << SDT_XN_START) | (calculateOffset(simm, address, SIMM9_LEN) << SDT_SIMM9_START) | PRE_INDEX_BASE; 
+        return instr | (getRegNum(xn) << SDT_XN_START) | (getImmediate(simm) << SDT_SIMM9_START) | PRE_INDEX_BASE; 
     }
     // Post-Indexed (3rd argument #<simm> exists)
     if (strcmp(arg3, "") != 0) {
