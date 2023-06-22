@@ -87,8 +87,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
 
 uint32_t ldr(char* arg1, char* arg2, char* arg3, char* arg4, uint32_t address) {
     if (strncmp(arg2, "[", 1) != 0) {
-        perror("literal\n"); fflush(stderr);
-        return LOADLIT_BASE | (getRegNum(arg1) << SDT_RT_START) | (calculateOffset(arg2, address, SIMM19_LEN) << SDT_SIMM19_START) | (is64BitReg(arg1) << SDT_SFBIT_POS);
+        return LOADLIT_BASE | (getRegNum(arg1) << SDT_RT_START) | ((calculateOffset(arg2, address, SIMM19_LEN) / INSTRUCTION_SIZE) << SDT_SIMM19_START) | (is64BitReg(arg1) << SDT_SFBIT_POS);
     } else {
         return dataTransferInstruction(arg1, arg2, arg3, arg4, address) | (1 << SDT_LBIT_POS);
     }
