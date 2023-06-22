@@ -69,13 +69,20 @@ char* getZeroReg(char* operand) {
 // Returns register number from operand
 uint32_t getRegNum(char* operand) {
 	assert(operand != NULL);
-	if (strncmp(operand, "xzr", 3) == 0 || strncmp(operand, "wzr", 3) == 0) {
+
+	char* reg = strdup(operand);
+
+	if (strncmp(reg, "[", 1) == 0) {
+		reg++;
+	}
+
+	if (strncmp(reg, "xzr", 3) == 0 || strncmp(reg, "wzr", 3) == 0) {
 		return ZR_INDEX;
 	}
 
-	// operand++ moves pointer past w or x index for registers.
-	operand++;
-	return (uint32_t) atoi(operand);
+	// reg++ moves pointer past w or x index for registers.
+	reg++;
+	return (uint32_t) atoi(reg);
 }
 
 

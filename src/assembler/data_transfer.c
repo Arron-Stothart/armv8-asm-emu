@@ -44,11 +44,10 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     char* simm = (char*) malloc(MAX_CHARS_IN_LINE * sizeof(char));
     perror("DATA TRANSFER INSTRUCTION\n"); fflush(stderr);
     // Pre-Indexed
-    if (sscanf(arg2, "[%3s,#%s]!", xn, simm) == 2) {
-        // Add # back to start of simm
-        perror("pre-indexed\n"); fflush(stderr);
-        memmove(simm+1, simm, strlen(simm) + 1);
-        simm[0] = '#';
+    if (strstr(arg2, "!")) {
+        fprintf(stderr, "pre-index sim");
+        xn = strtok(arg2, ",");
+        simm = strtok(NULL, "]");
         return instr | (getRegNum(xn) << SDT_XN_START) | ((getImmediate(simm) & generateMask(SIMM9_LEN)) << SDT_SIMM9_START) | PRE_INDEX_BASE; 
     }
     // Post-Indexed (3rd argument #<simm> exists)
@@ -74,10 +73,12 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     }
     // Register Offset
     if (sscanf(arg2, "[%3s,%3s]", xn, xm) == 2) {
+        perror("REGISTER\n"); fflush(stderr);
         return instr | (getRegNum(xn) << SDT_XN_START) | (getRegNum(xm) << SDT_XM_START) | REG_OFFSET_BASE;
     }
     // Zero Unsigned Offset
     if (sscanf(arg2, "[%s]", xn)) {
+        perror("ZOS\n"); fflush(stderr);
         return instr | (getRegNum(xn) << SDT_XN_START) | (1 << SDT_UNSIGNED_OFFSET_FLAG_BIT);
     }
     // Offset operand is not of valid form
