@@ -55,7 +55,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     if (strcmp(arg3, "") != 0) {
         perror("post-indexed\n"); fflush(stderr);
         sscanf(arg2, "[%s]", xn);
-        return instr | (getRegNum(xn) << SDT_XN_START) | (calculateOffset(arg3, address, SIMM9_LEN) << SDT_SIMM9_START) | POST_INDEX_BASE; 
+        return instr | (getRegNum(xn) << SDT_XN_START) | (getImmediate(arg3) << SDT_SIMM9_START) | POST_INDEX_BASE; 
     }
     // Unsigned Immediate Offset
     if (sscanf(arg2, "[%3s,#%s]", xn, imm) == 2) {

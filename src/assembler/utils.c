@@ -144,7 +144,7 @@ uint32_t calculateOffset(char* operand, uint8_t lineaddress, uint8_t len) {
 		// treat as label
 		fprintf(stderr, "label address is %d\n", getAddress(st, operand));
 		fprintf(stderr, "branch address is %d\n", lineaddress);
-		offset = getAddress(st, operand) - lineaddress;
+		offset = getAddress(st, operand) - lineaddress;	
 	}
 
 	// Truncates offset to desired length so it can be bitshifted
