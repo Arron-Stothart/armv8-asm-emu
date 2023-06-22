@@ -44,7 +44,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     char* simm = (char*) malloc(MAX_CHARS_IN_LINE * sizeof(char));
     perror("DATA TRANSFER INSTRUCTION\n"); fflush(stderr);
     // Pre-Indexed
-    if (sscanf(arg2, "[%s,#%s]!", xn, simm) == 2) {
+    if (sscanf(arg2, "[%3s,#%s]!", xn, simm) == 2) {
         // Add # back to start of simm
         perror("pre-indexed\n"); fflush(stderr);
         memmove(simm+1, simm, strlen(simm) + 1);
@@ -58,7 +58,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         return instr | (getRegNum(xn) << SDT_XN_START) | (calculateOffset(arg3, address, SIMM9_LEN) << SDT_SIMM9_START) | POST_INDEX_BASE; 
     }
     // Unsigned Immediate Offset
-    if (sscanf(arg2, "[%s,#%s]", xn, imm) == 2) {
+    if (sscanf(arg2, "[%3s,#%s]", xn, imm) == 2) {
         perror("u-imm offser\n"); fflush(stderr);
         // Add # back to start of imm
         memmove(imm+1, imm, strlen(imm) + 1);
@@ -73,7 +73,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         return instr | (getRegNum(xn) << SDT_XN_START) | (imm12 << SDT_IMM12_START) | (1 << SDT_UBIT_POS);
     }
     // Register Offset
-    if (sscanf(arg2, "[%s,%s]", xn, xm) == 2) {
+    if (sscanf(arg2, "[%3s,%3s]", xn, xm) == 2) {
         return instr | (getRegNum(xn) << SDT_XN_START) | (getRegNum(xm) << SDT_XM_START) | REG_OFFSET_BASE;
     }
     // Zero Unsigned Offset
