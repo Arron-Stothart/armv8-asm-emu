@@ -68,6 +68,7 @@ void branch(ARM* arm, int instruction) {
             int64_t offset = simm26 * BYTES_IN_WORD;
             // Branch to address encoded by literal
             arm->pc += offset;
+            arm->pc -= INSTRUCTION_SIZE;
             break;
         }
         case REGISTER: {
@@ -77,6 +78,7 @@ void branch(ARM* arm, int instruction) {
             assert(xn >= 0 && xn < NUM_OF_REGISTERS);
             // Branch to address stored in Xn
             arm->pc = arm->registers[xn];
+            arm->pc -= INSTRUCTION_SIZE;
             break;
         }
         case CONDITIONAL: {
@@ -86,10 +88,9 @@ void branch(ARM* arm, int instruction) {
                 int64_t offset = simm19 * BYTES_IN_WORD;
                 // Branch to address encoded by literal
                 arm->pc += offset;
+                arm->pc -= INSTRUCTION_SIZE;
             }
             break;
         }
     }
-
-    arm->pc -= INSTRUCTION_SIZE;
 }
