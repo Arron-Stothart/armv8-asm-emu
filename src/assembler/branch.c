@@ -42,7 +42,6 @@ CONDITONAL BRANCH
 #define BR_AL 0b1110 // Always
 
 uint32_t bcond(char* arg1, uint32_t cond, uint32_t address) {
-    fprintf(stderr, "simm19 is %x", (calculateOffset(arg1, address, SIMM19_LEN) / INSTRUCTION_SIZE) << BR_SIMM19_START);
     return BR_COND_BASE | ((calculateOffset(arg1, address, SIMM19_LEN) / INSTRUCTION_SIZE) << BR_SIMM19_START) | (cond << BR_COND_START);
 }
 

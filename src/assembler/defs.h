@@ -14,6 +14,7 @@
 #define ZR_INDEX 31
 #define OPERAND_WZR "wzr"
 #define OPERAND_XZR "xzr"
+#define MASK_OFFSET 2
 #define SIMM19_LEN 19
 #define SIMM9_LEN 9
 #define SIMM26_LEN 26

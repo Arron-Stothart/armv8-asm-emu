@@ -154,7 +154,7 @@ uint32_t calculateOffset(char* operand, uint8_t lineaddress, uint8_t len) {
 	}
 
 	// Truncates offset to desired length so it can be bitshifted
-	return offset & generateMask(len);
+	return offset & generateMask(len + MASK_OFFSET) ;
 }
 
 // Remvoes all lines that return true when passed into fn.

@@ -75,7 +75,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     // Register Offset
     regex_t regex;
     int reg_comp_value;
-    reg_comp_value = regcomp(&regex, "\[\w+, \w+\]", 0);
+    reg_comp_value = regcomp(&regex, "\[\\w+, \\w+\\]", 0);
     if (reg_comp_value != 0) {
         fprintf(stderr, "regex compilation error");
     }
