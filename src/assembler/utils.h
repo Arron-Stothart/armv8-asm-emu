@@ -47,3 +47,6 @@ void trimWhitespace(char* str);
 
 // Calculates of the offset between an operand and the line number of the instruction. 
 uint32_t calculateOffset(char* operand, uint8_t lineaddress, uint8_t len);
+
+// generates binary mask of n ones.
+uint64_t generateMask(uint32_t n);

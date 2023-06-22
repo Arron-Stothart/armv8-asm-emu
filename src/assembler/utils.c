@@ -93,8 +93,7 @@ uint32_t getImmediate(char* operand) {
 }
 
 // generates binary mask of n ones.
-//! Duplicate funciton (move shared utils function into library)
-static uint64_t generateMask(uint32_t n) {
+uint64_t generateMask(uint32_t n) {
     return ((1 << n) - 1);
 }
 
@@ -144,7 +143,7 @@ uint32_t calculateOffset(char* operand, uint8_t lineaddress, uint8_t len) {
 		// treat as label
 		fprintf(stderr, "label address is %d\n", getAddress(st, operand));
 		fprintf(stderr, "branch address is %d\n", lineaddress);
-		offset = getAddress(st, operand) - lineaddress;
+		offset = getAddress(st, operand) - lineaddress;	
 	}
 
 	// Truncates offset to desired length so it can be bitshifted

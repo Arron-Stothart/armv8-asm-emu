@@ -50,13 +50,13 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         perror("pre-indexed\n"); fflush(stderr);
         memmove(simm+1, simm, strlen(simm) + 1);
         simm[0] = '#';
-        return instr | (getRegNum(xn) << SDT_XN_START) | (calculateOffset(simm, address, SIMM9_LEN) << SDT_SIMM9_START) | PRE_INDEX_BASE; 
+        return instr | (getRegNum(xn) << SDT_XN_START) | ((getImmediate(simm) & generateMask(SIMM9_LEN)) << SDT_SIMM9_START) | PRE_INDEX_BASE; 
     }
     // Post-Indexed (3rd argument #<simm> exists)
     if (strcmp(arg3, "") != 0) {
         perror("post-indexed\n"); fflush(stderr);
         sscanf(arg2, "[%s]", xn);
-        return instr | (getRegNum(xn) << SDT_XN_START) | (calculateOffset(arg3, address, SIMM9_LEN) << SDT_SIMM9_START) | POST_INDEX_BASE; 
+        return instr | (getRegNum(xn) << SDT_XN_START) | ((getImmediate(arg3) & generateMask(SIMM9_LEN)) << SDT_SIMM9_START) | POST_INDEX_BASE; 
     }
     // Unsigned Immediate Offset
     if (sscanf(arg2, "[%3s,#%s]", xn, imm) == 2) {
@@ -92,7 +92,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         return instr | (getRegNum(xn) << SDT_XN_START) | (1 << SDT_UNSIGNED_OFFSET_FLAG_BIT);
     }
     // Offset operand is not of valid form
-    printf("Invalid operand for SDT.\n");
+    fprintf(stderr, "invalid data transfer.\n");
     exit(EXIT_FAILURE);
 }
 
