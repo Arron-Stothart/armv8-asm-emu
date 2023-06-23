@@ -60,7 +60,7 @@ static uint32_t arithmeticInstructions(char* arg1, char* arg2, char* arg3, char*
     if (isRegister(arg3)) {
         // Data processing register
         instr |= DPR_BASE | (getRegNum(arg3) << DPR_RM_START) | (1 << DPR_ARITHMETICBIT_POS);
-
+    
         // Optional shift
         if (strcmp(arg4, "") != 0) {
             instr |= (getShiftNum(strndup(arg4, SHIFT_OPLEN)) << DPR_SHIFT_START); 
