@@ -12,30 +12,25 @@ Operations
 
 static void movz(ARM* arm, int rd, uint64_t op, int hw) {
     arm->registers[rd] = op;
-    fputs("(movz)", stderr);
 }
 
 static void movn(ARM* arm, int rd, uint64_t op, int hw) {
     arm->registers[rd] = ~op;
-    fputs("(movn)", stderr);
 }
 
 static void movk(ARM* arm, int rd, uint64_t op, int hw) {
     arm->registers[rd] = setBitsTo(arm->registers[rd], (hw + 1) * DPI_MOVK_OFFSET, op, IMM16_LEN);
-    fputs("(movk)", stderr);
 }
 
 static uint64_t add(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     uint64_t r = arm->registers[rn] + op2;
     arm->registers[rd] = r;
-    fputs("(add)", stderr);
     return r;
 }
 
 static uint64_t sub(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     uint64_t r = arm->registers[rn] - op2;
     arm->registers[rd] = r;
-    fputs("(sub)", stderr);
     return r;
 }
 
@@ -60,7 +55,6 @@ static uint64_t adds(ARM* arm, int rd, int rn, uint64_t u_op2, int sf) {
     arm->pstate.C = sf ? u_r < u_rncontent : u_r >= (1UL << 32);
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = (!sign_1 && !sign_2 && sign_r) || (sign_1 && sign_2 && !sign_r);
-    fputs("(adds)", stderr);
     return EXIT_SUCCESS;
 }
 
@@ -78,40 +72,31 @@ static uint64_t subs(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // Check negative as 32 or 64 bit
     arm->pstate.N = sf ? (r & (1UL << 63)) : (r & (1UL << 31));
     // Unsigned overflow if subtraction produced a borrow
-    // arm->pstate.C = (arm->registers[rd] == op2);
-    // for (int i = 0; i < (sf ? 64 : 32); i++) {
-    //     arm->pstate.C |= ((getBitAt(arm->registers[rd], i)) < getBitAt(arm->registers[rd], i));
-    // }
     if (sf) {
-        arm->pstate.C = ((int64_t) (op2 & 0x7fffffffffffffff)) - (op2 & 0x8000000000000000)
-            <= ((int64_t) (rncontent & 0x7fffffffffffffff)) - (rncontent & 0x8000000000000000);
+        arm->pstate.C = ((int64_t) (op2 & SUBS_64BIT_UMASK)) - (op2 & SUBS_64BIT_LMASK)
+            <= ((int64_t) (rncontent & SUBS_64BIT_UMASK)) - (rncontent & SUBS_64BIT_LMASK);
     } else {
-        arm->pstate.C = (op2 & 0x7fffffff) - (op2 & 0x80000000) <= (rncontent & 0x7fffffff) - (rncontent & 0x80000000);
+        arm->pstate.C = (op2 & SUBS_32BIT_UMASK) - (op2 & SUBS_32BIT_LMASK) <= (rncontent & SUBS_32BIT_UMASK) - (rncontent & SUBS_32BIT_LMASK);
     }
     // Signed overflow/underflow if signs of operand are diferent from result
     arm->pstate.V = (!sign_1 && sign_2 && sign_r) || (sign_1 && !sign_2 && !sign_r);
 
-    fputs("(subs)", stderr);
     return EXIT_SUCCESS;
 }
 
 static uint64_t and(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
-    fprintf(stderr, "{rd: %lx, rn: %lx, op2: %lx}", arm->registers[rd], arm->registers[rn], op2);
     uint64_t r = arm->registers[rn] & op2;
     arm->registers[rd] = r;
-    fputs("(and)", stderr);
     return r;
 }
 
 static uint64_t orr(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     arm->registers[rd] = arm->registers[rn] | op2;
-    fputs("(orr)", stderr);
     return EXIT_SUCCESS;
 }
 
 static uint64_t eor(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     arm->registers[rd] = arm->registers[rn] ^ op2;
-    fputs("(eor)", stderr);
     return EXIT_SUCCESS;
 }
 
@@ -125,18 +110,15 @@ static uint64_t ands(ARM* arm, int rd, int rn, uint64_t op2, int sf) {
     // C and V are set to 0 after logical operations.
     arm->pstate.C = 0;
     arm->pstate.V = 0;
-    fputs("(ands)", stderr);
     return EXIT_SUCCESS;
 }
 
 static void madd(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
     arm->registers[rd] = arm->registers[ra] + (arm->registers[rn] * arm->registers[rm]);
-    fputs("(madd)", stderr);
 }
 
 static void msub(ARM* arm, int rd, int rn, int ra, int rm, int sf) {
     arm->registers[rd] = arm->registers[ra] - (arm->registers[rn] * arm->registers[rm]);
-    fputs("(msub)", stderr);
 }
 
 /*
@@ -243,10 +225,7 @@ void dataProcessingImmediate(ARM* arm, int instruction) {
 
     // Write to rd as a 32 bit register if sf is not given (fixes overflows).
     if (!sf) {
-        fprintf(stderr, "[%d]", rd);
-        fprintf(stderr, "%lx ", arm->registers[rd]);
         arm->registers[rd] &= WREGISTER_MASK;
-        fprintf(stderr, "%lx ", arm->registers[rd]);
     }
 }
 

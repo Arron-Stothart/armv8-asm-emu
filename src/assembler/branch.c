@@ -10,7 +10,6 @@ UNCONDITONAL BRANCH
 #define BR_SIMM26_START 0
 
 uint32_t b(char* arg1, char* arg2, char* arg3, char* arg4, uint32_t address) {
-    fprintf(stderr, "unconditional branch\n");
     return BR_UNCOND_BASE | ((calculateOffset(arg1, address, SIMM26_LEN) / INSTRUCTION_SIZE) << BR_SIMM26_START);
 }
 

@@ -43,23 +43,19 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     char* xm = (char*) malloc(MAX_CHARS_IN_LINE * sizeof(char));
     char* imm = (char*) malloc(MAX_CHARS_IN_LINE * sizeof(char));
     char* simm = (char*) malloc(MAX_CHARS_IN_LINE * sizeof(char));
-    perror("DATA TRANSFER INSTRUCTION\n"); fflush(stderr);
     // Pre-Indexed
     if (strstr(arg2, "!")) {
-        fprintf(stderr, "pre-index sim");
         xn = strtok(arg2, ",");
         simm = strtok(NULL, "]");
         return instr | (getRegNum(xn) << SDT_XN_START) | ((getImmediate(simm) & generateMask(SIMM9_LEN)) << SDT_SIMM9_START) | PRE_INDEX_BASE; 
     }
     // Post-Indexed (3rd argument #<simm> exists)
     if (strcmp(arg3, "") != 0) {
-        perror("post-indexed\n"); fflush(stderr);
         sscanf(arg2, "[%s]", xn);
         return instr | (getRegNum(xn) << SDT_XN_START) | ((getImmediate(arg3) & generateMask(SIMM9_LEN)) << SDT_SIMM9_START) | POST_INDEX_BASE; 
     }
     // Unsigned Immediate Offset
     if (sscanf(arg2, "[%3s,#%s]", xn, imm) == 2) {
-        perror("u-imm offser\n"); fflush(stderr);
         // Add # back to start of imm
         memmove(imm+1, imm, strlen(imm) + 1);
         imm[0] = '#';
@@ -82,17 +78,13 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     if (regexec(&regex, arg2, 0, NULL, 0) == 0){
         xn = strtok(arg2, "[,]");
         xm = strtok(NULL, "[,]");
-        fprintf(stderr, "x is %s\n", xm);
-        fprintf(stderr, "xn is %s\n", xn);
         return instr | (getRegNum(xn) << SDT_XN_START) | (getRegNum(xm) << SDT_XM_START) | REG_OFFSET_BASE;
     }
     // Zero Unsigned Offset
     if (sscanf(arg2, "[%s]", xn)) {
-        perror("ZOS\n"); fflush(stderr);
         return instr | (getRegNum(xn) << SDT_XN_START) | (1 << SDT_UNSIGNED_OFFSET_FLAG_BIT);
     }
     // Offset operand is not of valid form
-    fprintf(stderr, "invalid data transfer.\n");
     exit(EXIT_FAILURE);
 }
 

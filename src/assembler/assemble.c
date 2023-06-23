@@ -58,22 +58,13 @@ int main(int argc, char **argv) {
     instruction instr = {.opcode = "", .operands = {""}};
     instruction* instrptr = &instr;
     uint32_t address = 0; 
-    fprintf(stderr, "numRead is %d\n", numRead);
     for (int i = 0; i < numRead; i++) {
-        fprintf(stderr, "i is %d\n", i);
-        fprintf(stderr, "calling from assembler.c line is %s", buffer[i]);
         trimWhitespace(buffer[i]);
         if (!isLabel(buffer[i]) && !isBlankLine(buffer[i])) {
             
 
             // Tokenize instruction into opcode and operands.
             tokenizeInstruction(buffer[i], instrptr);
-            fprintf(stderr, "instr successfully returned\n");
-            // fprintf(stderr, "%s\n", buffer[i]);
-            fprintf(stderr, "opcode: %s\n", instrptr->opcode);
-            for (int j = 0; j < MAX_OPERANDS; j++) { 
-                fprintf(stderr, "%s\n", instrptr->operands[j]);
-            }
 
             // Hash opcode to get correct function. This function will return the word to be written to memory given the operands.
             // Divide address by INSTRUCTION_SIZE so we don't add blank lines.
@@ -82,21 +73,12 @@ int main(int argc, char **argv) {
                                                                instrptr->operands[3], address);
 
             // Increment address (blank lines and labels don't need to increment address)
-            fprintf(stderr, "address: %d\n", address);
             address += INSTRUCTION_SIZE; 
-        } else {
-            fprintf(stderr, "blank or label\n");
-        }
-
-        fprintf(stderr, "finished, %d\n", i);    
+        } 
     }
 
-    fprintf(stderr, "write\n");
-    fprintf(stderr, "the size of intructions is %d\n", numIns);
     writeBinary(argv[2], instructions, numIns);
-    fprintf(stderr, "wrinting finished \n");
     free(st);
     free(instructions);
-    fprintf(stderr, "success");
     return EXIT_SUCCESS;
 }

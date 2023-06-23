@@ -49,6 +49,11 @@
 #define SDT_XM_START 16 // for register offset
 #define SDT_IMM12_START 10 // for unsigned offset
 #define SDT_SIMM19_START 5 // for load literal
+#define SUBS_64BIT_UMASK 0x7fffffffffffffff
+#define SUBS_64BIT_LMASK 0x8000000000000000
+#define SUBS_32BIT_UMASK 0x7fffffff
+#define SUBS_32BIT_LMASK 0x80000000
+
 
 // Immediate Data Processing Constants
 #define DPI_ARITHMETIC_OPI 0b010

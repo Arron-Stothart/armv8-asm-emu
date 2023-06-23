@@ -34,33 +34,6 @@ bool hasLabel(symbol_table* st, char* label) {
 // Check if token is a label
 bool isLabel(char* token) {
 	return strstr(token, ":");
-
-	// if (!isalpha(*token)) {
-	// 	return false;
-	// }
-	// if (token[strlen(token) - 1] != ':') {
-	// 	return false;
-	// }
-
-	// regex_t rx;
-	// int val1;
-	// int val2;
-
-	// // Compile regex (create pattern to process comparisons)
-	// val1 = regcomp(&rx, "[a-zA-Z_\\.]([a-zA-Z0-9$_\\.])*", 0);
-	// // If returned value is not 0, compilation of regex has failed
-	// if (val1 != 0) {
-	// 	printf("Error in generating pattern.\n");
-    //     exit(EXIT_FAILURE);
-	// }
-
-	// // Match pattern of regex with token
-	// val2 = regexec(&rx, token, 0, NULL, 0);
-	// // If returned value is 0, match has been found
-	// if (val2 == 0) {
-	// 	return true;
-	// }
-	// return false;
 }
 
 // Add symbol to start of symbol table
@@ -74,17 +47,14 @@ void addSymbol(symbol_table* st, uint64_t address, char* label) {
 	sym->next = st->first;
 	st->first = sym;
 	st->size++;
-	fprintf(stderr, "symbol %s added\n", label);
 }
 
 // Get address in symbol table from label, returns -1 otherwise. Note return int is signed.
 int32_t getAddress(symbol_table* st, char* label) {
-	fprintf(stderr, "getAddress is called");
 	symbol* sym = st->first;
 
 	while (sym != NULL) {
 		if (strncmp(sym->label, label, strlen(sym->label)) == 0) {
-			fprintf(stderr, "the address of %s is %ld\n", sym->label, sym->address);
 			return sym->address;
 		}
 		sym = sym->next;

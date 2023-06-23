@@ -44,7 +44,6 @@ void singleDataTransfer(ARM* arm, int instruction) {
             uint64_t imm12 = getBitsAt(instruction, SDT_IMM12_START, IMM12_LEN);
             int scale = sf ? 8 : 4;
             address = arm->registers[xn] + (imm12 * scale);
-            fputs("[UNSIGNED_OFFSET]", stderr);
             break;
         }
 
@@ -52,26 +51,22 @@ void singleDataTransfer(ARM* arm, int instruction) {
             int64_t simm9 = getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN);
             arm->registers[xn] += simm9;
             address = arm->registers[xn];
-            fputs("[PRE_INDEX]", stderr);
             break;
         }
         case POST_INDEX: {
             int64_t simm9 = extendBits(getBitsAt(instruction, SDT_SIMM9_START, SIMM9_LEN), SIMM9_LEN);
             address = arm->registers[xn];
             arm->registers[xn] += simm9;
-            fputs("[POST_INDEX]", stderr);
             break;
         }
         case REGISTER_OFFSET: {
             int xm = getBitsAt(instruction, SDT_XM_START, REG_INDEX_SIZE);
             address = arm->registers[xn] + arm->registers[xm];
-            fputs("[REGISTER_OFFSET]", stderr);
             break;
         }
         case LITERAL_ADDRESS:{
             int64_t simm19 = extendBits(getBitsAt(instruction, SDT_SIMM19_START, SIMM19_LEN), SIMM19_LEN);
             address = arm->pc + (simm19 * BYTES_IN_WORD);
-            fputs("[LITERAL_ADDRESS]", stderr);
             break;
         }
     }
@@ -79,7 +74,6 @@ void singleDataTransfer(ARM* arm, int instruction) {
     // If load bit is given then load, else store.
     if (l || type == LITERAL_ADDRESS) {
         // Load
-        perror("{LOAD}");
         assert(address < MAX_MEMORY_SIZE);
         if (sf) {
             // In 64 bit load double word at address memory into register.
@@ -90,7 +84,6 @@ void singleDataTransfer(ARM* arm, int instruction) {
         }
     } else {
         // Store
-        perror("{STORE}");
         uint64_t rtcontent = arm->registers[rt];
         int storesize = sf ? BYTES_IN_64BIT : BYTES_IN_32BIT;
         // Store by shifting 1 byte of register's content at a time into memory.

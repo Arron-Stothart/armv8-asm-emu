@@ -12,9 +12,7 @@ extern symbol_table* st;
 
 // Writes n instructions from array into binary file
 void writeBinary(char* path, uint32_t* instructions, int n) {
-	fprintf(stderr, "writing %d lines \n", n);
 	// Creating the output file
-	fprintf(stderr, "writing\n");
 	FILE* output = fopen(path, "wb");
 
 	// Check if file has been loaded into memory
@@ -24,12 +22,10 @@ void writeBinary(char* path, uint32_t* instructions, int n) {
 	}
 
 	for (int i = 0; i < n; i++) {
-		fprintf(stderr, "intructions i: %x\n", instructions[i]);
 		fwrite(&(instructions[i]), sizeof(uint32_t), 1, output);
 	}
 
 	fclose(output);
-	fprintf(stderr, "closed\n");
 }
 
 // Reads each line of file into buffer with maximum of MAX_LINES lines. Returns number of lines read.
@@ -139,17 +135,13 @@ bool isImmediate(char *operand) {
 
 // Calculates of the offset between an operand and the line number of the instruction. 
 uint32_t calculateOffset(char* operand, uint8_t lineaddress, uint8_t len) {
-	fprintf(stderr, "calcoffset is called\n");
 	uint32_t offset;
 
     if (isImmediate(operand)) {
         // treat as immediate value
 		offset = getImmediate(operand) - lineaddress;
     } else {
-		fprintf(stderr, "is a label");
 		// treat as label
-		fprintf(stderr, "label address is %d\n", getAddress(st, operand));
-		fprintf(stderr, "branch address is %d\n", lineaddress);
 		offset = getAddress(st, operand) - lineaddress;	
 	}
 

@@ -47,9 +47,6 @@ int main(int argc, char **argv) {
         int instruction = getWord(&arm.memory[arm.pc]);
         INSTRUCTION_TYPE type = getInstructionType(instruction);
 
-        const char *names[] = { "DATA_PROCESSING_IMMEDIATE ", "DATA_PROCESSING_REGISTER ", "SINGLE_DATA_TRANSFER ", "BRANCH ", "HALT ", "NOP ", "DATA " };
-        fputs(names[type], stderr);
-
         switch(type) {
             case HALT:
                 goto halt; // Required to break out of both switch and for loop

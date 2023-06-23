@@ -11,8 +11,6 @@ void tokenizeInstruction(char* line, instruction* instr) {
     char* saveptr;
     char* token;
 
-    fprintf(stderr, "line is %s \n", line);
-
     // Get first token from line known to be instruction
     token = strtok_r(line, " ", &saveptr); 
     // If first token is null then return with error
@@ -51,6 +49,4 @@ void tokenizeInstruction(char* line, instruction* instr) {
     for (int j = i; j < MAX_OPERANDS; j++) {
         instr->operands[j] = "";
     }
-
-    fprintf(stderr, "return \n");
 }
