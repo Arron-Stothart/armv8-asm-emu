@@ -1,58 +1,49 @@
-dw:
-intdir 10000
+movz x8, #1
+movz x9, #1
 
 request:
-movz x1, #0x3F00B880
-str #256, x1
+ldr x0, #0x82000
+movz x1, #0x0
+str #32, [x0, x1]
 add x1, x1, #4
-str #0, x1
+str #0, [x0, x1]
 add x1, x1, #4
-str #0x00038041, x1
+str #0x00038041, [x0, x1]
 add x1, x1, #4
-str #8, x1
+str #8, [x0, x1]
 add x1, x1, #4
-str #0x0, x1
+str #0x0, [x0, x1]
 add x1, x1, #4
-str #130, x1
+str #130, [x0, x1]
 add x1, x1, #4
-str #0x1, x1
+str x8, [x0, x1]
 add x1, x1, #4
-str #0x0, x1
-b request_end
+str #0x0, [x0, x1]
 
-await_response:
-b read_response
-
-read_response:
-b read_response_end
-
-loop:
-b request
-request_end:
-b await_response
-read_response_end:
-b wait
+write_to_reg:
+ldr x3, #0x82000
+ldr x4, #8
+add x3, x3, x4
+ldr x5, #0x3f00b8a0
+str x3, [x5]
 
 wait:
-ldr x2, dw
+movz x2, 100000
 wait_l:
 sub x2, x2, #1
 cmp x2, #0x0
 b.ne wait_l
-b loop
 
+read_check:
+ldr x3, #0x3f00b898
+ldr x3, [x3]
+movz x4 #0x4000, lsl 16
+ands xzr, x4, x3
+b.ne read_check
 
-COMMENTS:
-0x3f000000 + 0xb880 = 0x3F00B880
-https://adamransom.github.io/posts/raspberry-pi-bare-metal-part-1.html
+ldr x0, #0x3f000b880
+ldr x0, [x0]
 
-Request Size 0x00 0x00038041‘Set LED’ Tag ID
-Request Code 0x04 8Value Buffer Size
-0x08 0x0 Request Code
-0x0c 130 Power LED Pin Number
-0x10 0x1 LED Status (on)
+eor x8, x8, x9
 
-The tag id to turn on or off one of the onboard LEDs is 0x00038041
-two 32byte params
-    put, in order
-    in the value buffer (offset 0x0c) of the tag buffer
+b request
