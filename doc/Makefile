@@ -3,7 +3,7 @@
 CHECKPOINT=Checkpoint
 REPORT=Report
 LATEXMK=latexmk
-OUTDIR=out
+OUTDIR=\
 
 LATEXMKRC=.latexmkrc
 
@@ -41,7 +41,7 @@ clean:
 cleanpdf:
 	$(RM) *.pdf
 
-cleanall: cleanpdf
-	$(RM) -rf $(OUTDIR)
+cleanall: 
+	$(RM) -rf $(OUTDIR) 
 
 
