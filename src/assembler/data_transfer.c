@@ -54,6 +54,20 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         sscanf(arg2, "[%s]", xn);
         return instr | (getRegNum(xn) << SDT_XN_START) | ((getImmediate(arg3) & generateMask(SIMM9_LEN)) << SDT_SIMM9_START) | POST_INDEX_BASE; 
     }
+
+    // Register Offset
+    regex_t regex;
+    int reg_comp_value;
+    reg_comp_value = regcomp(&regex, "\[\\w+, \\w+\\]", 0);
+    if (reg_comp_value != 0) {
+        fprintf(stderr, "regex compilation error");
+    }
+    if (regexec(&regex, arg2, 0, NULL, 0) == 0 && strstr(arg2, "#") == NULL){
+        xn = strtok(arg2, "[,]");
+        xm = strtok(NULL, "[,]");
+        return instr | (getRegNum(xn) << SDT_XN_START) | (getRegNum(xm) << SDT_XM_START) | REG_OFFSET_BASE;
+    }
+
     // Unsigned Immediate Offset
     if (sscanf(arg2, "[%3s,#%s]", xn, imm) == 2) {
         // Add # back to start of imm
@@ -68,18 +82,7 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
         }
         return instr | (getRegNum(xn) << SDT_XN_START) | (imm12 << SDT_IMM12_START) | (1 << SDT_UBIT_POS);
     }
-    // Register Offset
-    regex_t regex;
-    int reg_comp_value;
-    reg_comp_value = regcomp(&regex, "\[\\w+, \\w+\\]", 0);
-    if (reg_comp_value != 0) {
-        fprintf(stderr, "regex compilation error");
-    }
-    if (regexec(&regex, arg2, 0, NULL, 0) == 0){
-        xn = strtok(arg2, "[,]");
-        xm = strtok(NULL, "[,]");
-        return instr | (getRegNum(xn) << SDT_XN_START) | (getRegNum(xm) << SDT_XM_START) | REG_OFFSET_BASE;
-    }
+    
     // Zero Unsigned Offset
     if (sscanf(arg2, "[%s]", xn)) {
         return instr | (getRegNum(xn) << SDT_XN_START) | (1 << SDT_UNSIGNED_OFFSET_FLAG_BIT);
