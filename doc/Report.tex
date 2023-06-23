@@ -1,21 +1,60 @@
 \documentclass[11pt]{article}
 
 \usepackage{fullpage}
+\date{}
 
 \begin{document}
 
-\title{Our Extension...}
-\author{TODO}
+\title{ARM Final Report Group 22}
+\author{Ruben Vorster, Arron Stothart, Pip Moss, Faris Chaudhry}
 
 \maketitle
 
-\section{Introduction}
+\section{Structure and Implementation of Our Assembler}
+The main function in assemble.c is used to run our assembler. It reads in source code from an AArch64 source file, whose filename is given as the first command line argument, and outputs AArch64 binary code to a file, whose filename is given as the second command line argument. We achieve this through a two-pass assembly process. 
+\subsection{First Pass}
+The first pass generates a symbol table associating each label of the source file with its correct address. We used a global linked list to represent our symbol tables. The contents of the source file are read to a buffer from which each line is parsed. If a line match the label regex/format, it is written to the symbol table alongside an address obtained by multiplying the line number by instruction size. 
+\subsection{Second Pass}
+The second pass reads each instruction/directive of the source file and generates the corresponding binary encodings. Our program moves linearly through each line of the buffer. When a line representing an instruction is reached, it is tokenized to produce an opcode and an array of upto 4 operands. This process used calls to strtok\_r. The opcode of the instruction then is hashed, and the hash value used to obtain the relevant function pointer. This function is called with the obtained operands as arguments.
+We implemented the conversion of data transfer instructions by... 
+We implemented the conversion of data processing instructions by... 
+We implemented the conversion of branch instructions by... 
+We implemented the conversion of special instructions by... 
+We implemented the conversion of directives by... 
 
+\subsection{File Organisation}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
+incididunt ut labore et dolore magna aliqua.
+
+\section{Design}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+\section{Testing Strategy}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. 
+
+\section{Design Details}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. 
+
+\section{Group Reflections}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. 
+
+\section{Individual Reflections}
+\subsection{Ruben Vorster}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+\subsection{Arron Stothart}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+\subsection{Pip Moss}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+\subsection{Faris Chaudhry}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
 
 \end{document}
