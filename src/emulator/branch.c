@@ -84,7 +84,7 @@ void branch(ARM* arm, int instruction) {
         case CONDITIONAL: {
             int64_t simm19 = extendBits(getBitsAt(instruction, BR_SIMM19_START, SIMM19_LEN), SIMM19_LEN);
             int cond = getBitsAt(instruction, BR_COND_START, BR_COND_LEN);
-            if (conditionCheck(cond, arm) == 1) {
+            if (conditionCheck(cond, arm)) {
                 int64_t offset = simm19 * BYTES_IN_WORD;
                 // Branch to address encoded by literal
                 arm->pc += offset;

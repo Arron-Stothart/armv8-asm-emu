@@ -35,8 +35,8 @@ pvc:
 
 # filters out pdf from the clean (in case you want them there ☺ )
 TO_CLEAN = $(filter-out %.pdf, $(wildcard $(OUTDIR)/*))
-clean:
-	$(RM) -rf $(TO_CLEAN)
+# clean:
+# 	$(RM) -rf $(TO_CLEAN)
 
 cleanpdf:
 	$(RM) *.pdf
