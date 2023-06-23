@@ -60,7 +60,7 @@ int32_t getAddress(symbol_table* st, char* label) {
 		sym = sym->next;
 	}
 
-	fprintf(stderr, "Label not in symbol table.\n");
+	fprintf(stderr, "Label (%s) not in symbol table.\n", label);
     exit(EXIT_FAILURE);
 }
 
