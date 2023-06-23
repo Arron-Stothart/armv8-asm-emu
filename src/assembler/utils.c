@@ -139,7 +139,7 @@ uint32_t calculateOffset(char* operand, uint8_t lineaddress, uint8_t len) {
 
     if (isImmediate(operand)) {
         // treat as immediate value
-		offset = getImmediate(operand) - lineaddress;
+		offset = getImmediate(operand);
     } else {
 		// treat as label
 		offset = getAddress(st, operand) - lineaddress;	

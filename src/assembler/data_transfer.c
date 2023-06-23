@@ -69,10 +69,10 @@ uint32_t dataTransferInstruction(char* arg1, char* arg2, char* arg3, char* arg4,
     }
 
     // Unsigned Immediate Offset
-    if (sscanf(arg2, "[%3s,#%s]", xn, imm) == 2) {
+    if (regexec(&regex, arg2, 0, NULL, 0) == 0 && strstr(arg2, "#") != NULL){
         // Add # back to start of imm
-        memmove(imm+1, imm, strlen(imm) + 1);
-        imm[0] = '#';
+        xn = strtok(arg2, "[,]");
+        imm = strtok(NULL, "[,]");
         // Determine imm12 encoding based on register bitwidth
         uint32_t imm12;
         if (is64BitReg(arg1)) {
