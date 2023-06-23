@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 #include "utils.h"
 #include "defs.h"
 
@@ -132,9 +133,10 @@ static uint32_t logicalInstructions(char* arg1, char* arg2, char* arg3, char* ar
 
     // Optional shift
     // Extra checks to avoid broken halt codes
-    if (strcmp(arg4, "") != 0 && (strcmp(arg1, "x0") != 0 && strcmp(arg2, "x0") != 0 && strcmp(arg3, "x0") != 0)) {
+    if (strcmp(arg4, "") != 0 && (strcmp(arg1, "x0") != 0 || strcmp(arg2, "x0") != 0 || strcmp(arg3, "x0") != 0)) {
             instr |= (getShiftNum(strndup(arg4, SHIFT_OPLEN)) << DPR_SHIFT_START); 
             arg4 += SHIFT_OPLEN;
+            fprintf(stderr, "arg4 is %s", arg4);
             instr |= (getImmediate(arg4) << DPR_IMM6_START);
         }
 
