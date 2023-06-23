@@ -1,17 +1,9 @@
-CC      ?= gcc
-CFLAGS  ?= -std=c17 -g\
-	-D_POSIX_SOURCE -D_DEFAULT_SOURCE\
-	-Wall -Werror -pedantic
+.PHONY: all
+all:
+	cd assembler && make $@
+	cd emulator && make $@
 
-.SUFFIXES: .c .o
-
-.PHONY: all clean
-
-all: assemble emulate
-
-assemble: assemble.o
-emulate: emulate.o
-
+.PHONY: clean
 clean:
-	$(RM) *.o assemble emulate
-	
+	cd assembler && make $@
+	cd emulator && make $@

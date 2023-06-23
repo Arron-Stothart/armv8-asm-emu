@@ -56,9 +56,9 @@
 
 
 // Immediate Data Processing Constants
-#define DPI_ARITHMETIC_OPI 0b010
-#define DPI_WIDEMOVE_OPI 0b101
-#define DPI_MOVK_OPC 0b11
+#define DPI_ARITHMETIC_OPI 0x2
+#define DPI_WIDEMOVE_OPI 0x5
+#define DPI_MOVK_OPC 0x3
 #define DPI_SFBIT 31
 #define DPI_OPC_START 29
 #define DPI_OPC_LEN 2
@@ -92,13 +92,13 @@
 #define DPR_IMM6_START 10 // for arithemtic/logical
 
 // Branch Constants
-#define BR_EQ 0b0000 // Equal
-#define BR_NE 0b0001 // Not equal
-#define BR_GE 0b1010 // Signed greater or equal
-#define BR_LT 0b1011 // Signed less than
-#define BR_GT 0b1100 // Signed greater than
-#define BR_LE 0b1101 // Signed less than or equal
-#define BR_AL 0b1110 // Always
+#define BR_EQ 0x0 // Equal
+#define BR_NE 0x1 // Not equal
+#define BR_GE 0xa // Signed greater or equal
+#define BR_LT 0xb // Signed less than
+#define BR_GT 0xc // Signed greater than
+#define BR_LE 0xd // Signed less than or equal
+#define BR_AL 0xe // Always
 #define BR_SIMM26_START 0
 #define BR_SIMM19_START 5
 #define BR_XN_START 5

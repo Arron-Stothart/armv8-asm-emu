@@ -32,13 +32,13 @@ CONDITONAL BRANCH
 #define BR_COND_BASE 0x54000000
 #define BR_COND_START 0
 #define BR_SIMM19_START 5
-#define BR_EQ 0b0000 // Equal
-#define BR_NE 0b0001 // Not equal
-#define BR_GE 0b1010 // Signed greater or equal
-#define BR_LT 0b1011 // Signed less than
-#define BR_GT 0b1100 // Signed greater than
-#define BR_LE 0b1101 // Signed less than or equal
-#define BR_AL 0b1110 // Always
+#define BR_EQ 0x0 // Equal
+#define BR_NE 0x1 // Not equal
+#define BR_GE 0xa // Signed greater or equal
+#define BR_LT 0xb // Signed less than
+#define BR_GT 0xc // Signed greater than
+#define BR_LE 0xd // Signed less than or equal
+#define BR_AL 0xe // Always
 
 uint32_t bcond(char* arg1, uint32_t cond, uint32_t address) {
     return BR_COND_BASE | ((calculateOffset(arg1, address, SIMM19_LEN) / INSTRUCTION_SIZE) << BR_SIMM19_START) | (cond << BR_COND_START);

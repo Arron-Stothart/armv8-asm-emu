@@ -179,13 +179,13 @@ INSTRUCTION_TYPE getInstructionType(uint32_t instruction) {
         return HALT;
     } else if (instruction == NOP_CODE) {
         return NOP;
-    } else if ((op0 & 0b1110) == 0b1000) {
+    } else if ((op0 & 0xe) == 0x8) {
         return DATA_PROCESSING_IMMEDIATE;
-    } else if ((op0 & 0b0111) == 0b0101) {
+    } else if ((op0 & 0x7) == 0x5) {
         return DATA_PROCESSING_REGISTER;
-    } else if ((op0 & 0b0101) == 0b0100) {
+    } else if ((op0 & 0x5) == 0x4) {
         return SINGLE_DATA_TRANSFER;
-    } else if ((op0 & 0b1110) == 0b1010) {
+    } else if ((op0 & 0xe) == 0xa) {
         return BRANCH;
     } else {
         // Default case; not instruction.
