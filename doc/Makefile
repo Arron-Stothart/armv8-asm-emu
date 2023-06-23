@@ -3,7 +3,7 @@
 CHECKPOINT=Checkpoint
 REPORT=Report
 LATEXMK=latexmk
-OUTDIR=out
+OUTDIR=\
 
 LATEXMKRC=.latexmkrc
 
@@ -19,9 +19,9 @@ LATEXMKCLEANFLAGS=\
 	-outdir=$(OUTDIR)\
 	-c
 
-.PHONY: all clean pvc cleanall report checkpoint cleanpdf
+.PHONY: all
 
-all: report checkpoint
+all: report checkpoint 
 
 report: $(REPORT).pdf
 checkpoint: $(CHECKPOINT).pdf
@@ -40,8 +40,3 @@ clean:
 
 cleanpdf:
 	$(RM) *.pdf
-
-cleanall: cleanpdf
-	$(RM) -rf $(OUTDIR)
-
-
