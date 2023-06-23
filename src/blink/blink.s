@@ -1,9 +1,23 @@
 dw:
 intdir 10000
 
-
 request:
 movz x1, #0x3F00B880
+str #256, x1
+add x1, x1, #4
+str #0, x1
+add x1, x1, #4
+str #0x00038041, x1
+add x1, x1, #4
+str #8, x1
+add x1, x1, #4
+str #0x0, x1
+add x1, x1, #4
+str #130, x1
+add x1, x1, #4
+str #0x1, x1
+add x1, x1, #4
+str #0x0, x1
 b request_end
 
 await_response:
